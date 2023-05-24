@@ -1,13 +1,15 @@
-import "./globals.css";
+import { Providers } from "@/app/providers";
+import { Footer } from "@/components/Footer/Footer";
+import { Header } from "@/components/Header/Header";
+import { Main } from "@/components/Main/Main";
 import { Inter } from "next/font/google";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata = {
   title: "HOLLOFABRIKA",
-  description: "Hollofabrika is a store",
+  description: "Hollofabrika is a store.ts",
 };
 
 export default function RootLayout({
@@ -18,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={inter.className}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <Providers>
+          <Header />
+          <Main>{children}</Main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
