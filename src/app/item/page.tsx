@@ -5,7 +5,6 @@ const GetBooks = graphql(`
   query GetAllBooks {
     books {
       title
-      author
     }
   }
 `);
