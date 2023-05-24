@@ -1,4 +1,5 @@
 import { graphql } from "@/gql";
+import { graphqlClient } from "@/lib/graphql-client";
 import s from "./page.module.css";
 
 const GetBooks = graphql(`
@@ -6,9 +7,14 @@ const GetBooks = graphql(`
     books {
       title
     }
+    persons {
+      name
+    }
   }
 `);
 
-export default function Home() {
-  return <div></div>;
+export default async function Home() {
+  const { books, persons } = await graphqlClient.request(GetBooks);
+
+  return <pre>{JSON.stringify({ books, persons }, null, 2)}</pre>;
 }

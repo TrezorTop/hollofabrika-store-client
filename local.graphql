@@ -8,6 +8,11 @@ type Book {
     title: String
 }
 
+type Person {
+    name: String
+}
+
 type Query {
     books: [Book]
+    persons: [Person]
 }
