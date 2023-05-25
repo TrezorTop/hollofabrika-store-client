@@ -16,5 +16,6 @@ const GetBooks = graphql(`
 export default async function Home() {
   const { books, persons } = await graphqlClient.request(GetBooks);
 
-  return <pre>{JSON.stringify({ books, persons }, null, 2)}</pre>;
+  // return <pre>{JSON.stringify({ books, persons }, null, 2)}</pre>;
+  return <pre></pre>;
 }

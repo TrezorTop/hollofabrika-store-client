@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata = {
   title: "HOLLOFABRIKA",
-  description: "Hollofabrika is a store.ts",
+  description: "Hollofabrika is a store app",
 };
 
 export default function RootLayout({

@@ -4,6 +4,6 @@ type Store = {
   account: string;
 };
 
-export const store = proxy<Store>({
+export const globalStore = proxy<Store>({
   account: "user",
 });
