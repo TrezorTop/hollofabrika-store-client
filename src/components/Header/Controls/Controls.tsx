@@ -2,7 +2,7 @@
 
 import { LoginForm } from "@/components/Header/Controls/LoginForm/LoginForm";
 import { RegisterForm } from "@/components/Header/Controls/RegisterForm/RegisterForm";
-import { globalStore } from "@/lib/globalStore";
+import { globalStore } from "@/utils/globalStore";
 import {
   Box,
   Button,
