@@ -2,17 +2,37 @@
 
 schema {
     query: Query
+    mutation: Mutation
 }
 
-type Book {
-    title: String
+type Error {
+    code: ErrorCode!
+    message: String!
 }
 
-type Person {
-    name: String
+type JwtToken {
+    access: String!
+    refresh: String!
+}
+
+type Mutation {
+    register(email: String!, password: String!, username: String!): Error
 }
 
 type Query {
-    books: [Book]
-    persons: [Person]
+    users: [User]
+}
+
+type User {
+    email: String!
+    username: String!
+}
+
+enum ErrorCode {
+    BadRequest
+}
+
+enum Role {
+    Admin
+    Standalone
 }

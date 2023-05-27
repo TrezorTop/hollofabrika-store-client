@@ -7,17 +7,17 @@ type Props = {
 };
 
 export const LoginForm = ({ onRegister }: Props) => {
-  const snap = useSnapshot(authStore);
+  const authSnap = useSnapshot(authStore);
 
   return (
     <>
       <Input
-        value={snap.login}
+        defaultValue={authSnap.login ?? authSnap.email}
         onChange={(event) => (authStore.login = event.target.value)}
         placeholder="Login"
       />
       <Input
-        value={snap.password}
+        value={authSnap.password}
         onChange={(event) => (authStore.password = event.target.value)}
         placeholder="Password"
       />

@@ -2,6 +2,7 @@ import { Providers } from "@/app/providers";
 import { Footer } from "@/components/Footer/Footer";
 import { Header } from "@/components/Header/Header";
 import { Main } from "@/components/Main/Main";
+import { ApolloWrapper } from "@/lib/apollo-wrapper";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -21,9 +22,11 @@ export default function RootLayout({
     <html lang="ru">
       <body className={inter.className}>
         <Providers>
-          <Header />
-          <Main>{children}</Main>
-          <Footer />
+          <ApolloWrapper>
+            <Header />
+            <Main>{children}</Main>
+            <Footer />
+          </ApolloWrapper>
         </Providers>
       </body>
     </html>
