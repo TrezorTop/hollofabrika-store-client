@@ -1,0 +1,55 @@
+# This file was generated. Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Error {
+    code: ErrorCode
+    message: String!
+}
+
+type JwtToken {
+    access: String!
+    refresh: String!
+}
+
+type Mutation {
+    login(password: String!, username: String!): JwtToken
+    register(email: String!, password: String!, username: String!): Success
+    verifyEmail(token: Int!): Success
+}
+
+type Query {
+    users: [User]
+}
+
+type SomethingWentWrong {
+    errors: [Error!]!
+}
+
+type Success {
+    code: SuccessCode
+}
+
+type User {
+    email: String!
+    role: Role!
+    username: String!
+}
+
+enum ErrorCode {
+    BadRequest
+    InternalError
+}
+
+enum Role {
+    Admin
+    Standalone
+}
+
+enum SuccessCode {
+    ConfirmAction
+    Oke
+}

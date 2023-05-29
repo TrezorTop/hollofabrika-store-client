@@ -1,0 +1,6 @@
+schema: local.graphql
+documents: "**/*.graphql"
+extensions:
+  endpoints:
+    Hollofabrika:
+      url: http://26.109.83.16:3333/graphql
