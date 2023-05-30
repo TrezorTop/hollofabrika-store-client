@@ -4,40 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13e7fee4-dfd6-497e-8412-7adced8f493c" name="Changes" comment="added next 12">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/prettier.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/codegen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ClientOnly.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Footer/Footer.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Footer/Footer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Header/Controls/Controls.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Header/Controls/Controls.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Header/Controls/LoginForm/LoginForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Header/Controls/RegisterForm/RegisterForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Header/Controls/store.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Header/Header.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Header/Header.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Layout.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/layout/Layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/apollo-client.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gql/fragment-masking.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gql/gql.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gql/graphql.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gql/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/graphql.config.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/local.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/store/globalStore.ts" afterDir="false" />
+    <list default="true" id="13e7fee4-dfd6-497e-8412-7adced8f493c" name="Changes" comment="added apollo">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/hello.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,29 +34,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Andrey/Desktop/dev/hollofabrika/hollofabrika-store-client",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "yarn",
-    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Andrey\\Desktop\\dev\\hollofabrika\\hollofabrika-store-client\\node_modules\\prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "ts.external.directory.path": "C:\\Users\\Andrey\\Desktop\\dev\\hollofabrika\\hollofabrika-store-client\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Andrey/Desktop/dev/hollofabrika/hollofabrika-store-client&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\Andrey\\Desktop\\dev\\hollofabrika\\hollofabrika-store-client\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Andrey\\Desktop\\dev\\hollofabrika\\hollofabrika-store-client\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Andrey\Desktop\dev\hollofabrika\hollofabrika-store-client\components\layout\Header" />
@@ -108,7 +77,8 @@
       <workItem from="1685343653348" duration="20000" />
       <workItem from="1685374971073" duration="1201000" />
       <workItem from="1685376196709" duration="1180000" />
-      <workItem from="1685381781001" duration="9254000" />
+      <workItem from="1685381781001" duration="9914000" />
+      <workItem from="1685405257382" duration="106000" />
     </task>
     <task id="LOCAL-00001" summary="added next 12">
       <created>1685214530922</created>
@@ -117,7 +87,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685214530922</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added apollo">
+      <created>1685392303139</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1685392303139</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,6 +103,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="added next 12" />
-    <option name="LAST_COMMIT_MESSAGE" value="added next 12" />
+    <MESSAGE value="added apollo" />
+    <option name="LAST_COMMIT_MESSAGE" value="added apollo" />
   </component>
 </project>
