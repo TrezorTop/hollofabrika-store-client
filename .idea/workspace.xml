@@ -4,9 +4,46 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13e7fee4-dfd6-497e-8412-7adced8f493c" name="Changes" comment="added apollo">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="13e7fee4-dfd6-497e-8412-7adced8f493c" name="Changes" comment="gitignore update">
+      <change afterPath="$PROJECT_DIR$/core/components/ClientOnly.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Footer/Footer.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Footer/Footer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Header/Controls/Controls.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Header/Controls/Controls.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Header/Controls/LoginForm/LoginForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Header/Controls/RegisterForm/RegisterForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Header/Controls/store.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Header/Header.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Header/Header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Layout.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/components/layout/Layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/config/apollo-client.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/store/globalStore.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/utils/auth.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/utils/consts.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/test/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/codegen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/codegen.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ClientOnly.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Footer/Footer.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Footer/Footer.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Header/Controls/Controls.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Header/Controls/Controls.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Header/Controls/LoginForm/LoginForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Header/Controls/RegisterForm/RegisterForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Header/Controls/store.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Header/Header.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Header/Header.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Layout.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/Layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/apollo-client.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gql/gql.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gql/gql.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gql/graphql.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gql/graphql.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.graphql" beforeDir="false" afterPath="$PROJECT_DIR$/local.graphql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/store/globalStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +96,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Andrey\Desktop\dev\hollofabrika\hollofabrika-store-client\core" />
       <recent name="C:\Users\Andrey\Desktop\dev\hollofabrika\hollofabrika-store-client\components\layout\Header" />
     </key>
   </component>
@@ -78,7 +116,15 @@
       <workItem from="1685374971073" duration="1201000" />
       <workItem from="1685376196709" duration="1180000" />
       <workItem from="1685381781001" duration="9914000" />
-      <workItem from="1685405257382" duration="106000" />
+      <workItem from="1685405257382" duration="133000" />
+      <workItem from="1685430627712" duration="15000" />
+      <workItem from="1685448684725" duration="337000" />
+      <workItem from="1685457198867" duration="7303000" />
+      <workItem from="1685464673817" duration="24000" />
+      <workItem from="1685464732730" duration="2464000" />
+      <workItem from="1685506098817" duration="6000" />
+      <workItem from="1685542326555" duration="3175000" />
+      <workItem from="1685545640784" duration="7885000" />
     </task>
     <task id="LOCAL-00001" summary="added next 12">
       <created>1685214530922</created>
@@ -94,7 +140,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685392303139</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="gitignore update">
+      <created>1685405380621</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1685405380621</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -104,6 +157,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="added next 12" />
     <MESSAGE value="added apollo" />
-    <option name="LAST_COMMIT_MESSAGE" value="added apollo" />
+    <MESSAGE value="gitignore update" />
+    <option name="LAST_COMMIT_MESSAGE" value="gitignore update" />
   </component>
 </project>

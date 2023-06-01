@@ -45,7 +45,7 @@ export const Controls = () => {
                 <LoginForm onRegister={() => setForm(Form.REGISTER)} />
               )}
               {form === Form.REGISTER && (
-                <RegisterForm onLogin={() => setForm(Form.LOGIN)} />
+                <RegisterForm onSuccess={() => setForm(Form.LOGIN)} />
               )}
             </Flex>
           </PopoverBody>

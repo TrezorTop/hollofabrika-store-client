@@ -17,12 +17,17 @@ type JwtToken {
 
 type Mutation {
     login(password: String!, username: String!): JwtToken
-    register(email: String!, password: String!, username: String!): Success
-    verifyEmail(token: Int!): Success
+    refresh(token: String!): JwtToken
+    register(email: String!, password: String!, username: String!): RegisterResponse
+    verifyEmail(confirmToken: String!, emailToken: Int!): Success
 }
 
 type Query {
     users: [User]
+}
+
+type RegisterResponse {
+    confirmToken: String
 }
 
 type SomethingWentWrong {

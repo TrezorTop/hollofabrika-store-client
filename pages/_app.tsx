@@ -2,8 +2,8 @@ import { ApolloProvider } from "@apollo/client";
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import Layout from "../components/layout/Layout";
-import client from "../config/apollo-client";
+import Layout from "../core/components/layout/Layout";
+import client from "../core/config/apollo-client";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
