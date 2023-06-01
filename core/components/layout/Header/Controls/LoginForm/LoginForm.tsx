@@ -5,6 +5,7 @@ import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
 import { setUserTokens } from "../../../../../utils/auth";
 import { authStore } from "../store";
+import { globalStore } from "../../../../../store/globalStore";
 
 type Props = {
   onRegister: () => void;
@@ -32,6 +33,7 @@ export const LoginForm = ({ onRegister }: Props) => {
   useEffect(() => {
     if (!data) return;
 
+    globalStore.account = "USER";
     setUserTokens(data.login?.access!, data.login?.refresh!);
   }, [data]);
 
