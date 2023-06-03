@@ -1,6 +1,6 @@
-import ClientOnly from "../../ClientOnly";
 import { Controls } from "./Controls/Controls";
 import s from "./Header.module.css";
+import ClientOnly from "@core/components/ClientOnly";
 
 const Header = () => {
   return (

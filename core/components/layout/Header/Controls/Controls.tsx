@@ -1,26 +1,16 @@
 "use client";
 
-import {
-  Flex,
-  Heading,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-  Skeleton,
-} from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+
+import { RegisterForm } from "./RegisterForm/RegisterForm";
+import { Popup } from "@core/components/ui/Popup/Popup";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
-import { globalStore } from "../../../../store/globalStore";
+import { globalStore } from "@core/store/globalStore";
 import s from "./Controls.module.css";
-import { graphql } from "../../../../../gql";
+import { graphql } from "@gql/gql";
 import { useQuery } from "@apollo/client";
 import { LoginForm } from "./LoginForm/LoginForm";
-import { RegisterForm } from "./RegisterForm/RegisterForm";
-import { Popup } from "../../../ui/Modal/Popup";
 
 enum Form {
   LOGIN = "LOGIN",
@@ -49,6 +39,7 @@ export const Controls = () => {
   return (
     <div className={s.controls}>
       <Popup
+        header="Login"
         body={
           <Flex direction="column" gap="16px" padding="16px">
             {form === Form.LOGIN && (

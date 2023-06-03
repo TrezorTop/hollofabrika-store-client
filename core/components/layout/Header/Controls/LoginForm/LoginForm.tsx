@@ -2,10 +2,10 @@ import { useMutation } from "@apollo/client";
 import { Button, Input } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useSnapshot } from "valtio";
-import { graphql } from "../../../../../../gql";
-import { setUserTokens } from "../../../../../utils/auth";
-import { authStore } from "../store";
-import { globalStore } from "../../../../../store/globalStore";
+import { graphql } from "@gql/gql";
+import { setUserTokens } from "@core/utils/auth";
+import { globalStore } from "@core/store/globalStore";
+import { authStore } from "@core/components/layout/Header/Controls/store";
 
 type Props = {
   onRegister: () => void;

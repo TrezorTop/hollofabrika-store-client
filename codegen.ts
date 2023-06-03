@@ -1,5 +1,5 @@
 import { CodegenConfig } from "@graphql-codegen/cli";
-import { API_URL } from "./core/config/apollo-client";
+import { API_URL } from "@core/config/apollo-client";
 
 const codegen: CodegenConfig = {
   schema: API_URL,

@@ -14,7 +14,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "./src"
+    "paths": {
+      "@core/*": ["core/*"],
+      "@gql/*": ["gql/*"],
+      "@styles/*": ["styles/*"],
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
 

@@ -7,9 +7,9 @@ import {
   Observable,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
-import { getUserToken, setUserTokens } from "../utils/auth";
-import { USER_ACCESS_TOKEN_KEY, USER_REFRESH_TOKEN_KEY } from "../utils/consts";
-import { globalStore } from "../store/globalStore";
+import { USER_REFRESH_TOKEN_KEY } from "@core/utils/consts";
+import { getUserToken, setUserTokens } from "@core/utils/auth";
+import { globalStore } from "@core/store/globalStore";
 
 export const API_URL = "http://26.109.83.16:3333/graphql";
 
