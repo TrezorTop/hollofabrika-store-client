@@ -10,14 +10,6 @@ type Props = {
   onRegister: () => void;
 };
 
-const User = graphql(`
-  query User {
-    currentUser {
-      username
-    }
-  }
-`);
-
 const Login = graphql(`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
@@ -27,10 +19,18 @@ const Login = graphql(`
   }
 `);
 
+const User = graphql(`
+  query User {
+    currentUser {
+      username
+    }
+  }
+`);
+
 export const LoginForm = ({ onRegister }: Props) => {
   const snap = useSnapshot(authStore);
 
-  const { loading, data } = useQuery(User);
+  const { loading, data: user } = useQuery(User);
 
   const [login, { data }] = useMutation(Login, {
     variables: {
