@@ -5,11 +5,6 @@ schema {
     mutation: Mutation
 }
 
-type Category {
-    attributes: JSONObject!
-    name: String!
-}
-
 type Error {
     code: ErrorCode
     message: String!
@@ -21,16 +16,24 @@ type JwtToken {
 }
 
 type Mutation {
-    createCategory(input: CreateCategoryArgs!): Category!
+    createCategory(name: String!): Success!
+    createProduct(category: String!, product: CreateProductArgs!): Product!
+    deleteCategory(name: String!): Success!
+    deleteProduct(id: String!): Product!
     login(password: String!, username: String!): JwtToken
     refresh(token: String!): JwtToken
     register(email: String!, password: String!, username: String!): RegisterResponse
     verifyEmail(confirmToken: String!, emailToken: Int!): Success
 }
 
+type Product {
+    id: String!
+    name: String!
+    price: Int!
+}
+
 type Query {
-    categories: [Category!]!
-    currentUser: User
+    currentUser: User!
 }
 
 type RegisterResponse {
@@ -42,7 +45,7 @@ type SomethingWentWrong {
 }
 
 type Success {
-    code: SuccessCode
+    code: SuccessCode!
 }
 
 type User {
@@ -300,7 +303,7 @@ scalar UtcOffset
 "Represents NULL values"
 scalar Void
 
-input CreateCategoryArgs {
-    attributes: JSONObject!
+input CreateProductArgs {
     name: String!
+    price: Int!
 }

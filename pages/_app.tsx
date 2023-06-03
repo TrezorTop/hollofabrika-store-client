@@ -1,11 +1,11 @@
 import { ApolloProvider } from "@apollo/client";
 import { ChakraProvider } from "@chakra-ui/react";
+import "@styles/globals.scss";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import "@styles/globals.css";
-import Layout from "@core/components/layout/Layout";
-import ErrorBoundary from "@core/components/ErrorBoundary";
-import client from "@core/config/apollo-client";
+import ErrorBoundary from "../core/components/ErrorBoundary";
+import Layout from "../core/components/layout/Layout";
+import client from "../core/config/apollo-client";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

@@ -1,0 +1,16 @@
+@import "mixins";
+
+.home {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  gap: 32px;
+
+  @include media-desktop {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include media-phone {
+    grid-template-columns: 1fr;
+  }
+}

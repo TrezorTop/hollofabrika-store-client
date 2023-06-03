@@ -2,8 +2,8 @@ import { useMutation } from "@apollo/client";
 import { Button, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
-import { graphql } from "@gql/gql";
-import { authStore } from "@core/components/layout/Header/Controls/store";
+import { graphql } from "../../../../../../gql";
+import { authStore } from "../store";
 
 const Register = graphql(`
   mutation Register($username: String!, $email: String!, $password: String!) {

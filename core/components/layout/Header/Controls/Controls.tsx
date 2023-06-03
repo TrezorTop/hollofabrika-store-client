@@ -1,16 +1,16 @@
 "use client";
 
+import { useQuery } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
-
-import { RegisterForm } from "./RegisterForm/RegisterForm";
-import { Popup } from "@core/components/ui/Popup/Popup";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
-import { globalStore } from "@core/store/globalStore";
+import { graphql } from "../../../../../gql";
+import { globalStore } from "../../../../store/globalStore";
+import { Popup } from "../../../ui/Popup/Popup";
 import s from "./Controls.module.css";
-import { graphql } from "@gql/gql";
-import { useQuery } from "@apollo/client";
 import { LoginForm } from "./LoginForm/LoginForm";
+
+import { RegisterForm } from "./RegisterForm/RegisterForm";
 
 enum Form {
   LOGIN = "LOGIN",
