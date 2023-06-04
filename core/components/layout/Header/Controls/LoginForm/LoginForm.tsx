@@ -30,20 +30,20 @@ const User = graphql(`
 export const LoginForm = ({ onRegister }: Props) => {
   const snap = useSnapshot(authStore);
 
-  const { loading, data: user } = useQuery(User);
+  // const { loading, data: user } = useQuery(User);
 
-  const [login, { data }] = useMutation(Login, {
-    variables: {
-      username: snap.login,
-      password: snap.password,
-    },
-  });
+  // const [login, { data }] = useMutation(Login, {
+  //   variables: {
+  //     username: snap.login,
+  //     password: snap.password,
+  //   },
+  // });
 
-  useEffect(() => {
-    if (!data) return;
-
-    setUserTokens(data.login?.access!, data.login?.refresh!);
-  }, [data]);
+  // useEffect(() => {
+  //   if (!data) return;
+  //
+  //   setUserTokens(data.login?.access!, data.login?.refresh!);
+  // }, [data]);
 
   return (
     <>
@@ -58,7 +58,7 @@ export const LoginForm = ({ onRegister }: Props) => {
         placeholder="Password"
       />
 
-      <Button onClick={() => login()}>Login</Button>
+      {/*<Button onClick={() => login()}>Login</Button>*/}
       <Button variant="outline" onClick={onRegister}>
         Register
       </Button>

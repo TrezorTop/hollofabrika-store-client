@@ -1,3 +1,5 @@
+@import "styles/mixins";
+
 .layout {
   height: 100vh;
   min-height: 100vh;
@@ -6,11 +8,37 @@
   flex-direction: column;
 }
 .layout > * {
-  padding: 12px;
+  padding: 16px 40px;
+
+  @include media-tablet {
+    padding: 16px 40px;
+  }
+
+  @include media-small-tablet {
+    padding: 16px 36px;
+  }
+
+  @include media-phone {
+    padding: 16px 24px;
+  }
 }
 
 .main {
   flex-grow: 1;
-  max-width: 1200px;
+  max-width: 1920px;
+  width: 100%;
   margin: 0 auto;
+  padding: 72px;
+
+  @include media-tablet {
+    padding: 40px;
+  }
+
+  @include media-small-tablet {
+    padding: 36px;
+  }
+
+  @include media-phone {
+    padding: 24px;
+  }
 }

@@ -5,11 +5,13 @@ import s from "./Header.module.scss";
 const Header = () => {
   return (
     <div className={s.header}>
-      <span>HOLLOFABRIKA</span>
+      <div className={s.content}>
+        <span>HOLLOFABRIKA</span>
 
-      <ClientOnly>
-        <Controls />
-      </ClientOnly>
+        <ClientOnly>
+          <Controls />
+        </ClientOnly>
+      </div>
     </div>
   );
 };

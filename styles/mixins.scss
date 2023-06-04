@@ -1,5 +1,10 @@
 @mixin media-phone {
-  @media (max-width: 576px) {
+  @media (max-width: 480px) {
+    @content;
+  }
+}
+@mixin media-small-tablet {
+  @media (max-width: 570px) {
     @content;
   }
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import { Flex } from "@chakra-ui/react";
+import { Avatar, Divider, Flex, Heading, Link } from "@chakra-ui/react";
+import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../gql";
@@ -28,25 +29,40 @@ const User = graphql(`
 export const Controls = () => {
   const snap = useSnapshot(globalStore);
   const [form, setForm] = useState<Form>(Form.LOGIN);
-  const { loading, data } = useQuery(User);
+  // const { loading, data } = useQuery(User);
 
-  useEffect(() => {
-    if (data?.currentUser?.username) {
-      globalStore.account = data?.currentUser?.username;
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data?.currentUser?.username) {
+  //     globalStore.account = data?.currentUser?.username;
+  //   }
+  // }, [data]);
 
   return (
     <div className={s.controls}>
       <Popup
-        header="Login"
         body={
           <Flex direction="column" gap="16px" padding="16px">
-            {form === Form.LOGIN && (
-              <LoginForm onRegister={() => setForm(Form.REGISTER)} />
-            )}
-            {form === Form.REGISTER && (
-              <RegisterForm onSuccess={() => setForm(Form.LOGIN)} />
+            {!globalStore.account ? (
+              <>
+                <Flex gap="16px" alignItems="center">
+                  <Avatar name={globalStore.account!} src="" />
+                  <Heading size="lg">{globalStore.account}</Heading>
+                </Flex>
+                <Divider />
+                <Link>Your profile</Link>
+                <Link as={NextLink} href="/admin">
+                  Admin
+                </Link>
+              </>
+            ) : (
+              <>
+                {form === Form.LOGIN && (
+                  <LoginForm onRegister={() => setForm(Form.REGISTER)} />
+                )}
+                {form === Form.REGISTER && (
+                  <RegisterForm onSuccess={() => setForm(Form.LOGIN)} />
+                )}
+              </>
             )}
           </Flex>
         }

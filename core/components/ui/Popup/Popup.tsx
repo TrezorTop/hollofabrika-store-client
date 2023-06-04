@@ -10,6 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { FC, ReactNode } from "react";
 
+import s from "./Popup.module.scss";
+
 type Props = {
   children: ReactNode;
   header?: ReactNode;
@@ -22,12 +24,14 @@ export const Popup: FC<Props> = ({ body, children, header }) => {
       <PopoverTrigger>
         <div>{children}</div>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent className={s.popup}>
         <PopoverArrow />
         <PopoverCloseButton />
-        <PopoverHeader>
-          <Heading size="md">{header}</Heading>
-        </PopoverHeader>
+        {header && (
+          <PopoverHeader>
+            <Heading size="md">{header}</Heading>
+          </PopoverHeader>
+        )}
         <PopoverBody>{body}</PopoverBody>
       </PopoverContent>
     </Popover>
