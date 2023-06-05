@@ -1,3 +1,5 @@
+import { Link } from "@chakra-ui/react";
+import NextLink from "next/link";
 import ClientOnly from "../../ClientOnly";
 import { Controls } from "./Controls/Controls";
 import s from "./Header.module.scss";
@@ -6,7 +8,9 @@ const Header = () => {
   return (
     <div className={s.header}>
       <div className={s.content}>
-        <span>HOLLOFABRIKA</span>
+        <Link as={NextLink} href="/">
+          HOLLOFABRIKA
+        </Link>
 
         <ClientOnly>
           <Controls />

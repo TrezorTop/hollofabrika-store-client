@@ -23,17 +23,33 @@ type Mutation {
     login(password: String!, username: String!): JwtToken
     refresh(token: String!): JwtToken
     register(email: String!, password: String!, username: String!): RegisterResponse
+    updateCategory(newName: String!, originalName: String!): Success!
+    updateProduct(id: String!, product: CreateProductArgs!): Product!
     verifyEmail(confirmToken: String!, emailToken: Int!): Success
 }
 
+type PageData {
+    page: Int!
+    pageSize: Int!
+    totalPages: Int!
+}
+
 type Product {
+    attributes: JSONObject
     id: String!
     name: String!
     price: Int!
 }
 
+type ProductsQueryResult {
+    items: [Product!]!
+    pageData: PageData
+}
+
 type Query {
     currentUser: User!
+    product(id: String!): Product!
+    products(ids: [String], pageData: PageDataInput): ProductsQueryResult!
 }
 
 type RegisterResponse {
@@ -304,6 +320,12 @@ scalar UtcOffset
 scalar Void
 
 input CreateProductArgs {
+    attributes: JSONObject
     name: String!
     price: Int!
+}
+
+input PageDataInput {
+    page: Int!
+    pageSize: Int!
 }

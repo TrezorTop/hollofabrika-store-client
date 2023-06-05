@@ -1,5 +1,5 @@
 import s from "styles/Home.module.scss";
-import { Card } from "../core/components/ui/Card/Card";
+import { Card } from "../core/shared/components/Card/Card";
 
 const Home = () => {
   return (

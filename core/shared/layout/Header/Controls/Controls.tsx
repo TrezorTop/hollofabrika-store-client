@@ -1,13 +1,13 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import { Avatar, Divider, Flex, Heading, Link } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Flex, Link } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../gql";
 import { globalStore } from "../../../../store/globalStore";
-import { Popup } from "../../../ui/Popup/Popup";
+import { Popup } from "../../../components/Popup/Popup";
+import { Account } from "./Account/Account";
 import s from "./Controls.module.css";
 import { LoginForm } from "./LoginForm/LoginForm";
 
@@ -29,13 +29,13 @@ const User = graphql(`
 export const Controls = () => {
   const snap = useSnapshot(globalStore);
   const [form, setForm] = useState<Form>(Form.LOGIN);
-  // const { loading, data } = useQuery(User);
+  const { loading, data } = useQuery(User);
 
-  // useEffect(() => {
-  //   if (data?.currentUser?.username) {
-  //     globalStore.account = data?.currentUser?.username;
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data?.currentUser?.username) {
+      globalStore.account = data?.currentUser?.username;
+    }
+  }, [data]);
 
   return (
     <div className={s.controls}>
@@ -44,18 +44,6 @@ export const Controls = () => {
           <Flex direction="column" gap="16px" padding="16px">
             {!globalStore.account ? (
               <>
-                <Flex gap="16px" alignItems="center">
-                  <Avatar name={globalStore.account!} src="" />
-                  <Heading size="lg">{globalStore.account}</Heading>
-                </Flex>
-                <Divider />
-                <Link>Your profile</Link>
-                <Link as={NextLink} href="/admin">
-                  Admin
-                </Link>
-              </>
-            ) : (
-              <>
                 {form === Form.LOGIN && (
                   <LoginForm onRegister={() => setForm(Form.REGISTER)} />
                 )}
@@ -63,11 +51,13 @@ export const Controls = () => {
                   <RegisterForm onSuccess={() => setForm(Form.LOGIN)} />
                 )}
               </>
+            ) : (
+              <Account />
             )}
           </Flex>
         }
       >
-        {globalStore.account ?? "Login"}
+        <Link>{globalStore.account ?? "Login"}</Link>
       </Popup>
       <div>Cart</div>
     </div>

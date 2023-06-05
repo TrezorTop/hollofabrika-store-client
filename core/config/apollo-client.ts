@@ -58,12 +58,14 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
   );
 
   const isWrongTokenError = graphQLErrors?.some(
-    (error) => error.message === "Refresh_WrongTokenError"
+    (error) =>
+      error.message === "Refresh_WrongTokenError" ||
+      error.message === "Refresh_UsedTokenError"
   );
 
   if (isWrongTokenError) {
     setUserTokens("", "");
-    return;
+    return forward(operation);
   }
 
   if (isUnauthorizedError) {

@@ -1,0 +1,29 @@
+import { Avatar, Divider, Flex, Heading, Link } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { useCallback } from "react";
+import { globalStore } from "../../../../../store/globalStore";
+import { setUserTokens } from "../../../../../utils/auth";
+
+export const Account = () => {
+  const logout = useCallback(() => {
+    globalStore.account = null;
+    setUserTokens("", "");
+  }, []);
+
+  return (
+    <>
+      <Flex gap="16px" alignItems="center">
+        <Avatar name={globalStore.account!} src="" />
+        <Heading size="lg">{globalStore.account}</Heading>
+      </Flex>
+      <Divider />
+      <Link>Your profile</Link>
+      <Link as={NextLink} href="/admin">
+        Admin
+      </Link>
+      <Link color="tomato" onClick={logout}>
+        Logout
+      </Link>
+    </>
+  );
+};

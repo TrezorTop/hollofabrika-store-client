@@ -2,9 +2,9 @@ import { ApolloProvider } from "@apollo/client";
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import ErrorBoundary from "../core/components/ErrorBoundary";
-import Layout from "../core/components/layout/Layout";
 import client from "../core/config/apollo-client";
+import ErrorBoundary from "../core/shared/ErrorBoundary";
+import Layout from "../core/shared/layout/Layout";
 import "../styles/globals.scss";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -29,11 +29,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 const NestedLayout = ({ Component, pageProps }: any) => {
-  if (Component.getLayout) {
-    return Component.getLayout(<Component {...pageProps} />);
-  } else {
-    return <Component {...pageProps} />;
-  }
+  if (!Component) return;
+
+  return Component.getLayout ? (
+    Component.getLayout(<Component {...pageProps} />)
+  ) : (
+    <Component {...pageProps} />
+  );
 };
 
 export default MyApp;
