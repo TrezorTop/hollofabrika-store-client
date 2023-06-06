@@ -1,0 +1,11 @@
+@import "styles/mixins";
+
+.image {
+  width: 50%;
+  max-width: 300px;
+
+  @include media-tablet {
+    width: 100%;
+    max-width: 100%;
+  }
+}

@@ -5,6 +5,11 @@ schema {
     mutation: Mutation
 }
 
+type Category {
+    attributes: JSONObject
+    name: String!
+}
+
 type Error {
     code: ErrorCode
     message: String!
@@ -47,6 +52,7 @@ type ProductsQueryResult {
 }
 
 type Query {
+    categories: [Category!]!
     currentUser: User!
     product(id: String!): Product!
     products(ids: [String], pageData: PageDataInput): ProductsQueryResult!

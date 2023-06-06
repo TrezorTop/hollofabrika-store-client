@@ -42,7 +42,7 @@ export const Controls = () => {
       <Popup
         body={
           <Flex direction="column" gap="16px" padding="16px">
-            {!globalStore.account ? (
+            {!snap.account ? (
               <>
                 {form === Form.LOGIN && (
                   <LoginForm onRegister={() => setForm(Form.REGISTER)} />
@@ -57,7 +57,7 @@ export const Controls = () => {
           </Flex>
         }
       >
-        <Link>{globalStore.account ?? "Login"}</Link>
+        <Link>{snap.account ?? "Login"}</Link>
       </Popup>
       <div>Cart</div>
     </div>

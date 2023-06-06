@@ -18,6 +18,7 @@ const documents = {
     "\n  mutation Login($username: String!, $password: String!) {\n    login(username: $username, password: $password) {\n      refresh\n      access\n    }\n  }\n": types.LoginDocument,
     "\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      confirmToken\n    }\n  }\n": types.RegisterDocument,
     "\n  mutation Confirm($confirmToken: String!, $emailToken: Int!) {\n    verifyEmail(confirmToken: $confirmToken, emailToken: $emailToken) {\n      code\n    }\n  }\n": types.ConfirmDocument,
+    "\n  query Products($ids: [String], $pageData: PageDataInput) {\n    products(ids: $ids, pageData: $pageData) {\n      pageData {\n        totalPages\n        page\n        pageSize\n      }\n      items {\n        id\n        name\n        price\n        attributes\n      }\n    }\n  }\n": types.ProductsDocument,
 };
 
 /**
@@ -54,6 +55,10 @@ export function graphql(source: "\n  mutation Register($username: String!, $emai
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation Confirm($confirmToken: String!, $emailToken: Int!) {\n    verifyEmail(confirmToken: $confirmToken, emailToken: $emailToken) {\n      code\n    }\n  }\n"): (typeof documents)["\n  mutation Confirm($confirmToken: String!, $emailToken: Int!) {\n    verifyEmail(confirmToken: $confirmToken, emailToken: $emailToken) {\n      code\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Products($ids: [String], $pageData: PageDataInput) {\n    products(ids: $ids, pageData: $pageData) {\n      pageData {\n        totalPages\n        page\n        pageSize\n      }\n      items {\n        id\n        name\n        price\n        attributes\n      }\n    }\n  }\n"): (typeof documents)["\n  query Products($ids: [String], $pageData: PageDataInput) {\n    products(ids: $ids, pageData: $pageData) {\n      pageData {\n        totalPages\n        page\n        pageSize\n      }\n      items {\n        id\n        name\n        price\n        attributes\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

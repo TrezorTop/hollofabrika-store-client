@@ -1,6 +1,5 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { Button, Input } from "@chakra-ui/react";
-import { useEffect } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
 import { globalStore } from "../../../../../store/globalStore";
@@ -31,22 +30,21 @@ const User = graphql(`
 export const LoginForm = ({ onRegister }: Props) => {
   const snap = useSnapshot(authStore);
 
-  const { loading, data: user, refetch: refetchUser } = useQuery(User);
+  const [getUser, { loading, data: user }] = useLazyQuery(User);
 
-  const [login, { data }] = useMutation(Login, {
+  const [login, { data: loginData }] = useMutation(Login, {
     variables: {
       username: snap.login,
       password: snap.password,
     },
+    onCompleted: async (data) => {
+      if (!data.login) return;
+      setUserTokens(data.login?.access!, data.login?.refresh!);
+      const user = await getUser();
+      if (user.data?.currentUser.username)
+        globalStore.account = user.data?.currentUser.username;
+    },
   });
-
-  useEffect(() => {
-    if (!data) return;
-    setUserTokens(data.login?.access!, data.login?.refresh!);
-    refetchUser().then(
-      (user) => (globalStore.account = user.data.currentUser.username)
-    );
-  }, [data]);
 
   return (
     <>

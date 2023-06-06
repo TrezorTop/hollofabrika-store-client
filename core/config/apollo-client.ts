@@ -18,10 +18,6 @@ const httpLink = createHttpLink({
 });
 
 const refreshToken = () => {
-  const refreshToken = localStorage.getItem(USER_REFRESH_TOKEN_KEY);
-
-  if (!refreshToken) return;
-
   return client.mutate({
     mutation: gql`
       mutation Refresh($token: String!) {
@@ -69,6 +65,9 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
   }
 
   if (isUnauthorizedError) {
+    const token = localStorage.getItem(USER_REFRESH_TOKEN_KEY);
+    if (!token) return forward(operation);
+
     return new Observable((observer) => {
       refreshToken()
         ?.then((response) => {
@@ -76,7 +75,7 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
 
           if (!access || !refresh) {
             globalStore.account = "null";
-            return;
+            return forward(operation);
           }
 
           setUserTokens(access, refresh);
