@@ -3,7 +3,6 @@ import {
   Button,
   Flex,
   Heading,
-  Skeleton,
   Table,
   Tbody,
   Td,
@@ -19,8 +18,8 @@ import { AdminLayout } from "../layout";
 const baseRoute = "/admin/products/";
 
 const ProductsQuery = graphql(`
-  query Products($ids: [String], $pageData: PageDataInput) {
-    products(ids: $ids, pageData: $pageData) {
+  query Products($input: ProductsQueryInput) {
+    products(input: $input) {
       pageData {
         totalPages
         page
@@ -30,7 +29,10 @@ const ProductsQuery = graphql(`
         id
         name
         price
-        attributes
+        attributes {
+          value
+          name
+        }
       }
     }
   }
@@ -42,7 +44,7 @@ export default function Products() {
   const router = useRouter();
 
   const { data, loading, fetchMore } = useQuery(ProductsQuery, {
-    variables: { ids: [], pageData: { page: 1, pageSize } },
+    variables: { input: { ids: [], pageData: { page: 1, pageSize } } },
   });
 
   return (

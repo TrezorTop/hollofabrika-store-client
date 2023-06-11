@@ -6,8 +6,14 @@ schema {
 }
 
 type Category {
-    attributes: JSONObject
+    attributes: [CategoryAttribute]!
     name: String!
+}
+
+type CategoryAttribute {
+    count: Int!
+    name: String!
+    value: String!
 }
 
 type Error {
@@ -21,15 +27,15 @@ type JwtToken {
 }
 
 type Mutation {
-    createCategory(name: String!): Success!
+    createCategory(name: String!): Category!
     createProduct(category: String!, product: CreateProductArgs!): Product!
-    deleteCategory(name: String!): Success!
+    deleteCategory(name: String!): Category!
     deleteProduct(id: String!): Product!
     login(password: String!, username: String!): JwtToken
     refresh(token: String!): JwtToken
     register(email: String!, password: String!, username: String!): RegisterResponse
-    updateCategory(newName: String!, originalName: String!): Success!
-    updateProduct(id: String!, product: CreateProductArgs!): Product!
+    updateCategory(newName: String!, originalName: String!): Category!
+    updateProduct(id: String!, product: UpdateProductArgs!): Product!
     verifyEmail(confirmToken: String!, emailToken: Int!): Success
 }
 
@@ -40,10 +46,17 @@ type PageData {
 }
 
 type Product {
-    attributes: JSONObject
+    attributes: [ProductAttribute!]!
+    category: String!
+    description: String!
     id: String!
     name: String!
     price: Int!
+}
+
+type ProductAttribute {
+    name: String!
+    value: String!
 }
 
 type ProductsQueryResult {
@@ -55,7 +68,7 @@ type Query {
     categories: [Category!]!
     currentUser: User!
     product(id: String!): Product!
-    products(ids: [String], pageData: PageDataInput): ProductsQueryResult!
+    products(input: ProductsQueryInput): ProductsQueryResult!
 }
 
 type RegisterResponse {
@@ -326,7 +339,8 @@ scalar UtcOffset
 scalar Void
 
 input CreateProductArgs {
-    attributes: JSONObject
+    attributes: [ProductInputAttribute!]!
+    description: String!
     name: String!
     price: Int!
 }
@@ -334,4 +348,23 @@ input CreateProductArgs {
 input PageDataInput {
     page: Int!
     pageSize: Int!
+}
+
+input ProductInputAttribute {
+    name: String!
+    value: String!
+}
+
+input ProductsQueryInput {
+    categories: [String]
+    filters: [ProductInputAttribute!]
+    ids: [String]
+    pageData: PageDataInput
+}
+
+input UpdateProductArgs {
+    attributes: [ProductInputAttribute!]
+    description: String
+    name: String
+    price: Int
 }

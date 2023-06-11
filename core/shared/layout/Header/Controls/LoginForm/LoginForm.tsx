@@ -3,7 +3,7 @@ import { Button, Input } from "@chakra-ui/react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
 import { globalStore } from "../../../../../store/globalStore";
-import { setUserTokens } from "../../../../../utils/auth";
+import { setUserTokens } from "../../../../utils/auth";
 import { authStore } from "../store";
 
 type Props = {

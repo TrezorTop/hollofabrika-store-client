@@ -188,12 +188,20 @@ export type Scalars = {
 
 export type Category = {
   __typename?: 'Category';
-  attributes?: Maybe<Scalars['JSONObject']['output']>;
+  attributes: Array<Maybe<CategoryAttribute>>;
   name: Scalars['String']['output'];
 };
 
+export type CategoryAttribute = {
+  __typename?: 'CategoryAttribute';
+  count: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 export type CreateProductArgs = {
-  attributes?: InputMaybe<Scalars['JSONObject']['input']>;
+  attributes: Array<ProductInputAttribute>;
+  description: Scalars['String']['input'];
   name: Scalars['String']['input'];
   price: Scalars['Int']['input'];
 };
@@ -217,14 +225,14 @@ export type JwtToken = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createCategory: Success;
+  createCategory: Category;
   createProduct: Product;
-  deleteCategory: Success;
+  deleteCategory: Category;
   deleteProduct: Product;
   login?: Maybe<JwtToken>;
   refresh?: Maybe<JwtToken>;
   register?: Maybe<RegisterResponse>;
-  updateCategory: Success;
+  updateCategory: Category;
   updateProduct: Product;
   verifyEmail?: Maybe<Success>;
 };
@@ -277,7 +285,7 @@ export type MutationUpdateCategoryArgs = {
 
 export type MutationUpdateProductArgs = {
   id: Scalars['String']['input'];
-  product: CreateProductArgs;
+  product: UpdateProductArgs;
 };
 
 
@@ -300,10 +308,30 @@ export type PageDataInput = {
 
 export type Product = {
   __typename?: 'Product';
-  attributes?: Maybe<Scalars['JSONObject']['output']>;
+  attributes: Array<ProductAttribute>;
+  category: Scalars['String']['output'];
+  description: Scalars['String']['output'];
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   price: Scalars['Int']['output'];
+};
+
+export type ProductAttribute = {
+  __typename?: 'ProductAttribute';
+  name: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
+export type ProductInputAttribute = {
+  name: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
+export type ProductsQueryInput = {
+  categories?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  filters?: InputMaybe<Array<ProductInputAttribute>>;
+  ids?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  pageData?: InputMaybe<PageDataInput>;
 };
 
 export type ProductsQueryResult = {
@@ -327,8 +355,7 @@ export type QueryProductArgs = {
 
 
 export type QueryProductsArgs = {
-  ids?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  pageData?: InputMaybe<PageDataInput>;
+  input?: InputMaybe<ProductsQueryInput>;
 };
 
 export type RegisterResponse = {
@@ -356,6 +383,13 @@ export enum SuccessCode {
   Oke = 'Oke'
 }
 
+export type UpdateProductArgs = {
+  attributes?: InputMaybe<Array<ProductInputAttribute>>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type User = {
   __typename?: 'User';
   email: Scalars['String']['output'];
@@ -369,6 +403,11 @@ export type RefreshMutationVariables = Exact<{
 
 
 export type RefreshMutation = { __typename?: 'Mutation', refresh?: { __typename?: 'JwtToken', refresh: string, access: string } | null };
+
+export type ProductCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProductCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'Category', name: string, attributes: Array<{ __typename?: 'CategoryAttribute', name: string, value: string } | null> }> };
 
 export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -400,18 +439,27 @@ export type ConfirmMutationVariables = Exact<{
 
 export type ConfirmMutation = { __typename?: 'Mutation', verifyEmail?: { __typename?: 'Success', code: SuccessCode } | null };
 
-export type ProductsQueryVariables = Exact<{
-  ids?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
-  pageData?: InputMaybe<PageDataInput>;
+export type CreateProductMutationVariables = Exact<{
+  category: Scalars['String']['input'];
+  product: CreateProductArgs;
 }>;
 
 
-export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductsQueryResult', pageData?: { __typename?: 'PageData', totalPages: number, page: number, pageSize: number } | null, items: Array<{ __typename?: 'Product', id: string, name: string, price: number, attributes?: Record<string, any> | null }> } };
+export type CreateProductMutation = { __typename?: 'Mutation', createProduct: { __typename?: 'Product', name: string, id: string, description: string, category: string, price: number, attributes: Array<{ __typename?: 'ProductAttribute', name: string, value: string }> } };
+
+export type ProductsQueryVariables = Exact<{
+  input?: InputMaybe<ProductsQueryInput>;
+}>;
+
+
+export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductsQueryResult', pageData?: { __typename?: 'PageData', totalPages: number, page: number, pageSize: number } | null, items: Array<{ __typename?: 'Product', id: string, name: string, price: number, attributes: Array<{ __typename?: 'ProductAttribute', value: string, name: string }> }> } };
 
 
 export const RefreshDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Refresh"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"token"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refresh"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"token"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refresh"}},{"kind":"Field","name":{"kind":"Name","value":"access"}}]}}]}}]} as unknown as DocumentNode<RefreshMutation, RefreshMutationVariables>;
+export const ProductCategoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProductCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"categories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<ProductCategoriesQuery, ProductCategoriesQueryVariables>;
 export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refresh"}},{"kind":"Field","name":{"kind":"Name","value":"access"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const RegisterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Register"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"register"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"confirmToken"}}]}}]}}]} as unknown as DocumentNode<RegisterMutation, RegisterMutationVariables>;
 export const ConfirmDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Confirm"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"confirmToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"emailToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyEmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"confirmToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"confirmToken"}}},{"kind":"Argument","name":{"kind":"Name","value":"emailToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"emailToken"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]} as unknown as DocumentNode<ConfirmMutation, ConfirmMutationVariables>;
-export const ProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Products"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ids"}},"type":{"kind":"ListType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pageData"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PageDataInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ids"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ids"}}},{"kind":"Argument","name":{"kind":"Name","value":"pageData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pageData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalPages"}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"}}]}}]}}]}}]} as unknown as DocumentNode<ProductsQuery, ProductsQueryVariables>;
+export const CreateProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateProduct"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"category"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"product"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateProductArgs"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createProduct"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"category"},"value":{"kind":"Variable","name":{"kind":"Name","value":"category"}}},{"kind":"Argument","name":{"kind":"Name","value":"product"},"value":{"kind":"Variable","name":{"kind":"Name","value":"product"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]}}]} as unknown as DocumentNode<CreateProductMutation, CreateProductMutationVariables>;
+export const ProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Products"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ProductsQueryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalPages"}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ProductsQuery, ProductsQueryVariables>;

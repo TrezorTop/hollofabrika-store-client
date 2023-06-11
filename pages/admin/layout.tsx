@@ -24,10 +24,7 @@ const baseRoute = "/admin/";
 const NestedLayout = ({ children }: { children: ReactNode }) => {
   const [sidebar, setSidebar] = useState<boolean>(false);
 
-  const [isLessThan570] = useMediaQuery("(max-width: 570px)", {
-    ssr: true,
-    fallback: false, // return false on the server, and re-evaluate on the client side
-  });
+  const [isLessThan570] = useMediaQuery("(max-width: 570px)");
 
   const links: { title: string; href: string }[] = useMemo(() => {
     return [
