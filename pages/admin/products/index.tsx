@@ -11,6 +11,8 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useSnapshot } from "valtio";
+import { adminStore } from "../../../core/store/store";
 import { graphql } from "../../../gql";
 
 import { AdminLayout } from "../layout";
@@ -39,12 +41,17 @@ const ProductsQuery = graphql(`
 `);
 
 export default function Products() {
+  const snap = useSnapshot(adminStore);
+
   const pageSize = 50;
 
   const router = useRouter();
 
   const { data, loading, fetchMore } = useQuery(ProductsQuery, {
     variables: { input: { ids: [], pageData: { page: 1, pageSize } } },
+    onCompleted: (data) => {
+      adminStore.products = data.products;
+    },
   });
 
   return (
@@ -63,11 +70,11 @@ export default function Products() {
           </Tr>
         </Thead>
         <Tbody>
-          {data?.products.items.map((item) => (
+          {snap.products?.items.map((item) => (
             <Tr
               key={item.id}
               cursor="pointer"
-              onClick={() => router.push(baseRoute + "1234")}
+              onClick={() => router.push(baseRoute + item.id)}
             >
               <Td>{item.name}</Td>
               <Td isNumeric>{item.price}</Td>

@@ -30,12 +30,12 @@ type Mutation {
     createCategory(name: String!): Category!
     createProduct(category: String!, product: CreateProductArgs!): Product!
     deleteCategory(name: String!): Category!
-    deleteProduct(id: String!): Product!
+    deleteProduct(id: Id!): Product!
     login(password: String!, username: String!): JwtToken
     refresh(token: String!): JwtToken
     register(email: String!, password: String!, username: String!): RegisterResponse
     updateCategory(newName: String!, originalName: String!): Category!
-    updateProduct(id: String!, product: UpdateProductArgs!): Product!
+    updateProduct(id: Id!, product: UpdateProductArgs!): Product!
     verifyEmail(confirmToken: String!, emailToken: Int!): Success
 }
 
@@ -49,7 +49,7 @@ type Product {
     attributes: [ProductAttribute!]!
     category: String!
     description: String!
-    id: String!
+    id: Id!
     name: String!
     price: Int!
 }
@@ -67,7 +67,7 @@ type ProductsQueryResult {
 type Query {
     categories: [Category!]!
     currentUser: User!
-    product(id: String!): Product!
+    product(id: Id!): Product!
     products(input: ProductsQueryInput): ProductsQueryResult!
 }
 
@@ -92,6 +92,11 @@ type User {
 enum ErrorCode {
     BadRequest
     InternalError
+}
+
+enum FilterLogic {
+    AND
+    OR
 }
 
 enum Role {
@@ -214,6 +219,9 @@ Matches moment.js, Luxon and DateFns implementations
 ,/. is valid for decimal places and +/- is a valid prefix
 """
 scalar ISO8601Duration
+
+"An encoded id"
+scalar Id
 
 "The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."
 scalar JSON
@@ -350,6 +358,11 @@ input PageDataInput {
     pageSize: Int!
 }
 
+input ProductFilterQueryInput {
+    attributes: [ProductInputAttribute!]
+    logic: FilterLogic!
+}
+
 input ProductInputAttribute {
     name: String!
     value: String!
@@ -357,8 +370,8 @@ input ProductInputAttribute {
 
 input ProductsQueryInput {
     categories: [String]
-    filters: [ProductInputAttribute!]
-    ids: [String]
+    filter: ProductFilterQueryInput
+    ids: [Id!]
     pageData: PageDataInput
 }
 

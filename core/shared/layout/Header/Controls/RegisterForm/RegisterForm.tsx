@@ -3,7 +3,7 @@ import { Button, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
-import { authStore } from "../store";
+import { authStore } from "../../../../../store/store";
 
 const Register = graphql(`
   mutation Register($username: String!, $email: String!, $password: String!) {

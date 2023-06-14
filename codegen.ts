@@ -12,6 +12,7 @@ const codegen: CodegenConfig = {
       config: {
         scalars: {
           JSONObject: "Record<string, any>",
+          Id: "string",
         },
       },
     },

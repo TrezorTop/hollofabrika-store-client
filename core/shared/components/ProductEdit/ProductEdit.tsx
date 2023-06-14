@@ -13,7 +13,11 @@ import {
 import { useState } from "react";
 import Select from "react-select";
 import { graphql } from "../../../../gql";
-import { Product, ProductAttribute } from "../../../../gql/graphql";
+import {
+  Product,
+  ProductAttribute,
+  ProductInputAttribute,
+} from "../../../../gql/graphql";
 import s from "../../../../pages/admin/products/product.module.scss";
 import { useForm } from "../../hooks/useForm";
 import { randomId } from "../../utils/random";
@@ -32,23 +36,30 @@ const Categories = graphql(`
 
 type Attribute = { id: string } & ProductAttribute;
 
-export const ProductEdit = () => {
+type Props = {
+  onSubmit: (
+    product: Product,
+    attributes: ProductInputAttribute[],
+    newCategory: string
+  ) => void;
+};
+
+export const ProductEdit = ({ onSubmit }: Props) => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
+  const [newCategory, setNewCategory] = useState<string>("");
 
   const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
   const { data } = useQuery(Categories);
 
   const { form, updateForm } = useForm<Product>();
 
-  const onCategorySelect = ({
-    value,
-    label,
-  }: {
-    value: string;
-    label: string;
-  }) => {
+  const onCategorySelect = (option: { value: string; label: string }) => {
+    if (!option) return;
+
+    updateForm({ category: option.value });
+
     const attributes = data?.categories.find(
-      (category) => category.name === label
+      (category) => category.name === option.label
     )?.attributes;
 
     if (attributes)
@@ -85,13 +96,22 @@ export const ProductEdit = () => {
         </div>
 
         <Flex flexGrow="1" flexDirection="column" gap="32px">
-          <Select
-            onChange={(value) => onCategorySelect(value!)}
-            options={data?.categories.map((category) => ({
-              value: category.name,
-              label: category.name,
-            }))}
-          />
+          <Grid
+            gridTemplateColumns="1fr auto 1fr"
+            alignItems="center"
+            gap="32px"
+          >
+            <Select
+              onChange={(value) => onCategorySelect(value!)}
+              options={data?.categories.map((category) => ({
+                value: category.name,
+                label: category.name,
+              }))}
+              isClearable
+            />
+            <span>or create</span>
+            <Input placeholder="New category" />
+          </Grid>
           <Input
             onChange={(event) => updateForm({ name: event.target.value })}
             placeholder="Name"
@@ -168,6 +188,20 @@ export const ProductEdit = () => {
               />
             </Grid>
           </Grid>
+          <Button
+            onClick={() =>
+              onSubmit(
+                form,
+                attributes.map((attr) => ({
+                  value: attr.value,
+                  name: attr.name,
+                })),
+                newCategory
+              )
+            }
+          >
+            Save
+          </Button>
         </Flex>
       </Flex>
     </>

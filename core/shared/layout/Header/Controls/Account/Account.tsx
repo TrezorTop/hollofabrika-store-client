@@ -1,7 +1,7 @@
 import { Avatar, Divider, Flex, Heading, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useCallback } from "react";
-import { globalStore } from "../../../../../store/globalStore";
+import { globalStore } from "../../../../../store/store";
 import { setUserTokens } from "../../../../utils/auth";
 
 export const Account = () => {

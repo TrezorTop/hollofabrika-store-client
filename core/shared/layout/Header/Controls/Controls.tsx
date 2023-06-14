@@ -5,7 +5,7 @@ import { Flex, Link } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../gql";
-import { globalStore } from "../../../../store/globalStore";
+import { globalStore } from "../../../../store/store";
 import { Popup } from "../../../components/Popup/Popup";
 import { Account } from "./Account/Account";
 import s from "./Controls.module.css";
