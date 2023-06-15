@@ -15,6 +15,42 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@apollo/client@npm:^3.7.0":
+  version: 3.7.15
+  resolution: "@apollo/client@npm:3.7.15"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.1.1
+    "@wry/context": ^0.7.0
+    "@wry/equality": ^0.5.0
+    "@wry/trie": ^0.4.0
+    graphql-tag: ^2.12.6
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.16.2
+    prop-types: ^15.7.2
+    response-iterator: ^0.2.6
+    symbol-observable: ^4.0.0
+    ts-invariant: ^0.10.3
+    tslib: ^2.3.0
+    zen-observable-ts: ^1.2.5
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    graphql-ws: ^5.5.5
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    subscriptions-transport-ws: ^0.9.0 || ^0.11.0
+  peerDependenciesMeta:
+    graphql-ws:
+      optional: true
+    react:
+      optional: true
+    react-dom:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: a33e56847dfb7d6176ffb3cd4d3ff2c548826ce51280a6c8f70e3d75daf9d3a287e79bf3d86ea0b16e39218c90d8a7b4f528eb340055387cf9137705970c0f59
+  languageName: node
+  linkType: hard
+
 "@apollo/client@npm:^3.7.14":
   version: 3.7.14
   resolution: "@apollo/client@npm:3.7.14"
@@ -3070,6 +3106,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/apollo-upload-client@npm:^17.0.2":
+  version: 17.0.2
+  resolution: "@types/apollo-upload-client@npm:17.0.2"
+  dependencies:
+    "@apollo/client": ^3.7.0
+    "@types/extract-files": "*"
+    graphql: 14 - 16
+  checksum: 77860397bc5e1749e6f69d70a3c6c9bd6eed4c5a6fd80cceb109c1badf03a100f4c7204c276e0cbbe170cea58a2a1a07701c3806813cb7a071009a1d1eeae80e
+  languageName: node
+  linkType: hard
+
+"@types/extract-files@npm:*":
+  version: 8.1.1
+  resolution: "@types/extract-files@npm:8.1.1"
+  checksum: cc26ced9c199b787cf833121247c084b41a5f9058da6947a3368947e5d85a34328752234ab6a04c950579ba91ae7800a0735bc10380225f131b868c25ab89899
+  languageName: node
+  linkType: hard
+
 "@types/js-yaml@npm:^4.0.0":
   version: 4.0.5
   resolution: "@types/js-yaml@npm:4.0.5"
@@ -3325,6 +3379,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@wry/trie@npm:^0.4.0":
+  version: 0.4.3
+  resolution: "@wry/trie@npm:0.4.3"
+  dependencies:
+    tslib: ^2.3.0
+  checksum: 106e021125cfafd22250a6631a0438a6a3debae7bd73f6db87fe42aa0757fe67693db0dfbe200ae1f60ba608c3e09ddb8a4e2b3527d56ed0a7e02aa0ee4c94e1
+  languageName: node
+  linkType: hard
+
 "@zag-js/element-size@npm:0.3.2":
   version: 0.3.2
   resolution: "@zag-js/element-size@npm:0.3.2"
@@ -3456,6 +3519,18 @@ __metadata:
     normalize-path: ^3.0.0
     picomatch: ^2.0.4
   checksum: 3e044fd6d1d26545f235a9fe4d7a534e2029d8e59fa7fd9f2a6eb21230f6b5380ea1eaf55136e60cbf8e613544b3b766e7a6fa2102e2a3a117505466e3025dc2
+  languageName: node
+  linkType: hard
+
+"apollo-upload-client@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "apollo-upload-client@npm:17.0.0"
+  dependencies:
+    extract-files: ^11.0.0
+  peerDependencies:
+    "@apollo/client": ^3.0.0
+    graphql: 14 - 16
+  checksum: e5aee12ae36f7d268a8bcd7f0d8c1f7cbb94b4a19f266185a5afb52f63a41c4bb9d6bc4edbdc437a953e697c5ebcac1a44cb2c8e863b96f4323df0060b976be6
   languageName: node
   linkType: hard
 
@@ -5490,7 +5565,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql@npm:^16.6.0":
+"graphql@npm:14 - 16, graphql@npm:^16.6.0":
   version: 16.6.0
   resolution: "graphql@npm:16.6.0"
   checksum: bf1d9e3c1938ce3c1a81e909bd3ead1ae4707c577f91cff1ca2eca474bfbc7873d5d7b942e1e9777ff5a8304421dba57a4b76d7a29eb19de8711cb70e3c2415e
@@ -5597,9 +5672,11 @@ __metadata:
     "@emotion/styled": ^11.11.0
     "@graphql-codegen/cli": ^4.0.0
     "@graphql-codegen/client-preset": ^4.0.0
+    "@types/apollo-upload-client": ^17.0.2
     "@types/node": 20.2.5
     "@types/react": 18.2.7
     "@types/react-dom": 18.2.4
+    apollo-upload-client: ^17.0.0
     classnames: ^2.3.2
     eslint: 8.41.0
     eslint-config-next: 13.4.4

@@ -182,6 +182,7 @@ export type Scalars = {
   UnsignedFloat: { input: any; output: any; }
   /** Integers that will have a value of 0 or more. */
   UnsignedInt: { input: any; output: any; }
+  Upload: { input: File; output: File; }
   /** A field whose value is a UTC Offset: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones */
   UtcOffset: { input: any; output: any; }
   /** Represents NULL values */
@@ -204,6 +205,7 @@ export type CategoryAttribute = {
 export type CreateProductArgs = {
   attributes: Array<ProductInputAttribute>;
   description: Scalars['String']['input'];
+  image: Scalars['Upload']['input'];
   name: Scalars['String']['input'];
   price: Scalars['Int']['input'];
 };

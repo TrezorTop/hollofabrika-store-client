@@ -7,15 +7,12 @@ import {
   Observable,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
+import { createUploadLink } from "apollo-upload-client";
 import { getUserToken, setUserTokens } from "../shared/utils/auth";
 import { USER_REFRESH_TOKEN_KEY } from "../shared/utils/consts";
 import { globalStore } from "../store/store";
 
 export const API_URL = "http://26.109.83.16:3333/graphql";
-
-const httpLink = createHttpLink({
-  uri: API_URL,
-});
 
 const refreshToken = () => {
   return client.mutate({
@@ -99,8 +96,16 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
   }
 });
 
+const uploadLink = createUploadLink({
+  uri: API_URL,
+  headers: {
+    "Apollo-Require-Preflight": "true",
+  },
+});
+
 const client = new ApolloClient({
-  link: ApolloLink.from([errorLink, authLink, httpLink]),
+  link: ApolloLink.from([errorLink, authLink, uploadLink]),
+  ssrMode: typeof window === "undefined",
   cache: new InMemoryCache(),
 });
 

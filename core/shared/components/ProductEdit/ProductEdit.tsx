@@ -14,7 +14,7 @@ import { useState } from "react";
 import Select from "react-select";
 import { graphql } from "../../../../gql";
 import {
-  Product,
+  CreateProductArgs,
   ProductAttribute,
   ProductInputAttribute,
 } from "../../../../gql/graphql";
@@ -38,25 +38,25 @@ type Attribute = { id: string } & ProductAttribute;
 
 type Props = {
   onSubmit: (
-    product: Product,
+    product: CreateProductArgs,
     attributes: ProductInputAttribute[],
-    newCategory: string
+    category: string
   ) => void;
 };
 
 export const ProductEdit = ({ onSubmit }: Props) => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
-  const [newCategory, setNewCategory] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
 
   const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
   const { data } = useQuery(Categories);
 
-  const { form, updateForm } = useForm<Product>();
+  const { form, updateForm } = useForm<CreateProductArgs>();
 
   const onCategorySelect = (option: { value: string; label: string }) => {
     if (!option) return;
 
-    updateForm({ category: option.value });
+    setCategory(option.value);
 
     const attributes = data?.categories.find(
       (category) => category.name === option.label
@@ -92,6 +92,10 @@ export const ProductEdit = ({ onSubmit }: Props) => {
             width="100%"
             src="gibbresh.png"
             fallbackSrc="https://via.placeholder.com/150"
+          />
+          <Input
+            onChange={(event) => updateForm({ image: event.target.files?.[0] })}
+            type="file"
           />
         </div>
 
@@ -196,7 +200,7 @@ export const ProductEdit = ({ onSubmit }: Props) => {
                   value: attr.value,
                   name: attr.name,
                 })),
-                newCategory
+                category
               )
             }
           >

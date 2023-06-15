@@ -13,6 +13,7 @@ const codegen: CodegenConfig = {
         scalars: {
           JSONObject: "Record<string, any>",
           Id: "string",
+          Upload: "File",
         },
       },
     },

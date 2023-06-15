@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ProductEdit } from "../../../core/shared/components/ProductEdit/ProductEdit";
 import { graphql } from "../../../gql";

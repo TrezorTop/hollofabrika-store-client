@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { ProductEdit } from "../../../../core/shared/components/ProductEdit/ProductEdit";
 import { adminStore } from "../../../../core/store/store";
 import { graphql } from "../../../../gql";
@@ -34,15 +34,17 @@ export default function Create() {
         <Heading>Product</Heading>
       </Flex>
       <ProductEdit
-        onSubmit={(product, attributes, newCategory) =>
+        onSubmit={(product, attributes, category) =>
+          // console.log(product.image)
           create({
             variables: {
-              category: product.category,
+              category: category,
               product: {
                 name: product.name,
                 price: product.price,
                 description: product.description,
                 attributes: attributes,
+                image: product.image,
               },
             },
           })
