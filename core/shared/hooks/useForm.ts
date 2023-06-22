@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
-export const useForm = <T>(defaultValues?: T) => {
-  const [form, setForm] = useState<T>(defaultValues!);
+export const useForm = <T>(defaultValues?: Partial<T>) => {
+  const [form, setForm] = useState<T>((defaultValues ?? {}) as T);
   const [error, setError] = useState<string | undefined>("");
 
-  const updateForm = (values: { [key in keyof T]?: T[key] }) => {
-    setForm({ ...form, ...values });
+  const updateForm = useCallback((values: { [key in keyof T]?: T[key] }) => {
+    setForm((prevForm) => ({ ...prevForm, ...values }));
     setError("");
-  };
+  }, []);
 
   return {
     form,

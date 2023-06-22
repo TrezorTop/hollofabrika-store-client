@@ -31,6 +31,8 @@ export const LoginForm = ({ onRegister }: Props) => {
 
   const [getUser, { loading, data: user }] = useLazyQuery(User);
 
+
+
   const [login, { data: loginData }] = useMutation(Login, {
     variables: {
       username: snap.login,

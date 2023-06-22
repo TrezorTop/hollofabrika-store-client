@@ -1,6 +1,7 @@
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { Flex, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { ProductEdit } from "../../../core/shared/components/ProductEdit/ProductEdit";
 import { graphql } from "../../../gql";
 import { AdminLayout } from "../layout";
@@ -14,9 +15,26 @@ const UpdateProduct = graphql(`
         name
         value
       }
+      cover
       description
       category
       price
+    }
+  }
+`);
+
+const ProductQuery = graphql(`
+  query Product($id: Id!) {
+    product(id: $id) {
+      id
+      description
+      price
+      attributes {
+        value
+        name
+      }
+      category
+      name
     }
   }
 `);
@@ -25,6 +43,17 @@ export default function Product() {
   const router = useRouter();
 
   const [update, { data }] = useMutation(UpdateProduct);
+
+  const [getProduct, { loading, data: product }] = useLazyQuery(ProductQuery);
+
+  useEffect(() => {
+    if (router.query.id)
+      getProduct({
+        variables: {
+          id: router.query.id as string,
+        },
+      });
+  }, [getProduct, router.query.id]);
 
   return (
     <Flex flexDirection="column" gap="32px">
@@ -35,16 +64,18 @@ export default function Product() {
         onSubmit={(product, attributes, newCategory) =>
           update({
             variables: {
-              id: "",
+              id: product.id,
               product: {
                 name: product.name,
                 price: product.price,
                 description: product.description,
                 attributes: attributes,
+                cover: product.cover,
               },
             },
           })
         }
+        product={product?.product}
       />
     </Flex>
   );

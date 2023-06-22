@@ -104,6 +104,7 @@ const uploadLink = createUploadLink({
 });
 
 const client = new ApolloClient({
+  // @ts-ignore
   link: ApolloLink.from([errorLink, authLink, uploadLink]),
   ssrMode: typeof window === "undefined",
   cache: new InMemoryCache(),

@@ -35,7 +35,6 @@ export default function Create() {
       </Flex>
       <ProductEdit
         onSubmit={(product, attributes, category) =>
-          // console.log(product.image)
           create({
             variables: {
               category: category,
@@ -44,7 +43,7 @@ export default function Create() {
                 price: product.price,
                 description: product.description,
                 attributes: attributes,
-                image: product.image,
+                cover: product.cover,
               },
             },
           })

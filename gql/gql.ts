@@ -19,7 +19,8 @@ const documents = {
     "\n  mutation Login($username: String!, $password: String!) {\n    login(username: $username, password: $password) {\n      refresh\n      access\n    }\n  }\n": types.LoginDocument,
     "\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      confirmToken\n    }\n  }\n": types.RegisterDocument,
     "\n  mutation Confirm($confirmToken: String!, $emailToken: Int!) {\n    verifyEmail(confirmToken: $confirmToken, emailToken: $emailToken) {\n      code\n    }\n  }\n": types.ConfirmDocument,
-    "\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      description\n      category\n      price\n    }\n  }\n": types.UpdateProductDocument,
+    "\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      cover\n      description\n      category\n      price\n    }\n  }\n": types.UpdateProductDocument,
+    "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n    }\n  }\n": types.ProductDocument,
     "\n  mutation CreateProduct($category: String!, $product: CreateProductArgs!) {\n    createProduct(category: $category, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      description\n      category\n      price\n    }\n  }\n": types.CreateProductDocument,
     "\n  query Products($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        page\n        pageSize\n      }\n      items {\n        id\n        name\n        price\n        attributes {\n          value\n          name\n        }\n      }\n    }\n  }\n": types.ProductsDocument,
 };
@@ -65,7 +66,11 @@ export function graphql(source: "\n  mutation Confirm($confirmToken: String!, $e
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      description\n      category\n      price\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      description\n      category\n      price\n    }\n  }\n"];
+export function graphql(source: "\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      cover\n      description\n      category\n      price\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      cover\n      description\n      category\n      price\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n    }\n  }\n"): (typeof documents)["\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -7,19 +7,23 @@ import {
   Heading,
   Image,
   Input,
+  InputGroup,
+  InputLeftAddon,
   Textarea,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Select from "react-select";
 import { graphql } from "../../../../gql";
 import {
   CreateProductArgs,
+  Product,
   ProductAttribute,
   ProductInputAttribute,
 } from "../../../../gql/graphql";
 import s from "../../../../pages/admin/products/product.module.scss";
 import { useForm } from "../../hooks/useForm";
+import { formatBytes } from "../../utils/bytes";
 import { randomId } from "../../utils/random";
 
 const Categories = graphql(`
@@ -36,22 +40,39 @@ const Categories = graphql(`
 
 type Attribute = { id: string } & ProductAttribute;
 
+type ProductForm = { id: string } & CreateProductArgs;
+
 type Props = {
   onSubmit: (
-    product: CreateProductArgs,
+    product: ProductForm,
     attributes: ProductInputAttribute[],
     category: string
   ) => void;
+  product?: Product;
 };
 
-export const ProductEdit = ({ onSubmit }: Props) => {
+export const ProductEdit = ({ onSubmit, product }: Props) => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [category, setCategory] = useState<string>("");
 
-  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+  const [isLargerThan970] = useMediaQuery("(min-width: 970px)");
   const { data } = useQuery(Categories);
+  const { form, updateForm } = useForm<ProductForm>();
 
-  const { form, updateForm } = useForm<CreateProductArgs>();
+  useEffect(() => {
+    if (product?.attributes)
+      setAttributes(
+        product.attributes.map((attr) => ({
+          id: randomId(),
+          name: attr.name!,
+          value: attr.value!,
+        }))
+      );
+
+    if (product?.category) setCategory(product.category);
+
+    if (product?.id) updateForm({ id: product.id });
+  }, [setAttributes, updateForm, product]);
 
   const onCategorySelect = (option: { value: string; label: string }) => {
     if (!option) return;
@@ -64,7 +85,7 @@ export const ProductEdit = ({ onSubmit }: Props) => {
 
     if (attributes)
       setAttributes(
-        attributes.map((attr, index) => ({
+        attributes.map((attr) => ({
           id: randomId(),
           name: attr?.name!,
           value: attr?.value!,
@@ -84,28 +105,52 @@ export const ProductEdit = ({ onSubmit }: Props) => {
     setAttributes(newAttributes);
   };
 
+  const inputFileRef = useRef<HTMLInputElement>(null)
+
   return (
     <>
-      <Flex flexDirection={isLargerThan768 ? "row" : "column"} gap="32px">
+      <Grid
+        gridTemplateColumns={isLargerThan970 ? "285px 1fr" : "1fr"}
+        gap="32px"
+      >
         <div className={s.image}>
           <Image
+            alt="Product photo"
             width="100%"
-            src="gibbresh.png"
+            src={form.cover?.webkitRelativePath}
             fallbackSrc="https://via.placeholder.com/150"
           />
+          {form.cover?.webkitRelativePath}
+          <InputGroup>
+            <InputLeftAddon>{formatBytes(form.cover?.size ?? 0)}</InputLeftAddon>
+            <Input
+              value={form.cover?.name}
+              onClick={() => inputFileRef.current?.click()}
+              cursor="pointer"
+              placeholder="Загрузить фото"
+            />
+          </InputGroup>
           <Input
-            onChange={(event) => updateForm({ image: event.target.files?.[0] })}
+            display="none"
+            ref={inputFileRef}
+            onChange={(event) => {
+              if (event.target.files?.[0]) updateForm({ cover: event.target.files?.[0] })
+            }}
             type="file"
           />
         </div>
 
         <Flex flexGrow="1" flexDirection="column" gap="32px">
           <Grid
-            gridTemplateColumns="1fr auto 1fr"
+            gridTemplateColumns={isLargerThan970 ? "1fr auto 1fr" : "1fr"}
             alignItems="center"
-            gap="32px"
+            gap="16px"
           >
             <Select
+              placeholder="Category"
+              value={
+                category ? { label: category, value: category } : undefined
+              }
               onChange={(value) => onCategorySelect(value!)}
               options={data?.categories.map((category) => ({
                 value: category.name,
@@ -117,10 +162,12 @@ export const ProductEdit = ({ onSubmit }: Props) => {
             <Input placeholder="New category" />
           </Grid>
           <Input
+            defaultValue={product?.name}
             onChange={(event) => updateForm({ name: event.target.value })}
             placeholder="Name"
           />
           <Input
+            defaultValue={product?.price}
             onChange={(event) =>
               updateForm({ price: parseFloat(event.target.value) })
             }
@@ -128,9 +175,21 @@ export const ProductEdit = ({ onSubmit }: Props) => {
           />
           <Grid
             gap="32px"
-            flexDirection={isLargerThan768 ? "row" : "column"}
-            gridTemplateColumns={isLargerThan768 ? "1fr 1fr" : "1fr"}
+            flexDirection={isLargerThan970 ? "row" : "column"}
+            gridTemplateColumns={isLargerThan970 ? "1fr 1fr" : "1fr"}
           >
+            <Grid gridTemplateRows="auto 1fr" gap="32px" alignItems="stretch">
+              <Heading>Description</Heading>
+              <Textarea
+                defaultValue={product?.description}
+                onChange={(event) =>
+                  updateForm({ description: event.target.value })
+                }
+                placeholder="Description"
+                width="100%"
+                rows={10}
+              />
+            </Grid>
             <Flex flexGrow="1" flexDirection="column" gap="32px">
               <Heading>Attributes</Heading>
               {attributes?.map((attribute) => (
@@ -148,6 +207,7 @@ export const ProductEdit = ({ onSubmit }: Props) => {
                   />
                   :
                   <Input
+                    defaultValue={attribute.value}
                     onChange={(event) =>
                       onAttributeKeyChange(
                         event.target.value,
@@ -179,18 +239,6 @@ export const ProductEdit = ({ onSubmit }: Props) => {
                 Add
               </Button>
             </Flex>
-            <Grid gridTemplateRows="auto 1fr" gap="32px">
-              <Heading>Description</Heading>
-              <Textarea
-                style={{ width: "100%" }}
-                onChange={(event) =>
-                  updateForm({ description: event.target.value })
-                }
-                placeholder="Description"
-                width={isLargerThan768 ? "50%" : "100%"}
-                rows={-1}
-              />
-            </Grid>
           </Grid>
           <Button
             onClick={() =>
@@ -207,7 +255,7 @@ export const ProductEdit = ({ onSubmit }: Props) => {
             Save
           </Button>
         </Flex>
-      </Flex>
+      </Grid>
     </>
   );
 };

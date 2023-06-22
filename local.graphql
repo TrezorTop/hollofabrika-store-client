@@ -48,6 +48,7 @@ type PageData {
 type Product {
     attributes: [ProductAttribute!]!
     category: String!
+    cover: String
     description: String!
     id: Id!
     name: String!
@@ -350,8 +351,8 @@ scalar Void
 
 input CreateProductArgs {
     attributes: [ProductInputAttribute!]!
+    cover: Upload
     description: String!
-    image: Upload!
     name: String!
     price: Int!
 }
@@ -380,6 +381,7 @@ input ProductsQueryInput {
 
 input UpdateProductArgs {
     attributes: [ProductInputAttribute!]
+    cover: Upload
     description: String
     name: String
     price: Int
