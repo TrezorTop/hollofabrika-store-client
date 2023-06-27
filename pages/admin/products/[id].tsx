@@ -15,7 +15,7 @@ const UpdateProduct = graphql(`
         name
         value
       }
-      cover
+      covers
       description
       category
       price
@@ -70,7 +70,7 @@ export default function Product() {
                 price: product.price,
                 description: product.description,
                 attributes: attributes,
-                cover: product.cover,
+                covers: product.covers,
               },
             },
           })

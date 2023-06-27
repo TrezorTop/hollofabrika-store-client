@@ -6,6 +6,7 @@ import client from "../core/config/apollo-client";
 import ErrorBoundary from "../core/shared/ErrorBoundary";
 import Layout from "../core/shared/layout/Layout";
 import "../styles/globals.scss";
+import 'swiper/css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

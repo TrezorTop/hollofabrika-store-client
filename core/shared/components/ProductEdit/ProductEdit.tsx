@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { CloseIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
   Grid,
@@ -14,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import Select from "react-select";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { graphql } from "../../../../gql";
 import {
   CreateProductArgs,
@@ -21,10 +23,10 @@ import {
   ProductAttribute,
   ProductInputAttribute,
 } from "../../../../gql/graphql";
-import s from "../../../../pages/admin/products/product.module.scss";
 import { useForm } from "../../hooks/useForm";
 import { formatBytes } from "../../utils/bytes";
 import { randomId } from "../../utils/random";
+import { UploadedImage } from "./UploadedImage/UploadedImage";
 
 const Categories = graphql(`
   query ProductCategories {
@@ -105,7 +107,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
     setAttributes(newAttributes);
   };
 
-  const inputFileRef = useRef<HTMLInputElement>(null)
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -113,32 +115,73 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
         gridTemplateColumns={isLargerThan970 ? "285px 1fr" : "1fr"}
         gap="32px"
       >
-        <div className={s.image}>
-          <Image
-            alt="Product photo"
-            width="100%"
-            src={form.cover?.webkitRelativePath}
-            fallbackSrc="https://via.placeholder.com/150"
-          />
-          {form.cover?.webkitRelativePath}
+        <Box gap="32px">
+          <Swiper>
+            {(product?.covers?.length ? product?.covers : ["1"]).map(
+              (cover) => (
+                <SwiperSlide key={cover}>
+                  <Image
+                    alt="Product photo"
+                    width="100%"
+                    src={cover}
+                    fallbackSrc="https://via.placeholder.com/150"
+                  />
+                </SwiperSlide>
+              )
+            )}
+          </Swiper>
+
           <InputGroup>
-            <InputLeftAddon>{formatBytes(form.cover?.size ?? 0)}</InputLeftAddon>
+            <InputLeftAddon>
+              {formatBytes(
+                form.covers?.reduce((acc, file) => acc + file.size, 0) ?? 0
+              )}
+            </InputLeftAddon>
             <Input
-              value={form.cover?.name}
+              value={
+                (form.covers?.length ?? 0) > 1
+                  ? `${form.covers?.length} файлов`
+                  : form.covers?.[0]?.name ?? ""
+              }
               onClick={() => inputFileRef.current?.click()}
               cursor="pointer"
               placeholder="Загрузить фото"
             />
           </InputGroup>
+
           <Input
             display="none"
             ref={inputFileRef}
             onChange={(event) => {
-              if (event.target.files?.[0]) updateForm({ cover: event.target.files?.[0] })
+              if (event.target.files?.length)
+                updateForm({ covers: Array.from(event.target.files) });
             }}
             type="file"
+            multiple
           />
-        </div>
+
+          <Box mt="32px">
+            {form.covers?.map((cover) => (
+              <UploadedImage
+                onDelete={() => {
+                  if (inputFileRef.current?.files?.length) {
+                    const dataTransfer = new DataTransfer();
+
+                    inputFileRef.current.files = dataTransfer.files;
+                  }
+
+                  updateForm({
+                    covers: form.covers?.filter(
+                      (oldCover) => oldCover.name !== cover.name
+                    ),
+                  });
+                }}
+                key={cover.name}
+                src={URL.createObjectURL(cover)}
+              />
+            ))}
+          </Box>
+        </Box>
 
         <Flex flexGrow="1" flexDirection="column" gap="32px">
           <Grid
@@ -187,7 +230,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                 }
                 placeholder="Description"
                 width="100%"
-                rows={10}
+                rows={15}
               />
             </Grid>
             <Flex flexGrow="1" flexDirection="column" gap="32px">

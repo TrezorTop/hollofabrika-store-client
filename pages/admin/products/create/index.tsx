@@ -43,7 +43,7 @@ export default function Create() {
                 price: product.price,
                 description: product.description,
                 attributes: attributes,
-                cover: product.cover,
+                covers: product.covers,
               },
             },
           })
