@@ -3,4 +3,4 @@ documents: "**/*.graphql"
 extensions:
   endpoints:
     Hollofabrika:
-      url: http://26.109.83.16:3333/graphql
+      url: http://194.169.160.186/api/graphql
