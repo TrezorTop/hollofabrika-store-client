@@ -3,8 +3,8 @@ import { Flex, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { ProductEdit } from "../../../core/shared/components/ProductEdit/ProductEdit";
+import { AdminLayout } from "../../../core/shared/layouts/layout";
 import { graphql } from "../../../gql";
-import { AdminLayout } from "../layout";
 
 const UpdateProduct = graphql(`
   mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {
@@ -35,6 +35,7 @@ const ProductQuery = graphql(`
       }
       category
       name
+      covers
     }
   }
 `);

@@ -1,4 +1,4 @@
-import { AdminLayout } from "./layout";
+import { AdminLayout } from "../../core/shared/layouts/layout";
 
 export default function Admin() {
   return <>TEST</>;

@@ -27,6 +27,7 @@ type JwtToken {
 }
 
 type Mutation {
+    changeCategory(category: String!, id: Id!): Product!
     createCategory(name: String!): Category!
     createProduct(category: String!, product: CreateProductArgs!): Product!
     deleteCategory(name: String!): Category!
@@ -382,7 +383,7 @@ input ProductsQueryInput {
 input UpdateProductArgs {
     attributes: [ProductInputAttribute!]
     covers: [Upload!]
-    coversToDelete: [Int!]
+    coversNamesToDelete: [String!]
     description: String
     name: String
     price: Int

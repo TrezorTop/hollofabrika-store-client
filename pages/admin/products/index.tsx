@@ -12,10 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useSnapshot } from "valtio";
+
+import { AdminLayout } from "../../../core/shared/layouts/layout";
 import { adminStore } from "../../../core/store/store";
 import { graphql } from "../../../gql";
-
-import { AdminLayout } from "../layout";
 
 const baseRoute = "/admin/products/";
 

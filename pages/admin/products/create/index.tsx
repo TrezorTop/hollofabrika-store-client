@@ -1,9 +1,9 @@
 import { useMutation } from "@apollo/client";
 import { Flex, Heading } from "@chakra-ui/react";
 import { ProductEdit } from "../../../../core/shared/components/ProductEdit/ProductEdit";
+import { AdminLayout } from "../../../../core/shared/layouts/layout";
 import { adminStore } from "../../../../core/store/store";
 import { graphql } from "../../../../gql";
-import { AdminLayout } from "../../layout";
 
 const CreateProduct = graphql(`
   mutation CreateProduct($category: String!, $product: CreateProductArgs!) {
@@ -21,8 +21,18 @@ const CreateProduct = graphql(`
   }
 `);
 
+const CreateCategory = graphql(`
+  mutation CreateCategory($name: String!) {
+    createCategory(name: $name) {
+      name
+    }
+  }
+`);
+
 export default function Create() {
-  const [create, { data }] = useMutation(CreateProduct, {
+  const [createCategory, { data: categoryData }] = useMutation(CreateCategory);
+
+  const [createProduct] = useMutation(CreateProduct, {
     onCompleted: (data) => {
       adminStore.products?.items.push(data.createProduct);
     },
@@ -34,10 +44,13 @@ export default function Create() {
         <Heading>Product</Heading>
       </Flex>
       <ProductEdit
-        onSubmit={(product, attributes, category) =>
-          create({
+        onSubmit={async (product, attributes, category) => {
+          if (!category)
+            await createCategory({ variables: { name: product.newCategory } });
+
+          createProduct({
             variables: {
-              category: category,
+              category: categoryData?.createCategory.name || category,
               product: {
                 name: product.name,
                 price: product.price,
@@ -46,8 +59,8 @@ export default function Create() {
                 covers: product.covers,
               },
             },
-          })
-        }
+          });
+        }}
       />
     </Flex>
   );

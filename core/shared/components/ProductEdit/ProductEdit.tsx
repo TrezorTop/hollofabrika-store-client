@@ -42,7 +42,7 @@ const Categories = graphql(`
 
 type Attribute = { id: string } & ProductAttribute;
 
-type ProductForm = { id: string } & CreateProductArgs;
+type ProductForm = { id: string, newCategory: string } & CreateProductArgs;
 
 type Props = {
   onSubmit: (
@@ -81,18 +81,17 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
 
     setCategory(option.value);
 
-    const attributes = data?.categories.find(
-      (category) => category.name === option.label
-    )?.attributes;
+    const attributes =
+      data?.categories.find((category) => category.name === option.label)
+        ?.attributes ?? [];
 
-    if (attributes)
-      setAttributes(
-        attributes.map((attr) => ({
-          id: randomId(),
-          name: attr?.name!,
-          value: attr?.value!,
-        }))
-      );
+    setAttributes(
+      attributes.map((attr) => ({
+        id: randomId(),
+        name: attr?.name!,
+        value: attr?.value!,
+      }))
+    );
   };
 
   const onAttributeKeyChange = (
@@ -138,6 +137,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
               )}
             </InputLeftAddon>
             <Input
+              readOnly
               value={
                 (form.covers?.length ?? 0) > 1
                   ? `${form.covers?.length} файлов`
@@ -160,7 +160,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
             multiple
           />
 
-          <Box mt="32px">
+          <Flex flexDirection="column" mt="32px" gap="8px">
             {form.covers?.map((cover) => (
               <UploadedImage
                 onDelete={() => {
@@ -180,30 +180,31 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                 src={URL.createObjectURL(cover)}
               />
             ))}
-          </Box>
+          </Flex>
         </Box>
 
         <Flex flexGrow="1" flexDirection="column" gap="32px">
-          <Grid
-            gridTemplateColumns={isLargerThan970 ? "1fr auto 1fr" : "1fr"}
-            alignItems="center"
-            gap="16px"
-          >
-            <Select
-              placeholder="Category"
-              value={
-                category ? { label: category, value: category } : undefined
-              }
-              onChange={(value) => onCategorySelect(value!)}
-              options={data?.categories.map((category) => ({
+          <Select
+            placeholder="Category"
+            value={
+              category
+                ? { label: category, value: category }
+                : { value: "", label: "Новая категория" }
+            }
+            onChange={(value) => onCategorySelect(value!)}
+            options={data?.categories
+              .map((category) => ({
                 value: category.name,
                 label: category.name,
-              }))}
-              isClearable
+              }))
+              .concat({ value: "", label: "Новая категория" })}
+          />
+          {!category && (
+            <Input
+              onChange={(event) => updateForm({ newCategory: event.target.value })}
+              placeholder="Новая категория"
             />
-            <span>or create</span>
-            <Input placeholder="New category" />
-          </Grid>
+          )}
           <Input
             defaultValue={product?.name}
             onChange={(event) => updateForm({ name: event.target.value })}
