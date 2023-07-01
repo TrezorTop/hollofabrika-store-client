@@ -11,7 +11,7 @@ import { getUserToken, setUserTokens } from "../shared/utils/auth";
 import { USER_REFRESH_TOKEN_KEY } from "../shared/utils/consts";
 import { globalStore } from "../store/store";
 
-export const API_URL = "http://194.169.160.186/api/graphql";
+export const API_URL = "http://194.169.160.186/api";
 
 const refreshToken = () => {
   return client.mutate({
