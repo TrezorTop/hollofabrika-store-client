@@ -42,13 +42,13 @@ const Categories = graphql(`
 
 type Attribute = { id: string } & ProductAttribute;
 
-type ProductForm = { id: string, newCategory: string } & CreateProductArgs;
+type ProductForm = { id: string; newCategory: string } & CreateProductArgs;
 
 type Props = {
   onSubmit: (
     product: ProductForm,
     attributes: ProductInputAttribute[],
-    category: string
+    category: string | undefined,
   ) => void;
   product?: Product;
 };
@@ -201,7 +201,9 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
           />
           {!category && (
             <Input
-              onChange={(event) => updateForm({ newCategory: event.target.value })}
+              onChange={(event) =>
+                updateForm({ newCategory: event.target.value })
+              }
               placeholder="Новая категория"
             />
           )}
@@ -292,7 +294,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                   value: attr.value,
                   name: attr.name,
                 })),
-                category
+                product?.category !== category ? category : undefined
               )
             }
           >

@@ -20,10 +20,14 @@ const documents = {
     "\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      confirmToken\n    }\n  }\n": types.RegisterDocument,
     "\n  mutation Confirm($confirmToken: String!, $emailToken: Int!) {\n    verifyEmail(confirmToken: $confirmToken, emailToken: $emailToken) {\n      code\n    }\n  }\n": types.ConfirmDocument,
     "\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      covers\n      description\n      category\n      price\n    }\n  }\n": types.UpdateProductDocument,
-    "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n    }\n  }\n": types.ProductDocument,
-    "\n  mutation CreateProduct($category: String!, $product: CreateProductArgs!) {\n    createProduct(category: $category, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      description\n      category\n      price\n    }\n  }\n": types.CreateProductDocument,
     "\n  mutation CreateCategory($name: String!) {\n    createCategory(name: $name) {\n      name\n    }\n  }\n": types.CreateCategoryDocument,
+    "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n    }\n  }\n": types.ProductDocument,
+    "\n  mutation ChangeCategory($id: Id!, $category: String!) {\n    changeCategory(id: $id, category: $category) {\n      name\n      id\n    }\n  }\n": types.ChangeCategoryDocument,
+    "\n  query Categories {\n    categories {\n      name\n    }\n  }\n": types.CategoriesDocument,
+    "\n  mutation CreateProduct($category: String!, $product: CreateProductArgs!) {\n    createProduct(category: $category, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      description\n      category\n      price\n    }\n  }\n": types.CreateProductDocument,
     "\n  query Products($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        page\n        pageSize\n      }\n      items {\n        id\n        name\n        price\n        attributes {\n          value\n          name\n        }\n      }\n    }\n  }\n": types.ProductsDocument,
+    "\n  query MainProducts($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        pageSize\n        page\n      }\n      items {\n        name\n        category\n        price\n        description\n        id\n        covers\n      }\n    }\n  }\n": types.MainProductsDocument,
+    "\n  query MainCategories {\n    categories {\n      name\n      attributes {\n        name\n        value\n        count\n      }\n    }\n  }\n": types.MainCategoriesDocument,
 };
 
 /**
@@ -71,7 +75,19 @@ export function graphql(source: "\n  mutation UpdateProduct($id: Id!, $product: 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation CreateCategory($name: String!) {\n    createCategory(name: $name) {\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateCategory($name: String!) {\n    createCategory(name: $name) {\n      name\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n    }\n  }\n"): (typeof documents)["\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation ChangeCategory($id: Id!, $category: String!) {\n    changeCategory(id: $id, category: $category) {\n      name\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation ChangeCategory($id: Id!, $category: String!) {\n    changeCategory(id: $id, category: $category) {\n      name\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Categories {\n    categories {\n      name\n    }\n  }\n"): (typeof documents)["\n  query Categories {\n    categories {\n      name\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -79,11 +95,15 @@ export function graphql(source: "\n  mutation CreateProduct($category: String!, 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation CreateCategory($name: String!) {\n    createCategory(name: $name) {\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateCategory($name: String!) {\n    createCategory(name: $name) {\n      name\n    }\n  }\n"];
+export function graphql(source: "\n  query Products($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        page\n        pageSize\n      }\n      items {\n        id\n        name\n        price\n        attributes {\n          value\n          name\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query Products($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        page\n        pageSize\n      }\n      items {\n        id\n        name\n        price\n        attributes {\n          value\n          name\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Products($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        page\n        pageSize\n      }\n      items {\n        id\n        name\n        price\n        attributes {\n          value\n          name\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query Products($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        page\n        pageSize\n      }\n      items {\n        id\n        name\n        price\n        attributes {\n          value\n          name\n        }\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query MainProducts($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        pageSize\n        page\n      }\n      items {\n        name\n        category\n        price\n        description\n        id\n        covers\n      }\n    }\n  }\n"): (typeof documents)["\n  query MainProducts($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        pageSize\n        page\n      }\n      items {\n        name\n        category\n        price\n        description\n        id\n        covers\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query MainCategories {\n    categories {\n      name\n      attributes {\n        name\n        value\n        count\n      }\n    }\n  }\n"): (typeof documents)["\n  query MainCategories {\n    categories {\n      name\n      attributes {\n        name\n        value\n        count\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

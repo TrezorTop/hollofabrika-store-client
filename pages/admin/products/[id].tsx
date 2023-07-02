@@ -23,6 +23,14 @@ const UpdateProduct = graphql(`
   }
 `);
 
+const CreateCategory = graphql(`
+  mutation CreateCategory($name: String!) {
+    createCategory(name: $name) {
+      name
+    }
+  }
+`);
+
 const ProductQuery = graphql(`
   query Product($id: Id!) {
     product(id: $id) {
@@ -40,21 +48,46 @@ const ProductQuery = graphql(`
   }
 `);
 
+const ChangeCategory = graphql(`
+  mutation ChangeCategory($id: Id!, $category: String!) {
+    changeCategory(id: $id, category: $category) {
+      name
+      id
+    }
+  }
+`);
+
+const Categories = graphql(`
+  query Categories {
+    categories {
+      name
+    }
+  }
+`);
+
 export default function Product() {
   const router = useRouter();
 
+  const [getCategories, { data: categories }] = useLazyQuery(Categories);
+
   const [update, { data }] = useMutation(UpdateProduct);
+
+  const [createCategory] = useMutation(CreateCategory);
 
   const [getProduct, { loading, data: product }] = useLazyQuery(ProductQuery);
 
+  const [changeCategory] = useMutation(ChangeCategory);
+
   useEffect(() => {
-    if (router.query.id)
+    if (router.query.id) {
       getProduct({
         variables: {
           id: router.query.id as string,
         },
       });
-  }, [getProduct, router.query.id]);
+      getCategories();
+    }
+  }, [getProduct, getCategories, router.query.id]);
 
   return (
     <Flex flexDirection="column" gap="32px">
@@ -62,10 +95,34 @@ export default function Product() {
         <Heading>Product</Heading>
       </Flex>
       <ProductEdit
-        onSubmit={(product, attributes, newCategory) =>
+        onSubmit={async (product, attributes, newCategory) => {
+          let newProductId = product.id;
+
+          if (newCategory) {
+            const newCategoryExist = !!categories?.categories.find(
+              (category) => category.name === newCategory
+            );
+
+            const category = newCategoryExist
+              ? newCategory
+              : await createCategory({
+                  variables: {
+                    name: newCategory,
+                  },
+                }).then((data) => data.data?.createCategory.name);
+
+            category &&
+              (await changeCategory({
+                variables: { id: product.id, category: category },
+                onCompleted: (data) => {
+                  newProductId = data.changeCategory.id;
+                },
+              }));
+          }
+
           update({
             variables: {
-              id: product.id,
+              id: newProductId,
               product: {
                 name: product.name,
                 price: product.price,
@@ -73,9 +130,9 @@ export default function Product() {
                 attributes: attributes,
                 covers: product.covers,
               },
-            },
-          })
-        }
+            }
+          });
+        }}
         product={product?.product}
       />
     </Flex>

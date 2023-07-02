@@ -30,7 +30,7 @@ const CreateCategory = graphql(`
 `);
 
 export default function Create() {
-  const [createCategory, { data: categoryData }] = useMutation(CreateCategory);
+  const [createCategory] = useMutation(CreateCategory);
 
   const [createProduct] = useMutation(CreateProduct, {
     onCompleted: (data) => {
@@ -45,12 +45,15 @@ export default function Create() {
       </Flex>
       <ProductEdit
         onSubmit={async (product, attributes, category) => {
-          if (!category)
-            await createCategory({ variables: { name: product.newCategory } });
+          const productCategory =
+            category ??
+            (await createCategory({
+              variables: { name: product.newCategory },
+            }).then((data) => data.data?.createCategory.name));
 
           createProduct({
             variables: {
-              category: categoryData?.createCategory.name || category,
+              category: productCategory!,
               product: {
                 name: product.name,
                 price: product.price,
