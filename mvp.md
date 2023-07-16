@@ -2,7 +2,6 @@
     - Create
     - Update
     - Delete
-      - 
     - Read
     - Covers
     - Attributes
@@ -17,10 +16,8 @@
       - Info
       - Products
       - Payment
-      - Statistics
 3. Main Store
     - Products
       - Product Info
       - Cart
     - Payment
-    - Product Receiving

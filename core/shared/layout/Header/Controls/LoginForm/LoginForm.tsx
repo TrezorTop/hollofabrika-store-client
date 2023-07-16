@@ -61,9 +61,9 @@ export const LoginForm = ({ onRegister }: Props) => {
       />
 
       <Button onClick={() => login()}>Login</Button>
-      <Button variant="outline" onClick={onRegister}>
-        Register
-      </Button>
+      {/*<Button variant="outline" onClick={onRegister}>*/}
+      {/*  Register*/}
+      {/*</Button>*/}
       <Button variant="link">Forgot password</Button>
     </>
   );

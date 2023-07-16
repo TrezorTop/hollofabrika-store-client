@@ -67,10 +67,25 @@ type ProductsQueryResult {
 }
 
 type Query {
-    categories: [Category!]!
+    categories: [QueryCategory!]!
     currentUser: User!
     product(id: Id!): Product!
     products(input: ProductsQueryInput): ProductsQueryResult!
+}
+
+type QueryAttribute {
+    count: Int!
+    value: String!
+}
+
+type QueryCategory {
+    attributes: [QueryCategoryAttribute]!
+    name: String!
+}
+
+type QueryCategoryAttribute {
+    name: String!
+    values: [QueryAttribute!]
 }
 
 type RegisterResponse {

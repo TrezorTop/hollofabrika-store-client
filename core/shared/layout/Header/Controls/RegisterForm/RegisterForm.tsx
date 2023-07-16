@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
 import { authStore } from "../../../../../store/store";
+import { useForm } from "../../../../hooks/useForm";
 
 const Register = graphql(`
   mutation Register($username: String!, $email: String!, $password: String!) {
@@ -56,6 +57,14 @@ export const RegisterForm = ({ onSuccess }: Props) => {
     },
   });
 
+  const { form, updateForm } = useForm<{
+    email: string;
+    login: string;
+    password: string;
+    repeatedPassword: string;
+    code: string;
+  }>();
+
   useEffect(() => {
     if (registerData?.register?.confirmToken) {
       authStore.confirmToken = registerData?.register?.confirmToken;
@@ -65,25 +74,22 @@ export const RegisterForm = ({ onSuccess }: Props) => {
 
   useEffect(() => {
     if (confirmData?.verifyEmail?.code == "Oke") onSuccess();
-  }, [confirmData]);
+  }, [confirmData, onSuccess]);
 
   return (
     <>
       <Input
-        defaultValue={snap.email}
-        onChange={(event) => (authStore.email = event.target.value)}
+        onChange={(event) => updateForm({ email: event.target.value })}
         placeholder="Email"
         disabled={step === Step.Confirm}
       />
       <Input
-        defaultValue={snap.login}
-        onChange={(event) => (authStore.login = event.target.value)}
+        onChange={(event) => updateForm({ login: event.target.value })}
         placeholder="Login"
         disabled={step === Step.Confirm}
       />
       <Input
-        defaultValue={snap.password}
-        onChange={(event) => (authStore.password = event.target.value)}
+        onChange={(event) => updateForm({ password: event.target.value })}
         placeholder="Password"
         disabled={step === Step.Confirm}
       />
@@ -91,7 +97,7 @@ export const RegisterForm = ({ onSuccess }: Props) => {
       {step === Step.Confirm && (
         <Input
           placeholder="Code"
-          onChange={(event) => (authStore.code = event.target.value)}
+          onChange={(event) => updateForm({ code: event.target.value })}
         />
       )}
 

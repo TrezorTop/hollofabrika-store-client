@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-export const useForm = <T>(defaultValues?: Partial<T>) => {
+export const useForm = <T>(defaultValues?: T) => {
   const [form, setForm] = useState<T>((defaultValues ?? {}) as T);
   const [error, setError] = useState<string | undefined>("");
 

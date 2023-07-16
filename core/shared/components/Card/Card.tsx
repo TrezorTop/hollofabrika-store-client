@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import classNames from "classnames";
 import { FC, ReactNode, useState } from "react";
 import s from "./Card.module.scss";
 
@@ -18,21 +19,26 @@ type Props = {
   title?: string;
   text?: string;
   subText?: string;
-  buttons?: ReactNode;
+  cover?: string;
+
+  onClick?: () => void;
   className?: string;
+  buttons?: ReactNode;
 };
 
 export const Card: FC<Props> = ({
   title,
   text,
   subText,
+  cover,
   buttons,
   className,
+  onClick,
 }) => {
   const [loaded, setLoaded] = useState<boolean>(true);
 
   return (
-    <ChakraCard className={className}>
+    <ChakraCard onClick={onClick} className={classNames(s.card, className)}>
       <CardBody>
         <div className={s.imageContainer}>
           <Fade in={!loaded}>
@@ -46,9 +52,9 @@ export const Card: FC<Props> = ({
           <Fade in={loaded}>
             <Image
               onLoad={() => setLoaded(true)}
-              src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-              alt="Green double couch with wooden legs"
+              src={cover}
               borderRadius="lg"
+              maxHeight="30%"
             />
           </Fade>
         </div>
@@ -65,7 +71,7 @@ export const Card: FC<Props> = ({
       {buttons && (
         <>
           <Divider />
-          <CardFooter>
+          <CardFooter justifyContent="end">
             <ButtonGroup spacing="2">{buttons}</ButtonGroup>
           </CardFooter>
         </>

@@ -92,7 +92,7 @@ export default function Product() {
   return (
     <Flex flexDirection="column" gap="32px">
       <Flex alignItems="center" justifyContent="space-between">
-        <Heading>Product</Heading>
+        <Heading>{product?.product.name ?? 'Товар'}</Heading>
       </Flex>
       <ProductEdit
         onSubmit={async (product, attributes, newCategory) => {
@@ -130,7 +130,7 @@ export default function Product() {
                 attributes: attributes,
                 covers: product.covers,
               },
-            }
+            },
           });
         }}
         product={product?.product}

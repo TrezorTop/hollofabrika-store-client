@@ -1,8 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { Flex } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
 import Select from "react-select";
 import { Card } from "../core/shared/components/Card/Card";
+import { useForm } from "../core/shared/hooks/useForm";
 import { graphql } from "../gql";
+import { FilterLogic, ProductInputAttribute } from "../gql/graphql";
 import s from "../styles/Home.module.scss";
 
 const Products = graphql(`
@@ -31,33 +35,114 @@ const Categories = graphql(`
       name
       attributes {
         name
-        value
-        count
+        values {
+          value
+          count
+        }
       }
     }
   }
 `);
 
+type TForm = {
+  categories: string[];
+  attributes: {
+    [key: string]: string[];
+  };
+};
+
 const Home = () => {
-  const { data: productsData } = useQuery(Products);
+  const router = useRouter();
+
+  const { updateForm, form } = useForm<TForm>({
+    attributes: {},
+    categories: [],
+  });
+
+  const { data: productsData, refetch } = useQuery(Products);
   const { data: categoriesData } = useQuery(Categories);
 
+  const attributes = useMemo(() => {
+    return categoriesData?.categories
+      .filter((category) => form.categories.includes(category.name))
+      .map((category) => category.attributes)
+      .flat();
+  }, [form.categories, categoriesData?.categories]);
+
+  const onRefetch = () => {
+    const attributes: ProductInputAttribute[] = [];
+
+    Object.entries(form.attributes).forEach(([name, attrs]) => {
+      attrs.forEach((attr) => attributes.push({ name, value: attr }));
+    });
+
+    refetch({
+      input: {
+        filter: {
+          attributes: attributes,
+          logic: FilterLogic.Or,
+        },
+      },
+    });
+  };
+
   return (
-    <div className={s.home}>
-      <Flex className={s.controls}>
+    <Flex flexDirection="column" gap="32px">
+      <div className={s.controls}>
         <Select
           options={categoriesData?.categories.map((category) => ({
             value: category.name,
             label: category.name,
           }))}
+          onChange={(values) => {
+            updateForm({ categories: values.map((value) => value.value) });
+          }}
           placeholder="Category"
+          isClearable
+          isMulti
         />
-      </Flex>
 
-      {productsData?.products.items.map((product) => (
-        <Card key={product.id} />
-      ))}
-    </div>
+        {attributes?.map((attribute) => (
+          <Select
+            key={attribute?.name}
+            options={attribute?.values?.map((value) => ({
+              value: value.value,
+              label: `${value.value} (${value.count})`,
+            }))}
+            onChange={(attributes) => {
+              updateForm({
+                attributes: {
+                  ...form.attributes,
+                  [attribute?.name!]: attributes.map((attr) => attr.value),
+                },
+              });
+            }}
+            closeMenuOnSelect={false}
+            isMulti
+            placeholder={attribute?.name}
+          />
+        ))}
+
+        <Button onClick={() => onRefetch()}>Применить</Button>
+      </div>
+      <div className={s.products}>
+        {productsData?.products.items.map((product) => (
+          <Card
+            onClick={() => {
+              router.push(`/product/${product.id}`);
+            }}
+            key={product.id}
+            cover={product.covers?.[0]}
+            title={product.name}
+            subText={Intl.NumberFormat("ru-RU", {
+              style: "currency",
+              currency: "RUB",
+            }).format(product.price)}
+            text={product.category}
+          />
+        ))}
+      </div>
+    </Flex>
   );
 };
 

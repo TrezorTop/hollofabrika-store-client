@@ -5,3 +5,12 @@
 .skeleton {
   position: absolute;
 }
+
+.card {
+  transition: 250ms;
+  cursor: pointer;
+}
+
+.card:hover {
+  background-color: #dfe9eb;
+}

@@ -1,9 +1,13 @@
-.container, .container * {
+.container,
+.container * {
   transition: 250ms;
 }
 
 .container {
   position: relative;
+
+  height: 100%;
+  width: 100%;
 }
 
 .icon {
@@ -14,6 +18,12 @@
 
   opacity: 0;
   cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+.icon svg {
+  min-width: 28px;
+  min-height: 28px;
 }
 
 .overlay {
@@ -24,7 +34,12 @@
 
   opacity: 0;
 
-  background-color: rgba(0, 0, 0, 0.25);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.overlay.deleted {
+  opacity: 100;
+
+  background-color: rgba(0, 0, 0, 0.75);
 }
 
 .container:hover {
@@ -33,4 +48,7 @@
 .container:hover > .icon,
 .container:hover > .overlay {
   opacity: 100;
+}
+.container:hover > .icon {
+  background-color: gray;
 }

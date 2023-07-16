@@ -41,7 +41,7 @@ export default function Create() {
   return (
     <Flex flexDirection="column" gap="32px">
       <Flex alignItems="center" justifyContent="space-between">
-        <Heading>Product</Heading>
+        <Heading>Новый товар</Heading>
       </Flex>
       <ProductEdit
         onSubmit={async (product, attributes, category) => {
