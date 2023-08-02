@@ -36,14 +36,22 @@ export const RegisterForm = ({ onSuccess }: Props) => {
 
   const snap = useSnapshot(authStore);
 
+  const { form, updateForm } = useForm<{
+    email: string;
+    login: string;
+    password: string;
+    repeatedPassword: string;
+    code: string;
+  }>();
+
   const [
     register,
     { data: registerData, loading: registerLoading, error: registerError },
   ] = useMutation(Register, {
     variables: {
-      email: snap.email,
-      username: snap.login,
-      password: snap.password,
+      email: form.email,
+      username: form.login,
+      password: form.password,
     },
   });
 
@@ -56,14 +64,6 @@ export const RegisterForm = ({ onSuccess }: Props) => {
       confirmToken: snap.confirmToken,
     },
   });
-
-  const { form, updateForm } = useForm<{
-    email: string;
-    login: string;
-    password: string;
-    repeatedPassword: string;
-    code: string;
-  }>();
 
   useEffect(() => {
     if (registerData?.register?.confirmToken) {

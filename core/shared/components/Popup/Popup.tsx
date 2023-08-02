@@ -1,4 +1,5 @@
 import {
+  Flex,
   Heading,
   Popover,
   PopoverArrow,
@@ -16,17 +17,19 @@ type Props = {
   children: ReactNode;
   header?: ReactNode;
   body: ReactNode;
+
+  closeButton?: boolean;
 };
 
-export const Popup: FC<Props> = ({ body, children, header }) => {
+export const Popup: FC<Props> = ({ body, children, header, closeButton }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <div>{children}</div>
+        <Flex alignItems="center">{children}</Flex>
       </PopoverTrigger>
       <PopoverContent className={s.popup}>
         <PopoverArrow />
-        <PopoverCloseButton />
+        {closeButton && <PopoverCloseButton />}
         {header && (
           <PopoverHeader>
             <Heading size="md">{header}</Heading>

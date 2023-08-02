@@ -31,8 +31,6 @@ export const LoginForm = ({ onRegister }: Props) => {
 
   const [getUser, { loading, data: user }] = useLazyQuery(User);
 
-
-
   const [login, { data: loginData }] = useMutation(Login, {
     variables: {
       username: snap.login,
@@ -61,9 +59,9 @@ export const LoginForm = ({ onRegister }: Props) => {
       />
 
       <Button onClick={() => login()}>Login</Button>
-      {/*<Button variant="outline" onClick={onRegister}>*/}
-      {/*  Register*/}
-      {/*</Button>*/}
+      <Button variant="outline" onClick={onRegister}>
+        Register
+      </Button>
       <Button variant="link">Forgot password</Button>
     </>
   );

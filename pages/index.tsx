@@ -3,8 +3,10 @@ import { Button, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import Select from "react-select";
-import { Card } from "../core/shared/components/Card/Card";
+import { useSnapshot } from "valtio";
+import { ProductCard } from "../core/shared/components/ProductCard/ProductCard";
 import { useForm } from "../core/shared/hooks/useForm";
+import { globalStore } from "../core/store/store";
 import { graphql } from "../gql";
 import { FilterLogic, ProductInputAttribute } from "../gql/graphql";
 import s from "../styles/Home.module.scss";
@@ -53,6 +55,8 @@ type TForm = {
 
 const Home = () => {
   const router = useRouter();
+
+  const globalStoreSnap = useSnapshot(globalStore);
 
   const { updateForm, form } = useForm<TForm>({
     attributes: {},
@@ -127,7 +131,7 @@ const Home = () => {
       </div>
       <div className={s.products}>
         {productsData?.products.items.map((product) => (
-          <Card
+          <ProductCard
             onClick={() => {
               router.push(`/product/${product.id}`);
             }}
@@ -139,6 +143,24 @@ const Home = () => {
               currency: "RUB",
             }).format(product.price)}
             text={product.category}
+            buttons={
+              <Button
+                onClick={() => {
+                  globalStore.cart.push(product);
+                }}
+                isDisabled={
+                  !!globalStoreSnap.cart.find(
+                    (cartProduct) => cartProduct.id === product.id
+                  )
+                }
+              >
+                {!!globalStoreSnap.cart.find(
+                  (cartProduct) => cartProduct.id === product.id
+                )
+                  ? "В корзине"
+                  : "Добавить в корзину"}
+              </Button>
+            }
           />
         ))}
       </div>

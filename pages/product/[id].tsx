@@ -1,5 +1,13 @@
 import { useQuery } from "@apollo/client";
-import { Badge, Flex, Grid, Heading } from "@chakra-ui/react";
+import {
+  Badge,
+  Button,
+  Card,
+  Flex,
+  Grid,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { graphql } from "../../gql";
@@ -33,16 +41,24 @@ export default function Product() {
   return (
     <Flex flexDirection="column" gap={"32px"}>
       <Heading>{data?.product.name}</Heading>
-      <Grid gridTemplateColumns={"1fr 1fr"} gap={"32px"}>
+      <Grid gridTemplateColumns={"1.5fr 1fr 0.75fr"} gap={"32px"}>
         <div>{JSON.stringify(data?.product.covers)}</div>
-        <Grid gridTemplateColumns={"1fr"}>
+        <Flex flexDirection='column' gap='8px'>
           {data?.product.attributes.map((attr) => (
-            <div key={attr.name}>
-              <Badge width="100%">{attr.name}:</Badge>
-              <Badge>{attr.value}</Badge>
-            </div>
+            <Badge key={attr.name}>
+              <Text fontSize='sm'>{attr.name}: {attr.value}</Text>
+            </Badge>
           ))}
-        </Grid>
+        </Flex>
+        <Card padding="16px" gap="16px">
+          <Text textAlign="end" fontSize="xl">
+            {Intl.NumberFormat("ru-RU", {
+              style: "currency",
+              currency: "RUB",
+            }).format(data?.product.price ?? 0)}
+          </Text>
+          <Button>Добавить в корзину</Button>
+        </Card>
       </Grid>
     </Flex>
   );

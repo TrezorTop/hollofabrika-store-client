@@ -1,13 +1,14 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import { Flex, Link } from "@chakra-ui/react";
+import { Button, Flex, Link } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../gql";
 import { globalStore } from "../../../../store/store";
 import { Popup } from "../../../components/Popup/Popup";
 import { Account } from "./Account/Account";
+import { Cart } from "./Cart/Cart";
 import s from "./Controls.module.css";
 import { LoginForm } from "./LoginForm/LoginForm";
 
@@ -59,7 +60,10 @@ export const Controls = () => {
       >
         <Link>{snap.account ?? "Login"}</Link>
       </Popup>
-      <div>Cart</div>
+
+      <Popup body={<Cart />}>
+        <Button size="md">Корзина</Button>
+      </Popup>
     </div>
   );
 };

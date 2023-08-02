@@ -1,5 +1,4 @@
 import {
-  ButtonGroup,
   Card as ChakraCard,
   CardBody,
   CardFooter,
@@ -11,9 +10,8 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import classNames from "classnames";
 import { FC, ReactNode, useState } from "react";
-import s from "./Card.module.scss";
+import s from "./ProductCard.module.scss";
 
 type Props = {
   title?: string;
@@ -26,7 +24,7 @@ type Props = {
   buttons?: ReactNode;
 };
 
-export const Card: FC<Props> = ({
+export const ProductCard: FC<Props> = ({
   title,
   text,
   subText,
@@ -38,8 +36,8 @@ export const Card: FC<Props> = ({
   const [loaded, setLoaded] = useState<boolean>(true);
 
   return (
-    <ChakraCard onClick={onClick} className={classNames(s.card, className)}>
-      <CardBody>
+    <ChakraCard className={className}>
+      <CardBody className={s.card} onClick={onClick}>
         <div className={s.imageContainer}>
           <Fade in={!loaded}>
             <Skeleton
@@ -71,8 +69,8 @@ export const Card: FC<Props> = ({
       {buttons && (
         <>
           <Divider />
-          <CardFooter justifyContent="end">
-            <ButtonGroup spacing="2">{buttons}</ButtonGroup>
+          <CardFooter flexDirection="column" gap='16px' justifyContent="center">
+            {buttons}
           </CardFooter>
         </>
       )}

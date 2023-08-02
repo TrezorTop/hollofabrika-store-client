@@ -1,8 +1,9 @@
 import { proxy } from "valtio";
-import { ProductsQuery } from "../../gql/graphql";
+import { Product, ProductsQuery } from "../../gql/graphql";
 
 export const globalStore = proxy({
   account: null as null | string,
+  cart: [] as Omit<Product, "attributes">[],
 });
 
 export const authStore = proxy({
