@@ -39,7 +39,7 @@
 .overlay.deleted {
   opacity: 100;
 
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.5 );
 }
 
 .container:hover {
@@ -50,5 +50,5 @@
   opacity: 100;
 }
 .container:hover > .icon {
-  background-color: gray;
+  background-color: #cbcbcb;
 }

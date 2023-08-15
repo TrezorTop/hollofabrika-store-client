@@ -17,12 +17,12 @@ export const Account = () => {
         <Heading size="lg">{globalStore.account}</Heading>
       </Flex>
       <Divider />
-      <Link>Your profile</Link>
+      <Link>Аккаунт</Link>
       <Link as={NextLink} href="/admin">
-        Admin
+        Администратор
       </Link>
       <Link color="tomato" onClick={logout}>
-        Logout
+        Выйти
       </Link>
     </>
   );

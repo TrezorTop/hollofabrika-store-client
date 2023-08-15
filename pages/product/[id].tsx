@@ -1,15 +1,18 @@
 import { useQuery } from "@apollo/client";
 import {
   Badge,
+  Box,
   Button,
   Card,
   Flex,
   Grid,
   Heading,
+  Image,
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { graphql } from "../../gql";
 
 const ProductQuery = graphql(`
@@ -41,16 +44,26 @@ export default function Product() {
   return (
     <Flex flexDirection="column" gap={"32px"}>
       <Heading>{data?.product.name}</Heading>
-      <Grid gridTemplateColumns={"1.5fr 1fr 0.75fr"} gap={"32px"}>
-        <div>{JSON.stringify(data?.product.covers)}</div>
-        <Flex flexDirection='column' gap='8px'>
+      <Grid gridTemplateColumns={"500px 1fr 0.5fr"} gap={"64px"}>
+        <Box>
+          <Swiper>
+            {data?.product.covers?.map((cover) => (
+              <SwiperSlide key={cover}>
+                <Image src={cover} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </Box>
+        <Flex flexDirection="column" gap="8px">
           {data?.product.attributes.map((attr) => (
             <Badge key={attr.name}>
-              <Text fontSize='sm'>{attr.name}: {attr.value}</Text>
+              <Text fontSize="sm">
+                {attr.name}: {attr.value}
+              </Text>
             </Badge>
           ))}
         </Flex>
-        <Card padding="16px" gap="16px">
+        <Card padding="16px" gap="16px" height='fit-content'>
           <Text textAlign="end" fontSize="xl">
             {Intl.NumberFormat("ru-RU", {
               style: "currency",

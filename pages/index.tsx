@@ -83,9 +83,10 @@ const Home = () => {
     refetch({
       input: {
         filter: {
-          attributes: attributes,
+          attributes: attributes.length ? attributes : undefined,
           logic: FilterLogic.Or,
         },
+        categories: form.categories
       },
     });
   };

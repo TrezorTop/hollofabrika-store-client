@@ -1,4 +1,4 @@
-import { Badge, Button, Flex, Link } from "@chakra-ui/react";
+import { Badge, Button, Flex, Link, Text } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { useSnapshot } from "valtio";
 import { globalStore } from "../../../../../store/store";
@@ -9,6 +9,12 @@ export const Cart: FC = () => {
   const [code, setCode] = useState<string>("");
   const snap = useSnapshot(globalStore);
 
+  if (!snap.cart.length)
+    return (
+      <Text textAlign="center" fontSize="xl" color="gray">
+        Корзина пуста
+      </Text>
+    );
   return (
     <Flex direction="column" gap="16px" padding="16px">
       {snap.cart.map((product) => (

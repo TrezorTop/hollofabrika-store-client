@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { CloseIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
   Grid,
@@ -11,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import Select from "react-select";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { graphql } from "../../../../gql";
 import {
   CreateProductArgs,
@@ -19,6 +21,7 @@ import {
   ProductInputAttribute,
 } from "../../../../gql/graphql";
 import { useForm } from "../../hooks/useForm";
+import { ImageControl } from "../../ui/ImageControl/ImageControl";
 import { randomId } from "../../utils/random";
 
 const Categories = graphql(`
@@ -105,58 +108,58 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
     <>
       <Grid gridTemplateColumns="1fr" gap="32px">
         <Flex gap="32px">
-          {/*<Box maxWidth="33%" maxHeight="33%">*/}
-          {/*  <Swiper>*/}
-          {/*    {(product?.covers?.length ? product?.covers : [""]).map(*/}
-          {/*      (cover) => (*/}
-          {/*        <SwiperSlide key={cover}>*/}
-          {/*          <ImageControl*/}
-          {/*            src={cover}*/}
-          {/*            deleted={deletedImages.includes(cover)}*/}
-          {/*            onDelete={() =>*/}
-          {/*              setDeletedImages((prev) => [...prev, cover])*/}
-          {/*            }*/}
-          {/*            onRestore={() =>*/}
-          {/*              setDeletedImages((prev) =>*/}
-          {/*                prev.filter((prevCover) => prevCover !== cover)*/}
-          {/*              )*/}
-          {/*            }*/}
-          {/*          />*/}
-          {/*        </SwiperSlide>*/}
-          {/*      )*/}
-          {/*    )}*/}
-          {/*  </Swiper>*/}
+          <Box maxWidth="350px" maxHeight="33%">
+            <Swiper>
+              {(product?.covers?.length ? product?.covers : [""]).map(
+                (cover) => (
+                  <SwiperSlide key={cover}>
+                    <ImageControl
+                      src={cover}
+                      deleted={deletedImages.includes(cover)}
+                      onDelete={() =>
+                        setDeletedImages((prev) => [...prev, cover])
+                      }
+                      onRestore={() =>
+                        setDeletedImages((prev) =>
+                          prev.filter((prevCover) => prevCover !== cover)
+                        )
+                      }
+                    />
+                  </SwiperSlide>
+                )
+              )}
+            </Swiper>
 
-          {/*  <InputGroup>*/}
-          {/*    <InputLeftAddon>*/}
-          {/*      {formatBytes(*/}
-          {/*        form.covers?.reduce((acc, file) => acc + file.size, 0) ?? 0*/}
-          {/*      )}*/}
-          {/*    </InputLeftAddon>*/}
-          {/*    <Input*/}
-          {/*      readOnly*/}
-          {/*      value={*/}
-          {/*        (form.covers?.length ?? 0) > 1*/}
-          {/*          ? `${form.covers?.length} файлов`*/}
-          {/*          : form.covers?.[0]?.name ?? ""*/}
-          {/*      }*/}
-          {/*      onClick={() => inputFileRef.current?.click()}*/}
-          {/*      cursor="pointer"*/}
-          {/*      placeholder="Загрузить фото"*/}
-          {/*    />*/}
-          {/*  </InputGroup>*/}
+            {/*  <InputGroup>*/}
+            {/*    <InputLeftAddon>*/}
+            {/*      {formatBytes(*/}
+            {/*        form.covers?.reduce((acc, file) => acc + file.size, 0) ?? 0*/}
+            {/*      )}*/}
+            {/*    </InputLeftAddon>*/}
+            {/*    <Input*/}
+            {/*      readOnly*/}
+            {/*      value={*/}
+            {/*        (form.covers?.length ?? 0) > 1*/}
+            {/*          ? `${form.covers?.length} файлов`*/}
+            {/*          : form.covers?.[0]?.name ?? ""*/}
+            {/*      }*/}
+            {/*      onClick={() => inputFileRef.current?.click()}*/}
+            {/*      cursor="pointer"*/}
+            {/*      placeholder="Загрузить фото"*/}
+            {/*    />*/}
+            {/*  </InputGroup>*/}
 
-          {/*  <Input*/}
-          {/*    display="none"*/}
-          {/*    ref={inputFileRef}*/}
-          {/*    onChange={(event) => {*/}
-          {/*      if (event.target.files?.length)*/}
-          {/*        updateForm({ covers: Array.from(event.target.files) });*/}
-          {/*    }}*/}
-          {/*    type="file"*/}
-          {/*    multiple*/}
-          {/*  />*/}
-          {/*</Box>*/}
+            {/*  <Input*/}
+            {/*    display="none"*/}
+            {/*    ref={inputFileRef}*/}
+            {/*    onChange={(event) => {*/}
+            {/*      if (event.target.files?.length)*/}
+            {/*        updateForm({ covers: Array.from(event.target.files) });*/}
+            {/*    }}*/}
+            {/*    type="file"*/}
+            {/*    multiple*/}
+            {/*  />*/}
+          </Box>
 
           {/*<Grid gridTemplateColumns='1fr 1fr 1fr' mt="32px" gap="8px">*/}
           {/*  {form.covers?.map((cover) => (*/}
