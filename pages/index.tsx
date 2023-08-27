@@ -86,7 +86,7 @@ const Home = () => {
           attributes: attributes.length ? attributes : undefined,
           logic: FilterLogic.Or,
         },
-        categories: form.categories
+        categories: form.categories,
       },
     });
   };

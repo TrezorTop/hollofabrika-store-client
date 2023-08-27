@@ -3,13 +3,10 @@ import { Button, Input } from "@chakra-ui/react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
 import { authStore, globalStore } from "../../../../../store/store";
+import { useForm } from "../../../../hooks/useForm";
 import { setUserTokens } from "../../../../utils/auth";
 
-type Props = {
-  onRegister: () => void;
-};
-
-const Login = graphql(`
+const LoginMutation = graphql(`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
       refresh
@@ -18,7 +15,7 @@ const Login = graphql(`
   }
 `);
 
-const User = graphql(`
+const UserQuery = graphql(`
   query User {
     currentUser {
       username
@@ -26,15 +23,25 @@ const User = graphql(`
   }
 `);
 
+type Form = {
+  login: string;
+  password: string;
+};
+
+type Props = {
+  onRegister: () => void;
+};
+
 export const LoginForm = ({ onRegister }: Props) => {
   const snap = useSnapshot(authStore);
 
-  const [getUser, { loading, data: user }] = useLazyQuery(User);
+  const { form, updateForm } = useForm<Form>();
+  const [getUser, { loading, data: user }] = useLazyQuery(UserQuery);
 
-  const [login, { data: loginData }] = useMutation(Login, {
+  const [login, { data: loginData }] = useMutation(LoginMutation, {
     variables: {
-      username: snap.login,
-      password: snap.password,
+      username: form.login,
+      password: form.password,
     },
     onCompleted: async (data) => {
       if (!data.login) return;
@@ -48,21 +55,19 @@ export const LoginForm = ({ onRegister }: Props) => {
   return (
     <>
       <Input
-        defaultValue={snap.email ?? snap.login}
-        onChange={(event) => (authStore.login = event.target.value)}
-        placeholder="Login or email"
+        onChange={(event) => updateForm({ login: event.target.value })}
+        placeholder="Логин или email"
       />
       <Input
-        defaultValue={snap.password}
-        onChange={(event) => (authStore.password = event.target.value)}
-        placeholder="Password"
+        onChange={(event) => updateForm({ password: event.target.value })}
+        placeholder="Пароль"
       />
 
-      <Button onClick={() => login()}>Login</Button>
+      <Button onClick={() => login()}>Войти</Button>
       <Button variant="outline" onClick={onRegister}>
-        Register
+        Регистрация
       </Button>
-      <Button variant="link">Forgot password</Button>
+      <Button variant="link">Забыли пароль?</Button>
     </>
   );
 };

@@ -15,10 +15,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n      mutation Refresh($token: String!) {\n        refresh(token: $token) {\n          refresh\n          access\n        }\n      }\n    ": types.RefreshDocument,
     "\n  query ProductCategories {\n    categories {\n      name\n      attributes {\n        name\n      }\n    }\n  }\n": types.ProductCategoriesDocument,
+    "\n  mutation ConfirmOrder($token: String!) {\n    confirmOrder(token: $token) {\n      id\n    }\n  }\n": types.ConfirmOrderDocument,
+    "\n  mutation CreateOrder($productsIds: [Id!]) {\n    createOrder(productsIds: $productsIds) {\n      token\n      expiresIn\n    }\n  }\n": types.CreateOrderDocument,
     "\n  query User {\n    currentUser {\n      username\n    }\n  }\n": types.UserDocument,
     "\n  mutation Login($username: String!, $password: String!) {\n    login(username: $username, password: $password) {\n      refresh\n      access\n    }\n  }\n": types.LoginDocument,
-    "\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      confirmToken\n    }\n  }\n": types.RegisterDocument,
-    "\n  mutation Confirm($confirmToken: String!, $emailToken: Int!) {\n    verifyEmail(confirmToken: $confirmToken, emailToken: $emailToken) {\n      code\n    }\n  }\n": types.ConfirmDocument,
+    "\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      code\n    }\n  }\n": types.RegisterDocument,
+    "\n  mutation Confirm($emailToken: String!) {\n    verifyEmail(emailToken: $emailToken) {\n      code\n    }\n  }\n": types.ConfirmDocument,
     "\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      covers\n      description\n      category\n      price\n    }\n  }\n": types.UpdateProductDocument,
     "\n  mutation CreateCategory($name: String!) {\n    createCategory(name: $name) {\n      name\n    }\n  }\n": types.CreateCategoryDocument,
     "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n    }\n  }\n": types.ProductDocument,
@@ -29,6 +31,7 @@ const documents = {
     "\n  query MainProducts($input: ProductsQueryInput) {\n    products(input: $input) {\n      pageData {\n        totalPages\n        pageSize\n        page\n      }\n      items {\n        name\n        category\n        price\n        description\n        id\n        covers\n      }\n    }\n  }\n": types.MainProductsDocument,
     "\n  query MainCategories {\n    categories {\n      name\n      attributes {\n        name\n        values {\n          value\n          count\n        }\n      }\n    }\n  }\n": types.MainCategoriesDocument,
     "\n  query ProductItemQuery($id: Id!) {\n    product(id: $id) {\n      id\n      category\n      covers\n      description\n      price\n      name\n      attributes {\n        name\n        value\n      }\n    }\n  }\n": types.ProductItemQueryDocument,
+    "\n  query UserOrders {\n    orders {\n      items {\n        id\n        totalSum\n        products {\n          id\n          covers\n        }\n        date\n        expiresIn\n        confirmCode\n        isCompleted\n      }\n    }\n  }\n": types.UserOrdersDocument,
 };
 
 /**
@@ -56,6 +59,14 @@ export function graphql(source: "\n  query ProductCategories {\n    categories {
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation ConfirmOrder($token: String!) {\n    confirmOrder(token: $token) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation ConfirmOrder($token: String!) {\n    confirmOrder(token: $token) {\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CreateOrder($productsIds: [Id!]) {\n    createOrder(productsIds: $productsIds) {\n      token\n      expiresIn\n    }\n  }\n"): (typeof documents)["\n  mutation CreateOrder($productsIds: [Id!]) {\n    createOrder(productsIds: $productsIds) {\n      token\n      expiresIn\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  query User {\n    currentUser {\n      username\n    }\n  }\n"): (typeof documents)["\n  query User {\n    currentUser {\n      username\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -64,11 +75,11 @@ export function graphql(source: "\n  mutation Login($username: String!, $passwor
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      confirmToken\n    }\n  }\n"): (typeof documents)["\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      confirmToken\n    }\n  }\n"];
+export function graphql(source: "\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      code\n    }\n  }\n"): (typeof documents)["\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      code\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation Confirm($confirmToken: String!, $emailToken: Int!) {\n    verifyEmail(confirmToken: $confirmToken, emailToken: $emailToken) {\n      code\n    }\n  }\n"): (typeof documents)["\n  mutation Confirm($confirmToken: String!, $emailToken: Int!) {\n    verifyEmail(confirmToken: $confirmToken, emailToken: $emailToken) {\n      code\n    }\n  }\n"];
+export function graphql(source: "\n  mutation Confirm($emailToken: String!) {\n    verifyEmail(emailToken: $emailToken) {\n      code\n    }\n  }\n"): (typeof documents)["\n  mutation Confirm($emailToken: String!) {\n    verifyEmail(emailToken: $emailToken) {\n      code\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -109,6 +120,10 @@ export function graphql(source: "\n  query MainCategories {\n    categories {\n 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query ProductItemQuery($id: Id!) {\n    product(id: $id) {\n      id\n      category\n      covers\n      description\n      price\n      name\n      attributes {\n        name\n        value\n      }\n    }\n  }\n"): (typeof documents)["\n  query ProductItemQuery($id: Id!) {\n    product(id: $id) {\n      id\n      category\n      covers\n      description\n      price\n      name\n      attributes {\n        name\n        value\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query UserOrders {\n    orders {\n      items {\n        id\n        totalSum\n        products {\n          id\n          covers\n        }\n        date\n        expiresIn\n        confirmCode\n        isCompleted\n      }\n    }\n  }\n"): (typeof documents)["\n  query UserOrders {\n    orders {\n      items {\n        id\n        totalSum\n        products {\n          id\n          covers\n        }\n        date\n        expiresIn\n        confirmCode\n        isCompleted\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

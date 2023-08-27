@@ -8,11 +8,6 @@ export const globalStore = proxy({
 
 export const authStore = proxy({
   confirmToken: "",
-
-  login: "",
-  email: "",
-  password: "",
-  code: "",
 });
 
 export const adminStore = proxy({

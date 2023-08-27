@@ -49,7 +49,7 @@ export const Controls = () => {
                   <LoginForm onRegister={() => setForm(Form.REGISTER)} />
                 )}
                 {form === Form.REGISTER && (
-                  <RegisterForm onSuccess={() => setForm(Form.LOGIN)} />
+                  <RegisterForm onSuccess={() => setForm(Form.LOGIN)} onCancel={() => setForm(Form.LOGIN)} />
                 )}
               </>
             ) : (
@@ -58,7 +58,7 @@ export const Controls = () => {
           </Flex>
         }
       >
-        <Link>{snap.account ?? "Login"}</Link>
+        <Link>{snap.account ?? "Аккаунт"}</Link>
       </Popup>
 
       <Popup body={<Cart />}>

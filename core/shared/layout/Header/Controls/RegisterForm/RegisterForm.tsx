@@ -6,48 +6,57 @@ import { graphql } from "../../../../../../gql";
 import { authStore } from "../../../../../store/store";
 import { useForm } from "../../../../hooks/useForm";
 
-const Register = graphql(`
+const RegisterMutation = graphql(`
   mutation Register($username: String!, $email: String!, $password: String!) {
     register(username: $username, email: $email, password: $password) {
-      confirmToken
-    }
-  }
-`);
-
-const Confirm = graphql(`
-  mutation Confirm($confirmToken: String!, $emailToken: Int!) {
-    verifyEmail(confirmToken: $confirmToken, emailToken: $emailToken) {
       code
     }
   }
 `);
 
-type Props = {
-  onSuccess: () => void;
-};
+const ConfirmMutation = graphql(`
+  mutation Confirm($emailToken: String!) {
+    verifyEmail(emailToken: $emailToken) {
+      code
+    }
+  }
+`);
 
 enum Step {
   Register,
   Confirm,
 }
 
-export const RegisterForm = ({ onSuccess }: Props) => {
+type Form = {
+  email: string;
+  login: string;
+  password: string;
+  repeatedPassword: string;
+  code: string;
+};
+
+type Props = {
+  onSuccess: () => void;
+  onCancel: () => void;
+};
+
+export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
   const [step, setStep] = useState<Step>(Step.Register);
 
   const snap = useSnapshot(authStore);
 
-  const { form, updateForm } = useForm<{
-    email: string;
-    login: string;
-    password: string;
-    repeatedPassword: string;
-    code: string;
-  }>();
+  const { form, updateForm } = useForm<Form>({
+    email: "",
+    login: "",
+    password: "",
+    repeatedPassword: "",
+    code: "",
+  });
 
   const [
     register,
     { data: registerData, loading: registerLoading, error: registerError },
-  ] = useMutation(Register, {
+  ] = useMutation(RegisterMutation, {
     variables: {
       email: form.email,
       username: form.login,
@@ -58,16 +67,15 @@ export const RegisterForm = ({ onSuccess }: Props) => {
   const [
     confirm,
     { data: confirmData, loading: confirmLoading, error: confirmError },
-  ] = useMutation(Confirm, {
+  ] = useMutation(ConfirmMutation, {
     variables: {
-      emailToken: +snap.code,
-      confirmToken: snap.confirmToken,
+      emailToken: form.code,
     },
   });
 
   useEffect(() => {
-    if (registerData?.register?.confirmToken) {
-      authStore.confirmToken = registerData?.register?.confirmToken;
+    if (registerData?.register?.code) {
+      authStore.confirmToken = registerData?.register?.code;
       setStep(Step.Confirm);
     }
   }, [registerData]);
@@ -108,9 +116,11 @@ export const RegisterForm = ({ onSuccess }: Props) => {
       )}
 
       <Button onClick={() => (step === Step.Register ? register() : confirm())}>
-        {step === Step.Register ? "Register" : "Confirm Code"}
+        {step === Step.Register ? "Register" : "ConfirmMutation Code"}
       </Button>
-      <Button variant="link">Login</Button>
+      <Button onClick={onCancel} variant="link">
+        Назад
+      </Button>
     </>
   );
 };

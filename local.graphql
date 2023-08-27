@@ -16,6 +16,15 @@ type CategoryAttribute {
     value: String!
 }
 
+type ConfirmOrderResult {
+    id: Id
+}
+
+type CreateOrderResult {
+    expiresIn: Int!
+    token: String!
+}
+
 type Error {
     code: ErrorCode
     message: String!
@@ -28,16 +37,45 @@ type JwtToken {
 
 type Mutation {
     changeCategory(category: String!, id: Id!): Product!
+    confirmOrder(token: String!): ConfirmOrderResult!
     createCategory(name: String!): Category!
+    createOrder(productsIds: [Id!]): CreateOrderResult!
     createProduct(category: String!, product: CreateProductArgs!): Product!
     deleteCategory(name: String!): Category!
     deleteProduct(id: Id!): Product!
-    login(password: String!, username: String!): JwtToken
-    refresh(token: String!): JwtToken
-    register(email: String!, password: String!, username: String!): RegisterResponse
+    login(password: String!, username: String!): JwtToken!
+    refresh(token: String!): JwtToken!
+    register(email: String!, password: String!, username: String!): Success!
     updateCategory(newName: String!, originalName: String!): Category!
     updateProduct(id: Id!, product: UpdateProductArgs!): Product!
-    verifyEmail(confirmToken: String!, emailToken: Int!): Success
+    verifyEmail(emailToken: String!): Success!
+}
+
+type Order {
+    confirmCode: String
+    date: String
+    expiresIn: Int
+    id: Id
+    isCompleted: Boolean
+    products: [OrderProduct!]
+    totalSum: Int
+    userId: Id
+}
+
+type OrderProduct {
+    attributes: [ProductAttribute!]!
+    buyedWithPrice: Int!
+    category: String!
+    covers: [String!]
+    description: String!
+    id: Id
+    name: String!
+    price: Int!
+}
+
+type OrdersQueryResult {
+    items: [Order!]!
+    pageData: PageData
 }
 
 type PageData {
@@ -69,6 +107,7 @@ type ProductsQueryResult {
 type Query {
     categories: [QueryCategory!]!
     currentUser: User!
+    orders(input: OrdersQueryInput): OrdersQueryResult!
     product(id: Id!): Product!
     products(input: ProductsQueryInput): ProductsQueryResult!
 }
@@ -88,14 +127,6 @@ type QueryCategoryAttribute {
     values: [QueryAttribute!]
 }
 
-type RegisterResponse {
-    confirmToken: String
-}
-
-type SomethingWentWrong {
-    errors: [Error!]!
-}
-
 type Success {
     code: SuccessCode!
 }
@@ -104,6 +135,15 @@ type User {
     email: String!
     role: Role!
     username: String!
+}
+
+type ValidationError {
+    key: String!
+    messages: [String!]
+}
+
+type ValidationErrors {
+    errors: [[ValidationError!]!]
 }
 
 enum ErrorCode {
@@ -371,6 +411,20 @@ input CreateProductArgs {
     description: String!
     name: String!
     price: Int!
+}
+
+input DatePeriod {
+    from: String!
+    to: String!
+}
+
+input OrdersQueryInput {
+    datePeriod: DatePeriod
+    isAdmin: Boolean
+    orderIds: [Id!]
+    pageData: PageDataInput
+    productsIds: [Id!]
+    usersIds: [Id!]
 }
 
 input PageDataInput {
