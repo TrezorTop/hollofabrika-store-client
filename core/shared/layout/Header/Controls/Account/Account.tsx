@@ -14,6 +14,8 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
@@ -36,11 +38,15 @@ export const Account = () => {
 
   const [code, setCode] = useState<string>("");
 
-  const [confirmOrder, {}] = useMutation(ConfirmOrderMutation, {
-    variables: {
-      token: code,
-    },
-  });
+  const [confirmOrder, { error: confirmError, data: confirmData }] =
+    useMutation(ConfirmOrderMutation, {
+      variables: {
+        token: code,
+      },
+      onCompleted: () => {
+        setCode("");
+      },
+    });
 
   const logout = useCallback(() => {
     globalStore.account = null;
@@ -54,7 +60,9 @@ export const Account = () => {
         <Heading size="lg">{globalStore.account}</Heading>
       </Flex>
       <Divider />
-      <Link as={NextLink} href="/profile">Профиль</Link>
+      <Link as={NextLink} href="/profile">
+        Профиль
+      </Link>
       <Link as={NextLink} href="/admin">
         Администратор
       </Link>
@@ -71,10 +79,19 @@ export const Account = () => {
             <ModalCloseButton />
 
             <ModalBody>
-              <Input
-                onChange={(event) => setCode(event.target.value)}
-                placeholder="Код заказа"
-              />
+              <Stack spacing="3">
+                {confirmError && (
+                  <Text color="tomato">Неверный код заказа.</Text>
+                )}
+                {confirmData?.confirmOrder.id && (
+                  <Text color="green.500">Заказ успешно закрыт.</Text>
+                )}
+                <Input
+                  value={code}
+                  onChange={(event) => setCode(event.target.value)}
+                  placeholder="Код заказа"
+                />
+              </Stack>
             </ModalBody>
 
             <ModalFooter gap="16px">
