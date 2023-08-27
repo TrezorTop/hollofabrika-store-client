@@ -52,14 +52,14 @@ export default function Profile() {
             <div key={order.id}>
               {!currentDate.hasSame(previousDate, "day") && (
                 <Heading size="lg" marginBottom="16px">
-                  {currentDate.toFormat("LL.dd.yyyy")}
+                  {currentDate.toFormat("dd.LL.yyyy")}
                 </Heading>
               )}
               <Card>
                 <CardHeader>
                   <Heading size="md">
                     {order.isCompleted ? "Завершенный" : "Открытый"} заказ
-                    {order.expiresIn && " - действителен до " + DateTime.fromSeconds(order.expiresIn).toFormat("LL.dd.yyyy HH:mm")}
+                    {order.expiresIn && " - действителен до " + DateTime.fromSeconds(order.expiresIn).toFormat("dd.LL.yyyy HH:mm")}
                   </Heading>
                 </CardHeader>
                 <Divider />

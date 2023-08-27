@@ -37,7 +37,7 @@ export const Cart: FC = () => {
 
     const date = new Date(createOrderData?.createOrder.expiresIn * 1000);
 
-    return DateTime.fromJSDate(date).toFormat("LL.dd.yyyy HH:mm");
+    return DateTime.fromJSDate(date).toFormat("dd.LL.yyyy HH:mm");
   }, [createOrderData?.createOrder.expiresIn]);
 
   if (!snap.cart.length && !createOrderData?.createOrder.token)
