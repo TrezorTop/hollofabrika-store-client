@@ -35,7 +35,6 @@ const UserOrdersQuery = graphql(`
 `);
 
 export default function Profile() {
-  
   const { data: ordersQuery } = useQuery(UserOrdersQuery);
 
   return (
