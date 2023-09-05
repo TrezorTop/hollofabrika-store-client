@@ -1,7 +1,11 @@
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   Avatar,
+  Badge,
+  Box,
   Button,
+  Card,
+  CardBody,
   Divider,
   Flex,
   Heading,
@@ -33,6 +37,24 @@ const ConfirmOrderMutation = graphql(`
   }
 `);
 
+const OrderQuery = graphql(`
+  query FindOrderByCode($input: OrdersQueryInput) {
+    orders(input: $input) {
+      items {
+        id
+        products {
+          id
+          name
+          category
+          buyedWithPrice
+        }
+        totalSum
+        date
+      }
+    }
+  }
+`);
+
 export const Account = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -48,6 +70,14 @@ export const Account = () => {
       },
     });
 
+  const [getOrder, { loading, data: order }] = useLazyQuery(OrderQuery, {
+    variables: {
+      input: {
+        orderTokens: [code],
+      },
+    },
+  });
+
   const logout = useCallback(() => {
     globalStore.account = null;
     setUserTokens("", "");
@@ -61,7 +91,7 @@ export const Account = () => {
       </Flex>
       <Divider />
       <Link as={NextLink} href="/profile">
-        Профиль
+        Ваши заказы
       </Link>
       <Link as={NextLink} href="/admin">
         Администратор
@@ -80,6 +110,30 @@ export const Account = () => {
 
             <ModalBody>
               <Stack spacing="3">
+                {order?.orders.items.length && (
+                  <>
+                    <Heading size="md">Заказ:</Heading>
+                    {order?.orders.items[0]?.products?.map((product) => (
+                      <Card key={product.id}>
+                        <CardBody>
+                          <Flex justifyContent="space-between">
+                            <div>{product.name}</div>
+                            <Box textAlign="right">
+                              <Text fontSize="xs">Цена при оформлении: </Text>
+                              <Badge>
+                                {Intl.NumberFormat("ru-RU", {
+                                  style: "currency",
+                                  currency: "RUB",
+                                }).format(product.buyedWithPrice)}
+                              </Badge>
+                            </Box>
+                          </Flex>
+                          <Text fontSize="xs">{product.category}</Text>
+                        </CardBody>
+                      </Card>
+                    ))}
+                  </>
+                )}
                 {confirmError && (
                   <Text color="tomato">Неверный код заказа.</Text>
                 )}
@@ -91,19 +145,31 @@ export const Account = () => {
                   onChange={(event) => setCode(event.target.value)}
                   placeholder="Код заказа"
                 />
+                { order?.orders.items[0] &&
+                  <Heading size="md" textAlign="right">
+                    Общая сумма:{" "}
+                    {Intl.NumberFormat("ru-RU", {
+                      style: "currency",
+                      currency: "RUB",
+                    }).format(order?.orders.items[0].totalSum ?? 0)}
+                  </Heading>
+                }
               </Stack>
             </ModalBody>
 
             <ModalFooter gap="16px">
-              <Button variant="ghost" onClick={onClose}>
-                Отмена
-              </Button>
               <Button
                 type="submit"
                 colorScheme="blue"
-                onClick={() => confirmOrder()}
+                onClick={() => {
+                  if (order?.orders.items.length) {
+                    confirmOrder();
+                  } else {
+                    getOrder();
+                  }
+                }}
               >
-                Подтвердить
+                {order?.orders.items.length ? "Подтвердить" : "Найти заказ"}
               </Button>
             </ModalFooter>
           </ModalContent>

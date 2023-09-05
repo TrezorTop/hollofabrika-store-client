@@ -9,7 +9,8 @@ const Header = () => {
     <div className={s.header}>
       <div className={s.content}>
         <Link as={NextLink} href="/">
-          HOLLOFABRIKA
+          <span className={s.title}>HOLLOFABRIKA</span>
+          <span className={s.back}>На главную</span>
         </Link>
 
         <ClientOnly>

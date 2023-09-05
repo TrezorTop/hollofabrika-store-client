@@ -1,13 +1,23 @@
 import { useMutation } from "@apollo/client";
-import { Badge, Button, Flex, Link, Text } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+import {
+  Badge,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Divider,
+  Flex,
+  IconButton,
+  Link,
+  Text,
+} from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import NextLink from "next/link";
 import { FC, useMemo, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
 import { globalStore } from "../../../../../store/store";
-
-import s from "./Cart.module.css";
 
 const CreateOrderMutation = graphql(`
   mutation CreateOrder($productsIds: [Id!]) {
@@ -50,38 +60,46 @@ export const Cart: FC = () => {
   return (
     <Flex direction="column" gap="16px" padding="16px">
       {snap.cart.map((product) => (
-        <Flex
-          key={product.id}
-          flexDirection="column"
-          gap="8px"
-          className={s.product}
-        >
-          <Flex
-            gap="8px"
+        <Card key={product.id} flexDirection="column" gap="8px">
+          <CardBody padding="12px">
+            <Flex
+              justifyContent="space-between"
+              alignItems="center"
+              key={product.id}
+            >
+              <Link>
+                <Text fontSize="xl">{product.name}</Text>
+              </Link>
+              <Text fontSize="2xl">
+                {Intl.NumberFormat("ru-RU", {
+                  style: "currency",
+                  currency: "RUB",
+                }).format(product.price)}
+              </Text>
+            </Flex>
+          </CardBody>
+
+          <Divider color="gray.400" margin="0" />
+
+          <CardFooter
+            padding="12px"
+            display="flex"
             justifyContent="space-between"
             alignItems="center"
-            key={product.id}
           >
-            <Link>{product.name}</Link>
-            <Badge>
-              {Intl.NumberFormat("ru-RU", {
-                style: "currency",
-                currency: "RUB",
-              }).format(product.price)}
-            </Badge>
-          </Flex>
+            <Text color="gray.500">{product.category}</Text>
 
-          <Button
-            size="sm"
-            onClick={() => {
-              globalStore.cart = globalStore.cart.filter(
-                (cartProduct) => cartProduct.id !== product.id
-              );
-            }}
-          >
-            Удалить
-          </Button>
-        </Flex>
+            <IconButton
+              onClick={() => {
+                globalStore.cart = globalStore.cart.filter(
+                  (cartProduct) => cartProduct.id !== product.id
+                );
+              }}
+              aria-label="Delete"
+              icon={<DeleteIcon />}
+            />
+          </CardFooter>
+        </Card>
       ))}
       {!!snap.cart.length && (
         <Button isDisabled={!snap.cart.length} onClick={() => createOrder()}>

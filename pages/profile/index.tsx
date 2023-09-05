@@ -39,7 +39,7 @@ export default function Profile() {
 
   return (
     <div>
-      <Heading size="2xl" marginBottom="32px">
+      <Heading size="xl" marginBottom="32px">
         Ваши заказы
       </Heading>
 
@@ -59,10 +59,14 @@ export default function Profile() {
                 <CardHeader>
                   <Heading size="md">
                     {order.isCompleted ? "Завершенный" : "Открытый"} заказ
-                    {order.expiresIn && " - действителен до " + DateTime.fromSeconds(order.expiresIn).toFormat("dd.LL.yyyy HH:mm")}
+                    {order.expiresIn &&
+                      " - действителен до " +
+                        DateTime.fromSeconds(order.expiresIn).toFormat(
+                          "dd.LL.yyyy HH:mm"
+                        )}
                   </Heading>
                 </CardHeader>
-                <Divider />
+                <Divider color="gray.400" />
                 <CardBody>
                   <Stack spacing="3">
                     <Flex flexWrap="wrap" gap="32px">
@@ -76,18 +80,20 @@ export default function Profile() {
                         />
                       ))}
                     </Flex>
-                    <Text color="blue.600" fontSize="2xl">
-                      {Intl.NumberFormat("ru-RU", {
-                        style: "currency",
-                        currency: "RUB",
-                      }).format(order.totalSum ?? 0)}
-                    </Text>
                   </Stack>
                 </CardBody>
-                {!order.isCompleted && (
-                  <>
-                    <Divider />
-                    <CardFooter>
+                <Divider color="gray.400" />
+                <CardFooter
+                  gap="6"
+                  display="flex"
+                  alignItems="center"
+                  flexWrap="wrap"
+                >
+                  {!order.isCompleted && (
+                    <>
+                      <Text color="blue.600" fontSize="2xl">
+                        Код подтверждения:
+                      </Text>
                       <Badge
                         textAlign="center"
                         fontSize="4xl"
@@ -95,9 +101,16 @@ export default function Profile() {
                       >
                         {order.confirmCode}
                       </Badge>
-                    </CardFooter>
-                  </>
-                )}
+                    </>
+                  )}
+                  <Text color="blue.600" fontSize="2xl">
+                    Общая цена:{" "}
+                    {Intl.NumberFormat("ru-RU", {
+                      style: "currency",
+                      currency: "RUB",
+                    }).format(order.totalSum ?? 0)}
+                  </Text>
+                </CardFooter>
               </Card>
             </div>
           );

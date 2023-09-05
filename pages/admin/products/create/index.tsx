@@ -51,7 +51,7 @@ export default function Create() {
               variables: { name: product.newCategory },
             }).then((data) => data.data?.createCategory.name));
 
-          createProduct({
+          await createProduct({
             variables: {
               category: productCategory!,
               product: {

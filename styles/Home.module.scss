@@ -8,19 +8,19 @@
   grid-template-columns: repeat(5, 1fr);
 
   @include media-large-desktop {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
-  @include media-desktop {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @include media-tablet {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  @include media-small-tablet {
+  @include media-desktop {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include media-tablet {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include media-small-tablet {
+    grid-template-columns: repeat(1, 1fr);
   }
 
   @include media-phone {
@@ -31,28 +31,8 @@
 }
 
 .controls {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-
-  @include media-large-desktop {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @include media-desktop {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @include media-tablet {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  @include media-small-tablet {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  @include media-phone {
-    grid-template-columns: repeat(1, 1fr);
-  }
+  display: flex;
+  justify-content: flex-end;
 
   gap: 32px;
 }

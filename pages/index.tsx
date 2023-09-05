@@ -1,7 +1,18 @@
 import { useQuery } from "@apollo/client";
-import { Button, Flex } from "@chakra-ui/react";
+import {
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Select from "react-select";
 import { useSnapshot } from "valtio";
 import { ProductCard } from "../core/shared/components/ProductCard/ProductCard";
@@ -54,6 +65,9 @@ type TForm = {
 };
 
 const Home = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = useRef<HTMLButtonElement>(null);
+
   const router = useRouter();
 
   const globalStoreSnap = useSnapshot(globalStore);
@@ -71,16 +85,46 @@ const Home = () => {
       .filter((category) => form.categories.includes(category.name))
       .map((category) => category.attributes)
       .flat();
-  }, [form.categories, categoriesData?.categories]);
+  }, [categoriesData?.categories, form]);
 
-  const onRefetch = () => {
+  useEffect(() => {
+    const attrs = categoriesData?.categories
+      .filter((category) => form.categories.includes(category.name))
+      .map((category) => category.attributes)
+      .flat();
+
+    const keysToClear = Object.keys(form.attributes).filter(
+      (attrKey) => !attrs?.find((attr) => attr?.name === attrKey)
+    );
+
+    const newAttrs = Object.fromEntries(
+      Object.entries(form.attributes).filter(
+        ([key, value]) => !keysToClear.includes(key)
+      )
+    );
+
+    if (keysToClear.length) {
+      updateForm({
+        attributes: {
+          ...newAttrs,
+        },
+      });
+    }
+  }, [categoriesData?.categories, form, updateForm]);
+
+  const onRefetch = (noFilters?: boolean) => {
     const attributes: ProductInputAttribute[] = [];
 
     Object.entries(form.attributes).forEach(([name, attrs]) => {
       attrs.forEach((attr) => attributes.push({ name, value: attr }));
     });
 
-    refetch({
+    if (noFilters)
+      return refetch({
+        input: {},
+      });
+
+    return refetch({
       input: {
         filter: {
           attributes: attributes.length ? attributes : undefined,
@@ -94,42 +138,96 @@ const Home = () => {
   return (
     <Flex flexDirection="column" gap="32px">
       <div className={s.controls}>
-        <Select
-          options={categoriesData?.categories.map((category) => ({
-            value: category.name,
-            label: category.name,
-          }))}
-          onChange={(values) => {
-            updateForm({ categories: values.map((value) => value.value) });
-          }}
-          placeholder="Category"
-          isClearable
-          isMulti
-        />
-
-        {attributes?.map((attribute) => (
-          <Select
-            key={attribute?.name}
-            options={attribute?.values?.map((value) => ({
-              value: value.value,
-              label: `${value.value} (${value.count})`,
-            }))}
-            onChange={(attributes) => {
-              updateForm({
-                attributes: {
-                  ...form.attributes,
-                  [attribute?.name!]: attributes.map((attr) => attr.value),
-                },
-              });
-            }}
-            closeMenuOnSelect={false}
-            isMulti
-            placeholder={attribute?.name}
-          />
-        ))}
-
-        <Button onClick={() => onRefetch()}>Применить</Button>
+        <Button ref={btnRef} onClick={onOpen}>
+          Фильтровать
+        </Button>
       </div>
+      <Drawer
+        isOpen={isOpen}
+        placement="right"
+        onClose={() => onClose()}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Фильтр</DrawerHeader>
+
+          <DrawerBody>
+            <Flex flexDirection="column" gap="16px">
+              <Select
+                options={categoriesData?.categories.map((category) => ({
+                  value: category.name,
+                  label: category.name,
+                }))}
+                onChange={(values) => {
+                  updateForm({
+                    categories: values.map((value) => value.value),
+                  });
+                }}
+                value={form.categories.map((category) => ({
+                  value: category,
+                  label: category,
+                }))}
+                placeholder="Категория"
+                isClearable
+                isMulti
+              />
+
+              {attributes?.map((attribute) => {
+                const values = form.attributes[attribute?.name!];
+
+                return (
+                  <Select
+                    key={attribute?.name}
+                    options={attribute?.values?.map((value) => ({
+                      value: value.value,
+                      label: `${value.value} (${value.count})`,
+                    }))}
+                    onChange={(attributes) => {
+                      updateForm({
+                        attributes: {
+                          ...form.attributes,
+                          [attribute?.name!]: attributes.map(
+                            (attr) => attr.value
+                          ),
+                        },
+                      });
+                    }}
+                    value={values?.map((value) => ({
+                      value,
+                      label: `${value} (${
+                        attribute?.values?.find(
+                          (option) => option.value === value
+                        )?.count
+                      })`,
+                    }))}
+                    closeMenuOnSelect={false}
+                    isMulti
+                    placeholder={attribute?.name}
+                  />
+                );
+              })}
+            </Flex>
+          </DrawerBody>
+
+          <DrawerFooter>
+            <Button
+              mr={3}
+              onClick={() => {
+                updateForm({ categories: [], attributes: {} });
+                onClose();
+                onRefetch(true);
+              }}
+            >
+              Очистить
+            </Button>
+            <Button colorScheme="blue" onClick={() => onRefetch()}>
+              Применить
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
       <div className={s.products}>
         {productsData?.products.items.map((product) => (
           <ProductCard

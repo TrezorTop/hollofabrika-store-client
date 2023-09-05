@@ -92,18 +92,18 @@ export default function Product() {
   return (
     <Flex flexDirection="column" gap="32px">
       <Flex alignItems="center" justifyContent="space-between">
-        <Heading>{product?.product.name ?? 'Товар'}</Heading>
+        <Heading>{product?.product.name ?? "Товар"}</Heading>
       </Flex>
       <ProductEdit
         onSubmit={async (product, attributes, newCategory) => {
           let newProductId = product.id;
 
           if (newCategory) {
-            const newCategoryExist = !!categories?.categories.find(
+            const newCategoryAlreadyExists = !!categories?.categories.find(
               (category) => category.name === newCategory
             );
 
-            const category = newCategoryExist
+            const category = newCategoryAlreadyExists
               ? newCategory
               : await createCategory({
                   variables: {
@@ -120,7 +120,7 @@ export default function Product() {
               }));
           }
 
-          update({
+          await update({
             variables: {
               id: newProductId,
               product: {

@@ -1,18 +1,23 @@
 import { useQuery } from "@apollo/client";
 import { CloseIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
   Flex,
   Grid,
   Heading,
   Input,
+  InputGroup,
+  InputRightAddon,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Textarea,
   useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { graphql } from "../../../../gql";
 import {
   CreateProductArgs,
@@ -21,7 +26,6 @@ import {
   ProductInputAttribute,
 } from "../../../../gql/graphql";
 import { useForm } from "../../hooks/useForm";
-import { ImageControl } from "../../ui/ImageControl/ImageControl";
 import { randomId } from "../../utils/random";
 
 const Categories = graphql(`
@@ -51,7 +55,6 @@ type Props = {
 export const ProductEdit = ({ onSubmit, product }: Props) => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [category, setCategory] = useState<string>("");
-  const [deletedImages, setDeletedImages] = useState<string[]>([]);
 
   const [isLargerThan970] = useMediaQuery("(min-width: 970px)");
   const { data } = useQuery(Categories);
@@ -75,6 +78,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
   const onCategorySelect = (option: { value: string; label: string }) => {
     if (!option) return;
 
+    updateForm({ newCategory: "" });
     setCategory(option.value);
 
     const attributes =
@@ -85,7 +89,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
       attributes.map((attr) => ({
         id: randomId(),
         name: attr?.name!,
-        value: "attr?.value!",
+        value: "",
       }))
     );
   };
@@ -102,86 +106,11 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
     setAttributes(newAttributes);
   };
 
-  const inputFileRef = useRef<HTMLInputElement>(null);
-
   return (
     <>
-      <Grid gridTemplateColumns="1fr" gap="32px">
+      <Grid gridTemplateColumns="1fr 3fr" gap="32px">
         <Flex gap="32px">
-          <Box maxWidth="350px" maxHeight="33%">
-            <Swiper>
-              {(product?.covers?.length ? product?.covers : [""]).map(
-                (cover) => (
-                  <SwiperSlide key={cover}>
-                    <ImageControl
-                      src={cover}
-                      deleted={deletedImages.includes(cover)}
-                      onDelete={() =>
-                        setDeletedImages((prev) => [...prev, cover])
-                      }
-                      onRestore={() =>
-                        setDeletedImages((prev) =>
-                          prev.filter((prevCover) => prevCover !== cover)
-                        )
-                      }
-                    />
-                  </SwiperSlide>
-                )
-              )}
-            </Swiper>
 
-            {/*  <InputGroup>*/}
-            {/*    <InputLeftAddon>*/}
-            {/*      {formatBytes(*/}
-            {/*        form.covers?.reduce((acc, file) => acc + file.size, 0) ?? 0*/}
-            {/*      )}*/}
-            {/*    </InputLeftAddon>*/}
-            {/*    <Input*/}
-            {/*      readOnly*/}
-            {/*      value={*/}
-            {/*        (form.covers?.length ?? 0) > 1*/}
-            {/*          ? `${form.covers?.length} файлов`*/}
-            {/*          : form.covers?.[0]?.name ?? ""*/}
-            {/*      }*/}
-            {/*      onClick={() => inputFileRef.current?.click()}*/}
-            {/*      cursor="pointer"*/}
-            {/*      placeholder="Загрузить фото"*/}
-            {/*    />*/}
-            {/*  </InputGroup>*/}
-
-            {/*  <Input*/}
-            {/*    display="none"*/}
-            {/*    ref={inputFileRef}*/}
-            {/*    onChange={(event) => {*/}
-            {/*      if (event.target.files?.length)*/}
-            {/*        updateForm({ covers: Array.from(event.target.files) });*/}
-            {/*    }}*/}
-            {/*    type="file"*/}
-            {/*    multiple*/}
-            {/*  />*/}
-          </Box>
-
-          {/*<Grid gridTemplateColumns='1fr 1fr 1fr' mt="32px" gap="8px">*/}
-          {/*  {form.covers?.map((cover) => (*/}
-          {/*    <ImageControl*/}
-          {/*      onDelete={() => {*/}
-          {/*        if (inputFileRef.current?.files?.length) {*/}
-          {/*          const dataTransfer = new DataTransfer();*/}
-
-          {/*          inputFileRef.current.files = dataTransfer.files;*/}
-          {/*        }*/}
-
-          {/*        updateForm({*/}
-          {/*          covers: form.covers?.filter(*/}
-          {/*            (oldCover) => oldCover.name !== cover.name*/}
-          {/*          ),*/}
-          {/*        });*/}
-          {/*      }}*/}
-          {/*      key={cover.name}*/}
-          {/*      src={URL.createObjectURL(cover)}*/}
-          {/*    />*/}
-          {/*  ))}*/}
-          {/*</Grid>*/}
         </Flex>
 
         <Flex flexGrow="1" flexDirection="column" gap="32px">
@@ -191,7 +120,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
             value={
               category
                 ? { label: category, value: category }
-                : { value: "", label: "Новая категория" }
+                : { value: "", label: "Создать новую категорию" }
             }
             onChange={(value) => onCategorySelect(value!)}
             options={data?.categories
@@ -199,28 +128,36 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                 value: category.name,
                 label: category.name,
               }))
-              .concat({ value: "", label: "Новая категория" })}
+              .concat({ value: "", label: "Создать новую категорию" })}
           />
           {!category && (
             <Input
               onChange={(event) =>
                 updateForm({ newCategory: event.target.value })
               }
-              placeholder="Новая категория"
+              placeholder="Категория"
             />
           )}
           <Input
             defaultValue={product?.name}
             onChange={(event) => updateForm({ name: event.target.value })}
-            placeholder="Name"
+            placeholder="Имя"
           />
-          <Input
-            defaultValue={product?.price}
-            onChange={(event) =>
-              updateForm({ price: parseFloat(event.target.value) })
-            }
-            placeholder="Price"
-          />
+          <InputGroup>
+            <NumberInput defaultValue={product?.price}>
+              <NumberInputField
+                placeholder="Цена в рублях"
+                onChange={(event) =>
+                  updateForm({ price: parseFloat(event.target.value) })
+                }
+              />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <InputRightAddon>РУБ</InputRightAddon>
+          </InputGroup>
           <Grid
             gap="32px"
             flexDirection={isLargerThan970 ? "row" : "column"}
@@ -233,7 +170,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                 onChange={(event) =>
                   updateForm({ description: event.target.value })
                 }
-                placeholder="Description"
+                placeholder="Описание"
                 width="100%"
                 rows={15}
               />
@@ -296,11 +233,11 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                   value: attr.value,
                   name: attr.name,
                 })),
-                product?.category !== category ? category : undefined
+                category === product?.category ? undefined : category
               )
             }
           >
-            Save
+            Сохранить
           </Button>
         </Flex>
       </Grid>

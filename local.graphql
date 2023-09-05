@@ -148,7 +148,9 @@ type ValidationErrors {
 
 enum ErrorCode {
     BadRequest
+    Forbidden
     InternalError
+    NotFound
 }
 
 enum FilterLogic {
@@ -422,6 +424,7 @@ input OrdersQueryInput {
     datePeriod: DatePeriod
     isAdmin: Boolean
     orderIds: [Id!]
+    orderTokens: [String!]
     pageData: PageDataInput
     productsIds: [Id!]
     usersIds: [Id!]

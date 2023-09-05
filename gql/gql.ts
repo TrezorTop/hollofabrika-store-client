@@ -16,11 +16,13 @@ const documents = {
     "\n      mutation Refresh($token: String!) {\n        refresh(token: $token) {\n          refresh\n          access\n        }\n      }\n    ": types.RefreshDocument,
     "\n  query ProductCategories {\n    categories {\n      name\n      attributes {\n        name\n      }\n    }\n  }\n": types.ProductCategoriesDocument,
     "\n  mutation ConfirmOrder($token: String!) {\n    confirmOrder(token: $token) {\n      id\n    }\n  }\n": types.ConfirmOrderDocument,
+    "\n  query FindOrderByCode($input: OrdersQueryInput) {\n    orders(input: $input) {\n      items {\n        id\n        products {\n          id\n          name\n          category\n          buyedWithPrice\n        }\n        totalSum\n        date\n      }\n    }\n  }\n": types.FindOrderByCodeDocument,
     "\n  mutation CreateOrder($productsIds: [Id!]) {\n    createOrder(productsIds: $productsIds) {\n      token\n      expiresIn\n    }\n  }\n": types.CreateOrderDocument,
     "\n  query User {\n    currentUser {\n      username\n    }\n  }\n": types.UserDocument,
     "\n  mutation Login($username: String!, $password: String!) {\n    login(username: $username, password: $password) {\n      refresh\n      access\n    }\n  }\n": types.LoginDocument,
     "\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      code\n    }\n  }\n": types.RegisterDocument,
     "\n  mutation Confirm($emailToken: String!) {\n    verifyEmail(emailToken: $emailToken) {\n      code\n    }\n  }\n": types.ConfirmDocument,
+    "\n  query Orders($input: OrdersQueryInput) {\n    orders(input: $input) {\n      items {\n        id\n        date\n        totalSum\n        products {\n          covers\n        }\n        expiresIn\n        isCompleted\n      }\n    }\n  }\n": types.OrdersDocument,
     "\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      covers\n      description\n      category\n      price\n    }\n  }\n": types.UpdateProductDocument,
     "\n  mutation CreateCategory($name: String!) {\n    createCategory(name: $name) {\n      name\n    }\n  }\n": types.CreateCategoryDocument,
     "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n    }\n  }\n": types.ProductDocument,
@@ -63,6 +65,10 @@ export function graphql(source: "\n  mutation ConfirmOrder($token: String!) {\n 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  query FindOrderByCode($input: OrdersQueryInput) {\n    orders(input: $input) {\n      items {\n        id\n        products {\n          id\n          name\n          category\n          buyedWithPrice\n        }\n        totalSum\n        date\n      }\n    }\n  }\n"): (typeof documents)["\n  query FindOrderByCode($input: OrdersQueryInput) {\n    orders(input: $input) {\n      items {\n        id\n        products {\n          id\n          name\n          category\n          buyedWithPrice\n        }\n        totalSum\n        date\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation CreateOrder($productsIds: [Id!]) {\n    createOrder(productsIds: $productsIds) {\n      token\n      expiresIn\n    }\n  }\n"): (typeof documents)["\n  mutation CreateOrder($productsIds: [Id!]) {\n    createOrder(productsIds: $productsIds) {\n      token\n      expiresIn\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -80,6 +86,10 @@ export function graphql(source: "\n  mutation Register($username: String!, $emai
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation Confirm($emailToken: String!) {\n    verifyEmail(emailToken: $emailToken) {\n      code\n    }\n  }\n"): (typeof documents)["\n  mutation Confirm($emailToken: String!) {\n    verifyEmail(emailToken: $emailToken) {\n      code\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Orders($input: OrdersQueryInput) {\n    orders(input: $input) {\n      items {\n        id\n        date\n        totalSum\n        products {\n          covers\n        }\n        expiresIn\n        isCompleted\n      }\n    }\n  }\n"): (typeof documents)["\n  query Orders($input: OrdersQueryInput) {\n    orders(input: $input) {\n      items {\n        id\n        date\n        totalSum\n        products {\n          covers\n        }\n        expiresIn\n        isCompleted\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

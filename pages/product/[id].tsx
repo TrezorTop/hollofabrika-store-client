@@ -1,18 +1,21 @@
 import { useQuery } from "@apollo/client";
 import {
   Badge,
-  Box,
   Button,
   Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
   Flex,
   Grid,
   Heading,
-  Image,
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { useSnapshot } from "valtio";
+import { globalStore } from "../../core/store/store";
 import { graphql } from "../../gql";
 
 const ProductQuery = graphql(`
@@ -35,6 +38,8 @@ const ProductQuery = graphql(`
 export default function Product() {
   const router = useRouter();
 
+  const globalStoreSnap = useSnapshot(globalStore);
+
   const { data } = useQuery(ProductQuery, {
     variables: {
       id: router.query.id as string,
@@ -43,34 +48,80 @@ export default function Product() {
 
   return (
     <Flex flexDirection="column" gap={"32px"}>
-      <Heading>{data?.product.name}</Heading>
-      <Grid gridTemplateColumns={"500px 1fr 0.5fr"} gap={"64px"}>
-        <Box>
-          <Swiper>
-            {data?.product.covers?.map((cover) => (
-              <SwiperSlide key={cover}>
-                <Image src={cover} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </Box>
-        <Flex flexDirection="column" gap="8px">
-          {data?.product.attributes.map((attr) => (
-            <Badge key={attr.name}>
-              <Text fontSize="sm">
-                {attr.name}: {attr.value}
-              </Text>
-            </Badge>
-          ))}
+      <span>
+        <Heading>{data?.product.name}</Heading>
+        <Text color="gray" fontSize="2xl">
+          {data?.product.category}
+        </Text>
+      </span>
+      <Grid gridTemplateColumns={"1fr 1fr 0.5fr"} gap={"64px"}>
+        <Card height="fit-content">
+          <CardBody>Image</CardBody>
+        </Card>
+        <Flex flexDirection="column" gap={6}>
+          <Card>
+            <CardHeader>
+              <Text fontSize="xl">Описание</Text>
+            </CardHeader>
+            <Divider color="gray.400" />
+            <CardBody>{data?.product.description}</CardBody>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Text fontSize="xl">Аттрибуты</Text>
+            </CardHeader>
+            <Divider color="gray.400" />
+            <CardBody>
+              <Flex flexDirection="column" gap="8px">
+                {data?.product.attributes.map((attr) => (
+                  <Badge key={attr.name}>
+                    <Text
+                      display="flex"
+                      justifyContent="space-between"
+                      fontSize="sm"
+                    >
+                      <span>{attr.name}:</span> <span>{attr.value}</span>
+                    </Text>
+                  </Badge>
+                ))}
+              </Flex>
+            </CardBody>
+          </Card>
         </Flex>
-        <Card padding="16px" gap="16px" height='fit-content'>
-          <Text textAlign="end" fontSize="xl">
-            {Intl.NumberFormat("ru-RU", {
-              style: "currency",
-              currency: "RUB",
-            }).format(data?.product.price ?? 0)}
-          </Text>
-          <Button>Добавить в корзину</Button>
+        <Card height="fit-content">
+          <CardBody>
+            <Flex justifyContent="space-between" alignItems="center">
+              <Text color="gray" fontSize="2xl">
+                Цена:
+              </Text>
+              <Text fontSize="3xl">
+                {Intl.NumberFormat("ru-RU", {
+                  style: "currency",
+                  currency: "RUB",
+                }).format(data?.product.price ?? 0)}
+              </Text>
+            </Flex>
+          </CardBody>
+          <Divider color="gray.400" />
+          <CardFooter justifyContent="end">
+            <Button
+              onClick={() => {
+                globalStore.cart.push(data?.product!);
+              }}
+              isDisabled={
+                !!globalStoreSnap.cart.find(
+                  (cartProduct) => cartProduct.id === data?.product.id
+                )
+              }
+              width="100%"
+            >
+              {!!globalStoreSnap.cart.find(
+                (cartProduct) => cartProduct.id === data?.product.id
+              )
+                ? "В корзине"
+                : "Добавить в корзину"}
+            </Button>
+          </CardFooter>
         </Card>
       </Grid>
     </Flex>

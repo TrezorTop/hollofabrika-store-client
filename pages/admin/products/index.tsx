@@ -57,16 +57,17 @@ export default function Products() {
   return (
     <Flex flexDirection="column" gap="32px">
       <Flex alignItems="center" justifyContent="space-between">
-        <Heading>Products</Heading>{" "}
+        <Heading>Товары</Heading>
         <Button onClick={() => router.push(baseRoute + "create")}>
-          Create
+          Добавить товар
         </Button>
       </Flex>
+      
       <Table variant="striped">
         <Thead>
           <Tr>
-            <Th>name</Th>
-            <Th isNumeric>price</Th>
+            <Th>Имя</Th>
+            <Th isNumeric>Цена</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -77,7 +78,12 @@ export default function Products() {
               onClick={() => router.push(baseRoute + item.id)}
             >
               <Td>{item.name}</Td>
-              <Td isNumeric>{item.price}</Td>
+              <Td isNumeric>
+                {Intl.NumberFormat("ru-RU", {
+                  style: "currency",
+                  currency: "RUB",
+                }).format(item.price)}
+              </Td>
             </Tr>
           ))}
         </Tbody>
