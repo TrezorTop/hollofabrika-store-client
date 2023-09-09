@@ -71,7 +71,7 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
           const { access, refresh } = response.data.refresh;
 
           if (!access || !refresh) {
-            globalStore.account = "null";
+            globalStore.account = null;
             return forward(operation);
           }
 

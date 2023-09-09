@@ -1,6 +1,5 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import {
-  Avatar,
   Badge,
   Box,
   Button,
@@ -86,8 +85,7 @@ export const Account = () => {
   return (
     <>
       <Flex gap="16px" alignItems="center">
-        <Avatar name={globalStore.account!} src="" />
-        <Heading size="lg">{globalStore.account}</Heading>
+        <Heading size="lg">{globalStore.account?.username}</Heading>
       </Flex>
       <Divider />
       <Link as={NextLink} href="/profile">

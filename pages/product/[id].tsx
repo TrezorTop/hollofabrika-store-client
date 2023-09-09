@@ -10,13 +10,17 @@ import {
   Flex,
   Grid,
   Heading,
+  Image,
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { useSnapshot } from "valtio";
 import { globalStore } from "../../core/store/store";
 import { graphql } from "../../gql";
+
+import s from "./index.module.scss";
 
 const ProductQuery = graphql(`
   query ProductItemQuery($id: Id!) {
@@ -47,16 +51,34 @@ export default function Product() {
   });
 
   return (
-    <Flex flexDirection="column" gap={"32px"}>
+    <Flex flexDirection="column" gap="8">
       <span>
         <Heading>{data?.product.name}</Heading>
         <Text color="gray" fontSize="2xl">
           {data?.product.category}
         </Text>
       </span>
-      <Grid gridTemplateColumns={"1fr 1fr 0.5fr"} gap={"64px"}>
+      <Grid className={s.grid} gap={"64px"}>
         <Card height="fit-content">
-          <CardBody>Image</CardBody>
+          {data?.product.covers?.length ? (
+            <CardBody>
+              <Swiper centeredSlides={true}>
+                {data?.product.covers?.map((cover) => (
+                  <SwiperSlide key={cover}>
+                    <Flex>
+                      <Image src={cover} margin={"0 auto"} width="100%" />
+                    </Flex>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </CardBody>
+          ) : (
+            <CardBody>
+              <Text textAlign={"center"} fontSize="3xl">
+                Товар без фото
+              </Text>
+            </CardBody>
+          )}
         </Card>
         <Flex flexDirection="column" gap={6}>
           <Card>

@@ -19,6 +19,7 @@ const UserQuery = graphql(`
   query User {
     currentUser {
       username
+      role
     }
   }
 `);
@@ -48,7 +49,7 @@ export const LoginForm = ({ onRegister }: Props) => {
       setUserTokens(data.login?.access!, data.login?.refresh!);
       const user = await getUser();
       if (user.data?.currentUser.username)
-        globalStore.account = user.data?.currentUser.username;
+        globalStore.account = user.data?.currentUser;
     },
   });
 

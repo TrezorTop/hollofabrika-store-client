@@ -2,6 +2,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import "swiper/css";
 import client from "../core/config/apollo-client";
 import ErrorBoundary from "../core/shared/ErrorBoundary";
 import Layout from "../core/shared/layout/Layout";

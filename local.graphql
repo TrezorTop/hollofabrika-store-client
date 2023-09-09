@@ -423,6 +423,7 @@ input DatePeriod {
 input OrdersQueryInput {
     datePeriod: DatePeriod
     isAdmin: Boolean
+    isCompleted: Boolean
     orderIds: [Id!]
     orderTokens: [String!]
     pageData: PageDataInput

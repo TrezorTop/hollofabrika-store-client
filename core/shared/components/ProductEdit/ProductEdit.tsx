@@ -2,9 +2,12 @@ import { useQuery } from "@apollo/client";
 import { CloseIcon } from "@chakra-ui/icons";
 import {
   Button,
+  Card,
+  CardBody,
   Flex,
   Grid,
   Heading,
+  Image,
   Input,
   InputGroup,
   InputRightAddon,
@@ -13,11 +16,15 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Stack,
+  Text,
   Textarea,
   useMediaQuery,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import Dropzone from "react-dropzone";
 import Select from "react-select";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { graphql } from "../../../../gql";
 import {
   CreateProductArgs,
@@ -27,6 +34,8 @@ import {
 } from "../../../../gql/graphql";
 import { useForm } from "../../hooks/useForm";
 import { randomId } from "../../utils/random";
+
+const allowedImameTypes = ["image/jpeg", "image/jpg", "image/png"];
 
 const Categories = graphql(`
   query ProductCategories {
@@ -109,9 +118,70 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
   return (
     <>
       <Grid gridTemplateColumns="1fr 3fr" gap="32px">
-        <Flex gap="32px">
+        <Stack gap={8}>
+          {product?.covers?.length ? (
+            <Card height="fit-content">
+              <CardBody>
+                <Swiper centeredSlides={true}>
+                  {product?.covers?.map((cover) => (
+                    <SwiperSlide key={cover}>
+                      <Flex>
+                        <Image src={cover} margin={"0 auto"} width="100%" />
+                      </Flex>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </CardBody>
+            </Card>
+          ) : (
+            <Card height="fit-content">
+              <CardBody>
+                <Text textAlign={"center"} fontSize="3xl">
+                  Товар без фото
+                </Text>
+              </CardBody>
+            </Card>
+          )}
 
-        </Flex>
+          <Dropzone
+            accept={{
+              "image/jpeg": [".jpeg", ".png", ".jpg"],
+            }}
+            onDrop={(acceptedFiles) => {
+              updateForm({
+                covers: acceptedFiles.filter((file) => {
+                  return allowedImameTypes.includes(file.type);
+                }),
+              });
+            }}
+          >
+            {({ getRootProps, getInputProps }) => (
+              <Card {...getRootProps()} cursor="pointer" height="200px">
+                <CardBody
+                  display="flex"
+                  justifyContent="center"
+                  border="3px dashed gray"
+                  alignItems="center"
+                >
+                  <input
+                    {...getInputProps({
+                      accept: "image/png, image/jpg",
+                    })}
+                  />
+                  <Text textAlign="center" fontSize="lg">
+                    Кликните или перетащите файлы сюда для загрузки картинок
+                    {form.covers?.length && (
+                      <>
+                        <br />
+                        Файлов загружено: {form.covers?.length}{" "}
+                      </>
+                    )}
+                  </Text>
+                </CardBody>
+              </Card>
+            )}
+          </Dropzone>
+        </Stack>
 
         <Flex flexGrow="1" flexDirection="column" gap="32px">
           <Heading>Информация</Heading>
@@ -188,7 +258,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                         "name"
                       )
                     }
-                    placeholder="Attribute"
+                    placeholder="Имя атрибута"
                   />
                   :
                   <Input
@@ -200,7 +270,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                         "value"
                       )
                     }
-                    placeholder="Value"
+                    placeholder="Значение атрибута"
                   />
                   <Button
                     onClick={() =>

@@ -23,6 +23,7 @@ const User = graphql(`
   query User {
     currentUser {
       username
+      role
     }
   }
 `);
@@ -34,7 +35,7 @@ export const Controls = () => {
 
   useEffect(() => {
     if (data?.currentUser?.username) {
-      globalStore.account = data?.currentUser?.username;
+      globalStore.account = data?.currentUser;
     }
   }, [data]);
 
@@ -49,7 +50,10 @@ export const Controls = () => {
                   <LoginForm onRegister={() => setForm(Form.REGISTER)} />
                 )}
                 {form === Form.REGISTER && (
-                  <RegisterForm onSuccess={() => setForm(Form.LOGIN)} onCancel={() => setForm(Form.LOGIN)} />
+                  <RegisterForm
+                    onSuccess={() => setForm(Form.LOGIN)}
+                    onCancel={() => setForm(Form.LOGIN)}
+                  />
                 )}
               </>
             ) : (
@@ -58,7 +62,7 @@ export const Controls = () => {
           </Flex>
         }
       >
-        <Link>{snap.account?.slice(0, 7) ?? "Аккаунт"}</Link>
+        <Link>{snap.account?.username?.slice(0, 7) ?? "Аккаунт"}</Link>
       </Popup>
 
       <Popup body={<Cart />}>
