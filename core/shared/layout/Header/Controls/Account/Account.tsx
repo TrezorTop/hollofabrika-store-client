@@ -110,7 +110,7 @@ export const Account = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <Form>
           <ModalOverlay />
-          <ModalContent alignSelf="center">
+          <ModalContent alignSelf="center" maxHeight="80%" overflow="auto">
             <ModalHeader>Подтверждение заказа</ModalHeader>
             <ModalCloseButton />
 

@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { FC, useMemo, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
@@ -45,6 +46,8 @@ export const Cart: FC = () => {
       },
     });
 
+  const router = useRouter();
+
   const expirationDate = useMemo(() => {
     if (!createOrderData?.createOrder.expiresIn) return "";
 
@@ -70,9 +73,8 @@ export const Cart: FC = () => {
               alignItems="center"
               key={product.id}
             >
-              <Link>
-                <Text fontSize="xl">{product.name}</Text>
-              </Link>
+              <Text fontSize="xl" textDecoration='underline' cursor='pointer' onClick={() => router.push(`/product/${product.id}`)}>{product.name}</Text>
+
               <Text fontSize="2xl">
                 {Intl.NumberFormat("ru-RU", {
                   style: "currency",

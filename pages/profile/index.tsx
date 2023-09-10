@@ -14,6 +14,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
+import { useRouter } from "next/router";
 import { useAuth } from "../../core/shared/hooks/useAuth";
 
 import { graphql } from "../../gql";
@@ -40,6 +41,8 @@ const UserOrdersQuery = graphql(`
 export default function Profile() {
   const { data: ordersQuery } = useQuery(UserOrdersQuery);
 
+  const router = useRouter();
+
   useAuth();
 
   return (
@@ -48,7 +51,7 @@ export default function Profile() {
         Ваши заказы
       </Heading>
 
-      <Stack flexDirection="column" divider={<StackDivider/>} gap="16px">
+      <Stack flexDirection="column" divider={<StackDivider />} gap="16px">
         {ordersQuery?.orders.items.map((order, index, array) => {
           const currentDate = DateTime.fromISO(order.date ?? "");
           const previousDate = DateTime.fromISO(array[index - 1]?.date ?? "");
@@ -82,6 +85,8 @@ export default function Profile() {
                           height="100%"
                           maxHeight="100px"
                           src={product.covers?.[0]}
+                          onClick={() => router.push(`/product/${product.id}`)}
+                          cursor='pointer'
                         />
                       ))}
                     </Flex>

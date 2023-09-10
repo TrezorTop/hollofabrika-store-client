@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   CardBody,
-  CardHeader,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -34,6 +33,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
+import { useRouter } from "next/router";
 import { useMemo, useRef, useState } from "react";
 import Select from "react-select";
 import { useForm } from "../../core/shared/hooks/useForm";
@@ -115,6 +115,8 @@ export default function Orders() {
     });
   };
 
+  const router = useRouter();
+
   const activeOrder = useMemo(() => {
     return data?.orders.items.find((order) => order.id === activeOrderId);
   }, [activeOrderId, data?.orders.items]);
@@ -145,10 +147,17 @@ export default function Orders() {
                 <Grid gridTemplateColumns="1fr" gap={4}>
                   {activeOrder.products?.map((product) => (
                     <Card key={product.id}>
-                      <CardHeader padding={2}>{product.name}</CardHeader>
-                      <CardBody padding={2} display='flex' gap={4}>
+                      <CardBody padding={2} display="flex" gap={4}>
                         <Image maxWidth="100px" src={product.covers?.[0]} />
                         <Stack gap={1}>
+                          <Text
+                            textDecoration="underline"
+                            cursor="pointer"
+                            onClick={() => router.push(`/product/${product.id}`)}
+                          >
+                            {product.name}
+                          </Text>
+
                           <Text>
                             Цена:{" "}
                             {Intl.NumberFormat("ru-RU", {

@@ -122,11 +122,11 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
     <>
       <Grid gridTemplateColumns="320px 3fr" gap={8}>
         <Stack gap={8}>
-          {product?.covers?.length ? (
+          {product?.covers?.filter(cover => cover.split('/').reverse()[0] !== "fallback.jpg").length ? (
             <Card height="fit-content">
               <CardBody>
                 <Swiper centeredSlides={true}>
-                  {product?.covers?.map((cover) => (
+                  {product?.covers?.filter(cover => cover.split('/').reverse()[0] !== "fallback.jpg").map((cover) => (
                     <SwiperSlide key={cover}>
                       <Flex>
                         <Image src={cover} margin={"0 auto"} width="100%" />
