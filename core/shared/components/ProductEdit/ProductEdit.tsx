@@ -146,11 +146,11 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
             </Card>
           )}
 
-          {!!product?.covers?.length && (
+          {!!product?.covers?.filter(cover => cover.split('/').reverse()[0] !== "fallback.jpg").length && (
             <>
               <Text fontSize="xl">Фото товара:</Text>
               <Stack>
-                {product.covers?.map((cover) => {
+                {product.covers?.filter(cover => cover.split('/').reverse()[0] !== "fallback.jpg").map((cover) => {
                   const deleted = !!form.coversNamesToDelete?.find((c) => c === cover);
 
                   console.log(form.coversNamesToDelete)

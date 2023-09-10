@@ -10,6 +10,7 @@ import {
   Heading,
   Image,
   Stack,
+  StackDivider,
   Text,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
@@ -47,7 +48,7 @@ export default function Profile() {
         Ваши заказы
       </Heading>
 
-      <Flex flexDirection="column" gap="16px">
+      <Stack flexDirection="column" divider={<StackDivider/>} gap="16px">
         {ordersQuery?.orders.items.map((order, index, array) => {
           const currentDate = DateTime.fromISO(order.date ?? "");
           const previousDate = DateTime.fromISO(array[index - 1]?.date ?? "");
@@ -119,7 +120,7 @@ export default function Profile() {
             </div>
           );
         })}
-      </Flex>
+      </Stack>
     </div>
   );
 }
