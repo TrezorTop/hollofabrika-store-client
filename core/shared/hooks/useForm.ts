@@ -2,17 +2,17 @@ import { useCallback, useState } from "react";
 
 export const useForm = <T>(defaultValues?: T) => {
   const [form, setForm] = useState<T>((defaultValues ?? {}) as T);
-  const [error, setError] = useState<string | undefined>("");
+  const [errors, setErrors] = useState<string[]>([]);
 
   const updateForm = useCallback((values: { [key in keyof T]?: T[key] }) => {
     setForm((prevForm) => ({ ...prevForm, ...values }));
-    setError("");
+    setErrors([]);
   }, []);
 
   return {
     form,
     updateForm,
-    error,
-    setError,
+    errors,
+    setErrors,
   };
 };

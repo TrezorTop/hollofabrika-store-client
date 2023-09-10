@@ -20,8 +20,8 @@ import { graphql } from "../../../../../../gql";
 import { globalStore } from "../../../../../store/store";
 
 const CreateOrderMutation = graphql(`
-  mutation CreateOrder($productsIds: [Id!]) {
-    createOrder(productsIds: $productsIds) {
+  mutation CreateOrder($products: [CreateOrderProductsList!]) {
+    createOrder(products: $products) {
       token
       expiresIn
     }
@@ -35,7 +35,10 @@ export const Cart: FC = () => {
   const [createOrder, { loading: loadingCreateOrder, data: createOrderData }] =
     useMutation(CreateOrderMutation, {
       variables: {
-        productsIds: snap.cart.map((product) => product.id),
+        products: snap.cart.map((product) => ({
+          id: product.id,
+          quantity: 1,
+        })),
       },
       onCompleted: () => {
         globalStore.cart = [];
@@ -45,7 +48,7 @@ export const Cart: FC = () => {
   const expirationDate = useMemo(() => {
     if (!createOrderData?.createOrder.expiresIn) return "";
 
-    const date = new Date(createOrderData?.createOrder.expiresIn * 1000);
+    const date = new Date(createOrderData?.createOrder.expiresIn);
 
     return DateTime.fromJSDate(date).toFormat("dd.LL.yyyy HH:mm");
   }, [createOrderData?.createOrder.expiresIn]);
@@ -102,8 +105,11 @@ export const Cart: FC = () => {
         </Card>
       ))}
       {!!snap.cart.length && (
-        <Button isDisabled={!snap.cart.length} onClick={() => createOrder()}>
-          Создать заказ
+        <Button
+          isDisabled={!snap.cart.length || !snap.account}
+          onClick={() => createOrder()}
+        >
+          {!!snap.account ? "Создать заказ" : "Нужно создать аккаунт"}
         </Button>
       )}
       {!globalStore.cart.length && createOrderData?.createOrder.token && (

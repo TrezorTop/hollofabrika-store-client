@@ -207,9 +207,14 @@ export type ConfirmOrderResult = {
   id?: Maybe<Scalars['Id']['output']>;
 };
 
+export type CreateOrderProductsList = {
+  id: Scalars['Id']['input'];
+  quantity: Scalars['Int']['input'];
+};
+
 export type CreateOrderResult = {
   __typename?: 'CreateOrderResult';
-  expiresIn: Scalars['Int']['output'];
+  expiresIn: Scalars['String']['output'];
   token: Scalars['String']['output'];
 };
 
@@ -237,6 +242,28 @@ export enum ErrorCode {
   Forbidden = 'Forbidden',
   InternalError = 'InternalError',
   NotFound = 'NotFound'
+}
+
+export enum Errors {
+  AnonymousGuardForbidden = 'AnonymousGuardForbidden',
+  ChangeCategoryCategoriesAreSame = 'ChangeCategoryCategoriesAreSame',
+  ChangeCategoryNewCategoryNotExists = 'ChangeCategoryNewCategoryNotExists',
+  ChangeCategoryProductNotExists = 'ChangeCategoryProductNotExists',
+  ConfirmOrderOrderRequestNotExists = 'ConfirmOrderOrderRequestNotExists',
+  CreateCategoryCategoryExists = 'CreateCategoryCategoryExists',
+  CreateProductCategoryNotExists = 'CreateProductCategoryNotExists',
+  DeleteCategoryCategoryNotExists = 'DeleteCategoryCategoryNotExists',
+  DeleteProductProductNotExists = 'DeleteProductProductNotExists',
+  LoginWrongPasswordError = 'LoginWrongPasswordError',
+  LoginWrongUsernameError = 'LoginWrongUsernameError',
+  ProductProductNotExists = 'ProductProductNotExists',
+  RefreshUsedTokenError = 'RefreshUsedTokenError',
+  RefreshWrongTokenError = 'RefreshWrongTokenError',
+  RegisterEmailWrong = 'RegisterEmailWrong',
+  RoleGuardForbidden = 'RoleGuardForbidden',
+  UpdateCategoryCategoryNotExists = 'UpdateCategoryCategoryNotExists',
+  UpdateProductProductNotExists = 'UpdateProductProductNotExists',
+  VerifyEmailWrongToken = 'VerifyEmailWrongToken'
 }
 
 export enum FilterLogic {
@@ -285,7 +312,7 @@ export type MutationCreateCategoryArgs = {
 
 
 export type MutationCreateOrderArgs = {
-  productsIds?: InputMaybe<Array<Scalars['Id']['input']>>;
+  products?: InputMaybe<Array<CreateOrderProductsList>>;
 };
 
 
@@ -342,8 +369,9 @@ export type MutationVerifyEmailArgs = {
 export type Order = {
   __typename?: 'Order';
   confirmCode?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
   date?: Maybe<Scalars['String']['output']>;
-  expiresIn?: Maybe<Scalars['Int']['output']>;
+  expiresIn?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['Id']['output']>;
   isCompleted?: Maybe<Scalars['Boolean']['output']>;
   products?: Maybe<Array<OrderProduct>>;
@@ -361,6 +389,7 @@ export type OrderProduct = {
   id?: Maybe<Scalars['Id']['output']>;
   name: Scalars['String']['output'];
   price: Scalars['Int']['output'];
+  quantity: Scalars['Int']['output'];
 };
 
 export type OrdersQueryInput = {
@@ -543,11 +572,11 @@ export type FindOrderByCodeQueryVariables = Exact<{
 export type FindOrderByCodeQuery = { __typename?: 'Query', orders: { __typename?: 'OrdersQueryResult', items: Array<{ __typename?: 'Order', id?: string | null, totalSum?: number | null, date?: string | null, products?: Array<{ __typename?: 'OrderProduct', id?: string | null, name: string, category: string, buyedWithPrice: number }> | null }> } };
 
 export type CreateOrderMutationVariables = Exact<{
-  productsIds?: InputMaybe<Array<Scalars['Id']['input']> | Scalars['Id']['input']>;
+  products?: InputMaybe<Array<CreateOrderProductsList> | CreateOrderProductsList>;
 }>;
 
 
-export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'CreateOrderResult', token: string, expiresIn: number } };
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'CreateOrderResult', token: string, expiresIn: string } };
 
 export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -583,7 +612,7 @@ export type OrdersQueryVariables = Exact<{
 }>;
 
 
-export type OrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrdersQueryResult', items: Array<{ __typename?: 'Order', id?: string | null, date?: string | null, totalSum?: number | null, expiresIn?: number | null, isCompleted?: boolean | null, products?: Array<{ __typename?: 'OrderProduct', category: string, name: string, price: number, buyedWithPrice: number, id?: string | null, covers?: Array<string> | null }> | null }> } };
+export type OrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrdersQueryResult', items: Array<{ __typename?: 'Order', id?: string | null, date?: string | null, totalSum?: number | null, expiresIn?: string | null, isCompleted?: boolean | null, products?: Array<{ __typename?: 'OrderProduct', category: string, name: string, price: number, buyedWithPrice: number, id?: string | null, covers?: Array<string> | null }> | null }> } };
 
 export type UpdateProductMutationVariables = Exact<{
   id: Scalars['Id']['input'];
@@ -657,14 +686,14 @@ export type ProductItemQueryQuery = { __typename?: 'Query', product: { __typenam
 export type UserOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserOrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrdersQueryResult', items: Array<{ __typename?: 'Order', id?: string | null, totalSum?: number | null, date?: string | null, expiresIn?: number | null, confirmCode?: string | null, isCompleted?: boolean | null, products?: Array<{ __typename?: 'OrderProduct', id?: string | null, covers?: Array<string> | null }> | null }> } };
+export type UserOrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrdersQueryResult', items: Array<{ __typename?: 'Order', id?: string | null, totalSum?: number | null, date?: string | null, expiresIn?: string | null, confirmCode?: string | null, isCompleted?: boolean | null, products?: Array<{ __typename?: 'OrderProduct', id?: string | null, covers?: Array<string> | null }> | null }> } };
 
 
 export const RefreshDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Refresh"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"token"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refresh"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"token"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refresh"}},{"kind":"Field","name":{"kind":"Name","value":"access"}}]}}]}}]} as unknown as DocumentNode<RefreshMutation, RefreshMutationVariables>;
 export const ProductCategoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProductCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"categories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<ProductCategoriesQuery, ProductCategoriesQueryVariables>;
 export const ConfirmOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ConfirmOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"token"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"confirmOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"token"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<ConfirmOrderMutation, ConfirmOrderMutationVariables>;
 export const FindOrderByCodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FindOrderByCode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"OrdersQueryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orders"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"buyedWithPrice"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalSum"}},{"kind":"Field","name":{"kind":"Name","value":"date"}}]}}]}}]}}]} as unknown as DocumentNode<FindOrderByCodeQuery, FindOrderByCodeQueryVariables>;
-export const CreateOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productsIds"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Id"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"productsIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productsIds"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"expiresIn"}}]}}]}}]} as unknown as DocumentNode<CreateOrderMutation, CreateOrderMutationVariables>;
+export const CreateOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"products"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateOrderProductsList"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"products"},"value":{"kind":"Variable","name":{"kind":"Name","value":"products"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"expiresIn"}}]}}]}}]} as unknown as DocumentNode<CreateOrderMutation, CreateOrderMutationVariables>;
 export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refresh"}},{"kind":"Field","name":{"kind":"Name","value":"access"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const RegisterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Register"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"register"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]} as unknown as DocumentNode<RegisterMutation, RegisterMutationVariables>;

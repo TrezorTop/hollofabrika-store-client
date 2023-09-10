@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { ReactElement, ReactNode, useMemo, useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 import s from "./layout.module.scss";
 
@@ -28,10 +29,12 @@ const NestedLayout = ({ children }: { children: ReactNode }) => {
 
   const links: { title: string; href: string }[] = useMemo(() => {
     return [
-      { title: "Admin", href: baseRoute },
-      { title: "Products", href: baseRoute + "products" },
+      { title: "Заказы", href: baseRoute },
+      { title: "Товары", href: baseRoute + "products" },
     ];
   }, []);
+  
+  useAuth();
 
   return (
     <div>

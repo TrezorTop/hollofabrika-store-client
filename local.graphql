@@ -21,7 +21,7 @@ type ConfirmOrderResult {
 }
 
 type CreateOrderResult {
-    expiresIn: Int!
+    expiresIn: String!
     token: String!
 }
 
@@ -39,7 +39,7 @@ type Mutation {
     changeCategory(category: String!, id: Id!): Product!
     confirmOrder(token: String!): ConfirmOrderResult!
     createCategory(name: String!): Category!
-    createOrder(productsIds: [Id!]): CreateOrderResult!
+    createOrder(products: [CreateOrderProductsList!]): CreateOrderResult!
     createProduct(category: String!, product: CreateProductArgs!): Product!
     deleteCategory(name: String!): Category!
     deleteProduct(id: Id!): Product!
@@ -53,8 +53,9 @@ type Mutation {
 
 type Order {
     confirmCode: String
+    createdAt: String
     date: String
-    expiresIn: Int
+    expiresIn: String
     id: Id
     isCompleted: Boolean
     products: [OrderProduct!]
@@ -71,6 +72,7 @@ type OrderProduct {
     id: Id
     name: String!
     price: Int!
+    quantity: Int!
 }
 
 type OrdersQueryResult {
@@ -151,6 +153,28 @@ enum ErrorCode {
     Forbidden
     InternalError
     NotFound
+}
+
+enum Errors {
+    AnonymousGuardForbidden
+    ChangeCategoryCategoriesAreSame
+    ChangeCategoryNewCategoryNotExists
+    ChangeCategoryProductNotExists
+    ConfirmOrderOrderRequestNotExists
+    CreateCategoryCategoryExists
+    CreateProductCategoryNotExists
+    DeleteCategoryCategoryNotExists
+    DeleteProductProductNotExists
+    LoginWrongPasswordError
+    LoginWrongUsernameError
+    ProductProductNotExists
+    RefreshUsedTokenError
+    RefreshWrongTokenError
+    RegisterEmailWrong
+    RoleGuardForbidden
+    UpdateCategoryCategoryNotExists
+    UpdateProductProductNotExists
+    VerifyEmailWrongToken
 }
 
 enum FilterLogic {
@@ -407,6 +431,11 @@ scalar UtcOffset
 "Represents NULL values"
 scalar Void
 
+input CreateOrderProductsList {
+    id: Id!
+    quantity: Int!
+}
+
 input CreateProductArgs {
     attributes: [ProductInputAttribute!]!
     covers: [Upload!]
@@ -416,8 +445,8 @@ input CreateProductArgs {
 }
 
 input DatePeriod {
-    from: String!
-    to: String!
+    from: String
+    to: String
 }
 
 input OrdersQueryInput {

@@ -14,6 +14,7 @@ import {
   Flex,
   Grid,
   Heading,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -131,7 +132,7 @@ export default function Orders() {
       {activeOrder && (
         <Modal isOpen={isOpenModal} onClose={onCloseModal}>
           <ModalOverlay />
-          <ModalContent alignSelf="center" maxHeight="80%" overflow='auto'>
+          <ModalContent alignSelf="center" maxHeight="80%" overflow="auto">
             <ModalHeader>Заказ {activeOrder.id}</ModalHeader>
             <ModalCloseButton />
 
@@ -141,26 +142,29 @@ export default function Orders() {
                   Товаров: {activeOrder.products?.length}
                 </Text>
 
-                <Grid gridTemplateColumns={"1fr 1fr"} gap={4}>
+                <Grid gridTemplateColumns="1fr" gap={4}>
                   {activeOrder.products?.map((product) => (
                     <Card key={product.id}>
                       <CardHeader padding={2}>{product.name}</CardHeader>
-                      <CardBody padding={2}>
-                        <Text>
-                          Цена:{" "}
-                          {Intl.NumberFormat("ru-RU", {
-                            style: "currency",
-                            currency: "RUB",
-                          }).format(product.price ?? 0)}
-                        </Text>
+                      <CardBody padding={2} display='flex' gap={4}>
+                        <Image maxWidth="100px" src={product.covers?.[0]} />
+                        <Stack gap={1}>
+                          <Text>
+                            Цена:{" "}
+                            {Intl.NumberFormat("ru-RU", {
+                              style: "currency",
+                              currency: "RUB",
+                            }).format(product.price ?? 0)}
+                          </Text>
 
-                        <Text>
-                          Заказано по цене:{" "}
-                          {Intl.NumberFormat("ru-RU", {
-                            style: "currency",
-                            currency: "RUB",
-                          }).format(product.buyedWithPrice ?? 0)}
-                        </Text>
+                          <Text>
+                            Заказано по цене:{" "}
+                            {Intl.NumberFormat("ru-RU", {
+                              style: "currency",
+                              currency: "RUB",
+                            }).format(product.buyedWithPrice ?? 0)}
+                          </Text>
+                        </Stack>
                       </CardBody>
                     </Card>
                   ))}

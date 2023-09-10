@@ -13,6 +13,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
+import { useAuth } from "../../core/shared/hooks/useAuth";
+
 import { graphql } from "../../gql";
 
 const UserOrdersQuery = graphql(`
@@ -36,6 +38,8 @@ const UserOrdersQuery = graphql(`
 
 export default function Profile() {
   const { data: ordersQuery } = useQuery(UserOrdersQuery);
+
+  useAuth();
 
   return (
     <div>
@@ -61,7 +65,7 @@ export default function Profile() {
                     {order.isCompleted ? "Завершенный" : "Открытый"} заказ
                     {order.expiresIn &&
                       " - действителен до " +
-                        DateTime.fromSeconds(order.expiresIn).toFormat(
+                        DateTime.fromISO(order.expiresIn).toFormat(
                           "dd.LL.yyyy HH:mm"
                         )}
                   </Heading>

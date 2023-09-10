@@ -17,7 +17,7 @@ const documents = {
     "\n  query ProductCategories {\n    categories {\n      name\n      attributes {\n        name\n      }\n    }\n  }\n": types.ProductCategoriesDocument,
     "\n  mutation ConfirmOrder($token: String!) {\n    confirmOrder(token: $token) {\n      id\n    }\n  }\n": types.ConfirmOrderDocument,
     "\n  query FindOrderByCode($input: OrdersQueryInput) {\n    orders(input: $input) {\n      items {\n        id\n        products {\n          id\n          name\n          category\n          buyedWithPrice\n        }\n        totalSum\n        date\n      }\n    }\n  }\n": types.FindOrderByCodeDocument,
-    "\n  mutation CreateOrder($productsIds: [Id!]) {\n    createOrder(productsIds: $productsIds) {\n      token\n      expiresIn\n    }\n  }\n": types.CreateOrderDocument,
+    "\n  mutation CreateOrder($products: [CreateOrderProductsList!]) {\n    createOrder(products: $products) {\n      token\n      expiresIn\n    }\n  }\n": types.CreateOrderDocument,
     "\n  query User {\n    currentUser {\n      username\n      role\n    }\n  }\n": types.UserDocument,
     "\n  mutation Login($username: String!, $password: String!) {\n    login(username: $username, password: $password) {\n      refresh\n      access\n    }\n  }\n": types.LoginDocument,
     "\n  mutation Register($username: String!, $email: String!, $password: String!) {\n    register(username: $username, email: $email, password: $password) {\n      code\n    }\n  }\n": types.RegisterDocument,
@@ -69,7 +69,7 @@ export function graphql(source: "\n  query FindOrderByCode($input: OrdersQueryIn
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation CreateOrder($productsIds: [Id!]) {\n    createOrder(productsIds: $productsIds) {\n      token\n      expiresIn\n    }\n  }\n"): (typeof documents)["\n  mutation CreateOrder($productsIds: [Id!]) {\n    createOrder(productsIds: $productsIds) {\n      token\n      expiresIn\n    }\n  }\n"];
+export function graphql(source: "\n  mutation CreateOrder($products: [CreateOrderProductsList!]) {\n    createOrder(products: $products) {\n      token\n      expiresIn\n    }\n  }\n"): (typeof documents)["\n  mutation CreateOrder($products: [CreateOrderProductsList!]) {\n    createOrder(products: $products) {\n      token\n      expiresIn\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

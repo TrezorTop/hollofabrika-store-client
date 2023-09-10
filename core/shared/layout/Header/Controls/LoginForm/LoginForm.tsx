@@ -4,6 +4,7 @@ import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
 import { authStore, globalStore } from "../../../../../store/store";
 import { useForm } from "../../../../hooks/useForm";
+import { ErrorText } from "../../../../ui/ErrorText/ErrorText";
 import { setUserTokens } from "../../../../utils/auth";
 
 const LoginMutation = graphql(`
@@ -36,10 +37,10 @@ type Props = {
 export const LoginForm = ({ onRegister }: Props) => {
   const snap = useSnapshot(authStore);
 
-  const { form, updateForm } = useForm<Form>();
+  const { form, updateForm, errors, setErrors } = useForm<Form>();
   const [getUser, { loading, data: user }] = useLazyQuery(UserQuery);
 
-  const [login, { data: loginData }] = useMutation(LoginMutation, {
+  const [login, { data: loginData, error }] = useMutation(LoginMutation, {
     variables: {
       username: form.login,
       password: form.password,
@@ -53,22 +54,34 @@ export const LoginForm = ({ onRegister }: Props) => {
     },
   });
 
+  const isValid = () => {
+    if (!form.login) return false;
+    if (!form.password) return false;
+
+    return true;
+  };
+
   return (
     <>
       <Input
         onChange={(event) => updateForm({ login: event.target.value })}
         placeholder="Логин или email"
       />
+
       <Input
         onChange={(event) => updateForm({ password: event.target.value })}
         placeholder="Пароль"
       />
 
-      <Button onClick={() => login()}>Войти</Button>
+      <ErrorText error={error?.message} />
+
+      <Button onClick={() => login()} isDisabled={!isValid()}>
+        Войти
+      </Button>
       <Button variant="outline" onClick={onRegister}>
         Регистрация
       </Button>
-      <Button variant="link">Забыли пароль?</Button>
+      {/*<Button variant="link">Забыли пароль?</Button>*/}
     </>
   );
 };

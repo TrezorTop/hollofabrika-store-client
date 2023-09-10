@@ -23,7 +23,9 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useCallback, useState } from "react";
+import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
+import { Role } from "../../../../../../gql/graphql";
 import { globalStore } from "../../../../../store/store";
 import { Form } from "../../../../ui/Form/Form";
 import { setUserTokens } from "../../../../utils/auth";
@@ -57,6 +59,8 @@ const OrderQuery = graphql(`
 export const Account = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const snap = useSnapshot(globalStore);
+
   const [code, setCode] = useState<string>("");
 
   const [confirmOrder, { error: confirmError, data: confirmData }] =
@@ -85,16 +89,20 @@ export const Account = () => {
   return (
     <>
       <Flex gap="16px" alignItems="center">
-        <Heading size="lg">{globalStore.account?.username}</Heading>
+        <Heading size="lg">{snap.account?.username}</Heading>
       </Flex>
       <Divider />
       <Link as={NextLink} href="/profile">
         Ваши заказы
       </Link>
-      <Link as={NextLink} href="/admin">
-        Администратор
-      </Link>
-      <Link onClick={onOpen}>Подтвердить заказ</Link>
+      {snap.account?.role === Role.Admin && (
+        <Link as={NextLink} href="/admin">
+          Администратор
+        </Link>
+      )}
+      {snap.account?.role === Role.Admin && (
+        <Link onClick={onOpen}>Подтвердить заказ</Link>
+      )}
       <Link color="tomato" onClick={logout}>
         Выйти
       </Link>
@@ -143,7 +151,7 @@ export const Account = () => {
                   onChange={(event) => setCode(event.target.value)}
                   placeholder="Код заказа"
                 />
-                { order?.orders.items[0] &&
+                {order?.orders.items[0] && (
                   <Heading size="md" textAlign="right">
                     Общая сумма:{" "}
                     {Intl.NumberFormat("ru-RU", {
@@ -151,7 +159,7 @@ export const Account = () => {
                       currency: "RUB",
                     }).format(order?.orders.items[0].totalSum ?? 0)}
                   </Heading>
-                }
+                )}
               </Stack>
             </ModalBody>
 

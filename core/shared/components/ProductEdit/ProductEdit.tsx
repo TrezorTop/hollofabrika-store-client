@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { CloseIcon } from "@chakra-ui/icons";
+import { CloseIcon, DeleteIcon, RepeatClockIcon } from "@chakra-ui/icons";
 import {
   Button,
   Card,
@@ -7,6 +7,7 @@ import {
   Flex,
   Grid,
   Heading,
+  IconButton,
   Image,
   Input,
   InputGroup,
@@ -31,6 +32,7 @@ import {
   Product,
   ProductAttribute,
   ProductInputAttribute,
+  UpdateProductArgs,
 } from "../../../../gql/graphql";
 import { useForm } from "../../hooks/useForm";
 import { randomId } from "../../utils/random";
@@ -50,7 +52,8 @@ const Categories = graphql(`
 
 type Attribute = { id: string } & ProductAttribute;
 
-type ProductForm = { id: string; newCategory: string } & CreateProductArgs;
+type ProductForm = { id: string; newCategory: string } & CreateProductArgs &
+  UpdateProductArgs;
 
 type Props = {
   onSubmit: (
@@ -117,7 +120,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
 
   return (
     <>
-      <Grid gridTemplateColumns="1fr 3fr" gap="32px">
+      <Grid gridTemplateColumns="320px 3fr" gap={8}>
         <Stack gap={8}>
           {product?.covers?.length ? (
             <Card height="fit-content">
@@ -141,6 +144,58 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                 </Text>
               </CardBody>
             </Card>
+          )}
+
+          {!!product?.covers?.length && (
+            <>
+              <Text fontSize="xl">Фото товара:</Text>
+              <Stack>
+                {product.covers?.map((cover) => {
+                  const deleted = !!form.coversNamesToDelete?.find((c) => c === cover);
+
+                  console.log(form.coversNamesToDelete)
+
+                  return (
+                    <Card
+                      key={cover}
+                      border={deleted ? "1px solid red" : "unset"}
+                    >
+                      <CardBody
+                        padding={4}
+                        display="flex"
+                        gap={4}
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <Flex gap={4} alignItems="center">
+                          <Image maxWidth="100px" src={cover} />
+
+                          {deleted && <>Фото будет удалено</>}
+                        </Flex>
+
+                        <IconButton
+                          aria-label={"Delete"}
+                          icon={deleted ? <RepeatClockIcon /> : <DeleteIcon />}
+                          onClick={() =>
+                            deleted
+                              ? updateForm({
+                                  coversNamesToDelete:
+                                    form.coversNamesToDelete?.filter(
+                                      (c) => c !== cover
+                                    ),
+                                })
+                              : updateForm({
+                                  coversNamesToDelete:
+                                    (form.coversNamesToDelete ?? []).concat(cover),
+                                })
+                          }
+                        />
+                      </CardBody>
+                    </Card>
+                  );
+                })}
+              </Stack>
+            </>
           )}
 
           <Dropzone
@@ -170,7 +225,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                   />
                   <Text textAlign="center" fontSize="lg">
                     Кликните или перетащите файлы сюда для загрузки картинок
-                    {form.covers?.length && (
+                    {!!form.covers?.length && (
                       <>
                         <br />
                         Файлов загружено: {form.covers?.length}{" "}
@@ -181,6 +236,44 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
               </Card>
             )}
           </Dropzone>
+
+          {!!form.covers?.length && (
+            <>
+              <Text fontSize="xl">Загруженные файлы:</Text>
+              <Stack>
+                {form.covers?.map((cover) => (
+                  <Card key={cover.name}>
+                    <CardBody
+                      padding={4}
+                      display="flex"
+                      gap={4}
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Flex gap={4} alignItems="center">
+                        <Image
+                          maxWidth="100px"
+                          src={URL.createObjectURL(cover)}
+                        />{" "}
+                        <Text fontSize="xl">{cover.name}</Text>
+                      </Flex>
+                      <IconButton
+                        aria-label={"Delete"}
+                        icon={<DeleteIcon />}
+                        onClick={() =>
+                          updateForm({
+                            covers: form.covers?.filter(
+                              (c) => c.name !== cover.name
+                            ),
+                          })
+                        }
+                      />
+                    </CardBody>
+                  </Card>
+                ))}
+              </Stack>
+            </>
+          )}
         </Stack>
 
         <Flex flexGrow="1" flexDirection="column" gap="32px">

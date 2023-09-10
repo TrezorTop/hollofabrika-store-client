@@ -11,6 +11,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useRef } from "react";
 import { useSnapshot } from "valtio";
 
 import { AdminLayout } from "../../../core/shared/layouts/layout";
@@ -43,6 +44,8 @@ const ProductsQuery = graphql(`
 export default function Products() {
   const snap = useSnapshot(adminStore);
 
+  const btnRef = useRef<HTMLButtonElement>(null);
+
   const pageSize = 50;
 
   const router = useRouter();
@@ -58,11 +61,14 @@ export default function Products() {
     <Flex flexDirection="column" gap="32px">
       <Flex alignItems="center" justifyContent="space-between">
         <Heading>Товары</Heading>
-        <Button onClick={() => router.push(baseRoute + "create")}>
-          Добавить товар
-        </Button>
+
+        <Flex gap={4}>
+          <Button onClick={() => router.push(baseRoute + "create")}>
+            Добавить товар
+          </Button>
+        </Flex>
       </Flex>
-      
+
       <Table variant="striped">
         <Thead>
           <Tr>

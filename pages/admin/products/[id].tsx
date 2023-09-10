@@ -120,6 +120,8 @@ export default function Product() {
               }));
           }
 
+          const coversToDelete = [...new Set(product.coversNamesToDelete)]
+
           await update({
             variables: {
               id: newProductId,
@@ -129,6 +131,9 @@ export default function Product() {
                 description: product.description,
                 attributes: attributes,
                 covers: product.covers,
+                coversNamesToDelete: coversToDelete?.map(
+                  (cover) => cover.split("/").reverse()[0]
+                ),
               },
             },
           });
