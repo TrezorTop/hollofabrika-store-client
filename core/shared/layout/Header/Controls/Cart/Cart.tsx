@@ -8,7 +8,9 @@ import {
   CardFooter,
   Divider,
   Flex,
+  Grid,
   IconButton,
+  Image,
   Link,
   Text,
 } from "@chakra-ui/react";
@@ -68,22 +70,26 @@ export const Cart: FC = () => {
       {snap.cart.map((product) => (
         <Card key={product.id} flexDirection="column" gap="8px">
           <CardBody padding="12px">
-            <Flex
-              justifyContent="space-between"
+            <Grid
               alignItems="center"
               key={product.id}
+              gap={4}
+              gridTemplateColumns="100px 1fr"
             >
-              <Text
-                fontSize="xl"
-                textDecoration="underline"
-                cursor="pointer"
-                onClick={() => router.push(`/product/${product.id}`)}
-              >
-                {product.name}
-              </Text>
+              <Image src={product.covers?.[0]} />
 
-              <Text color="gray.500">{product.category}</Text>
-            </Flex>
+              <div>
+                <Text
+                  textDecoration="underline"
+                  cursor="pointer"
+                  onClick={() => router.push(`/product/${product.id}`)}
+                >
+                  {product.name}
+                </Text>
+
+                <Text color="gray.500">{product.category}</Text>
+              </div>
+            </Grid>
           </CardBody>
 
           <Divider color="gray.400" margin="0" />
