@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-export const useForm = <T>(defaultValues?: T) => {
+export const useForm = <T>(defaultValues?: Partial<T>) => {
   const [form, setForm] = useState<T>((defaultValues ?? {}) as T);
   const [errors, setErrors] = useState<string[]>([]);
 
@@ -9,10 +9,17 @@ export const useForm = <T>(defaultValues?: T) => {
     setErrors([]);
   }, []);
 
+  const addError = (err: string) =>
+    setErrors((prev) => [...new Set(prev.concat(err))]);
+
+  const removeError = (err: string) =>
+    setErrors((prev) => prev.filter((error) => error !== err));
+
   return {
     form,
     updateForm,
     errors,
-    setErrors,
+    addError,
+    removeError,
   };
 };

@@ -32,6 +32,7 @@ const ProductsQuery = graphql(`
         id
         name
         price
+        category
         attributes {
           value
           name
@@ -73,6 +74,7 @@ export default function Products() {
         <Thead>
           <Tr>
             <Th>Имя</Th>
+            <Th>Категория</Th>
             <Th isNumeric>Цена</Th>
           </Tr>
         </Thead>
@@ -84,6 +86,7 @@ export default function Products() {
               onClick={() => router.push(baseRoute + item.id)}
             >
               <Td>{item.name}</Td>
+              <Td>{item.category}</Td>
               <Td isNumeric>
                 {Intl.NumberFormat("ru-RU", {
                   style: "currency",

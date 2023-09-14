@@ -1,10 +1,12 @@
 import { useMutation } from "@apollo/client";
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Input, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
 import { authStore } from "../../../../../store/store";
 import { useForm } from "../../../../hooks/useForm";
+import { ErrorText } from "../../../../ui/ErrorText/ErrorText";
+import { isEmail } from "../../../../utils/string";
 
 const RegisterMutation = graphql(`
   mutation Register($username: String!, $email: String!, $password: String!) {
@@ -45,7 +47,7 @@ export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
 
   const snap = useSnapshot(authStore);
 
-  const { form, updateForm } = useForm<Form>({
+  const { form, updateForm, errors, addError } = useForm<Form>({
     email: "",
     login: "",
     password: "",
@@ -53,25 +55,29 @@ export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
     code: "",
   });
 
-  const [
-    register,
-    { data: registerData, loading: registerLoading, error: registerError },
-  ] = useMutation(RegisterMutation, {
-    variables: {
-      email: form.email,
-      username: form.login,
-      password: form.password,
-    },
-  });
+  const [register, { data: registerData, loading: registerLoading }] =
+    useMutation(RegisterMutation, {
+      variables: {
+        email: form.email,
+        username: form.login,
+        password: form.password,
+      },
+      onError: (error) => {
+        addError(error.message);
+      },
+    });
 
-  const [
-    confirm,
-    { data: confirmData, loading: confirmLoading, error: confirmError },
-  ] = useMutation(ConfirmMutation, {
-    variables: {
-      emailToken: form.code,
-    },
-  });
+  const [confirm, { data: confirmData, loading: confirmLoading }] = useMutation(
+    ConfirmMutation,
+    {
+      variables: {
+        emailToken: form.code,
+      },
+      onError: (error) => {
+        addError(error.message);
+      },
+    }
+  );
 
   useEffect(() => {
     if (registerData?.register?.code) {
@@ -84,6 +90,25 @@ export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
     if (confirmData?.verifyEmail?.code == "Oke") onSuccess();
   }, [confirmData, onSuccess]);
 
+  const isValid = () => {
+    if (step === Step.Register) {
+      if (!form.email || !isEmail(form.email)) return false;
+      if (!form.login) return false;
+      if (!form.password) return false;
+      if (form.repeatedPassword !== form.password) return false;
+
+      return true;
+    }
+
+    if (step === Step.Confirm) {
+      if (!form.code) return false;
+
+      return true;
+    }
+
+    return true;
+  };
+
   return (
     <>
       <Input
@@ -93,30 +118,56 @@ export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
       />
       <Input
         onChange={(event) => updateForm({ login: event.target.value })}
-        placeholder="Login"
+        placeholder="Логин"
         disabled={step === Step.Confirm}
       />
       <Input
         onChange={(event) => updateForm({ password: event.target.value })}
-        placeholder="Password"
+        type="password"
+        placeholder="Пароль"
         disabled={step === Step.Confirm}
       />
-      <Input disabled={step === Step.Confirm} placeholder="Repeat Password" />
+      <Input
+        disabled={step === Step.Confirm}
+        type="password"
+        placeholder="Повторите пароль"
+        onChange={(event) =>
+          updateForm({ repeatedPassword: event.target.value })
+        }
+      />
       {step === Step.Confirm && (
-        <Input
-          placeholder="Code"
-          onChange={(event) => updateForm({ code: event.target.value })}
-        />
+        <>
+          <Text textAlign="center">Код был отправлен на вашу почту</Text>
+
+          <Input
+            placeholder="Код подтверждения"
+            onChange={(event) => updateForm({ code: event.target.value })}
+          />
+        </>
       )}
 
       {step === Step.Confirm && (
         <Button variant="link" onClick={() => setStep(Step.Register)}>
-          cancel
+          Ввести другие данные
         </Button>
       )}
 
-      <Button onClick={() => (step === Step.Register ? register() : confirm())}>
-        {step === Step.Register ? "Register" : "ConfirmMutation Code"}
+      {form.repeatedPassword && form.repeatedPassword !== form.password && (
+        <ErrorText>Пароли должны совпадать</ErrorText>
+      )}
+      {form.email && !isEmail(form.email) && (
+        <ErrorText>Неверный email</ErrorText>
+      )}
+
+      {errors.map((error) => (
+        <ErrorText key={error} error={error} />
+      ))}
+
+      <Button
+        isDisabled={!isValid() || registerLoading || confirmLoading}
+        onClick={() => (step === Step.Register ? register() : confirm())}
+      >
+        {step === Step.Register ? "Зарегистрироваться" : "Подтвердить код"}
       </Button>
       <Button onClick={onCancel} variant="link">
         Назад

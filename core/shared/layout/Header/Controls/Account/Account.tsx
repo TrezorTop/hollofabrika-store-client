@@ -7,7 +7,9 @@ import {
   CardBody,
   Divider,
   Flex,
+  Grid,
   Heading,
+  Image,
   Input,
   Link,
   Modal,
@@ -48,6 +50,7 @@ const OrderQuery = graphql(`
           name
           category
           buyedWithPrice
+          covers
         }
         totalSum
         date
@@ -123,7 +126,19 @@ export const Account = () => {
                       <Card key={product.id}>
                         <CardBody>
                           <Flex justifyContent="space-between">
-                            <div>{product.name}</div>
+                            <Grid
+                              gridTemplateColumns="100px 1fr"
+                              alignItems="center"
+                              gap={4}
+                            >
+                              <Image src={product.covers?.[0]} />
+                              <div>
+                                <Text>{product.name}</Text>
+                                <Text fontSize="s" color="gray.500">
+                                  {product.category}
+                                </Text>
+                              </div>
+                            </Grid>
                             <Box textAlign="right">
                               <Text fontSize="xs">Цена при оформлении: </Text>
                               <Badge>
@@ -134,7 +149,6 @@ export const Account = () => {
                               </Badge>
                             </Box>
                           </Flex>
-                          <Text fontSize="xs">{product.category}</Text>
                         </CardBody>
                       </Card>
                     ))}
@@ -165,6 +179,7 @@ export const Account = () => {
 
             <ModalFooter gap="16px">
               <Button
+                isDisabled={!code}
                 type="submit"
                 colorScheme="blue"
                 onClick={() => {

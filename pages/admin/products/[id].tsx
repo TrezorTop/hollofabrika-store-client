@@ -122,6 +122,8 @@ export default function Product() {
 
           const coversToDelete = [...new Set(product.coversNamesToDelete)]
 
+          console.log(product.description)
+
           await update({
             variables: {
               id: newProductId,

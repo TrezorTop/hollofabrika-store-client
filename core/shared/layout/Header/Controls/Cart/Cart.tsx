@@ -73,14 +73,16 @@ export const Cart: FC = () => {
               alignItems="center"
               key={product.id}
             >
-              <Text fontSize="xl" textDecoration='underline' cursor='pointer' onClick={() => router.push(`/product/${product.id}`)}>{product.name}</Text>
-
-              <Text fontSize="2xl">
-                {Intl.NumberFormat("ru-RU", {
-                  style: "currency",
-                  currency: "RUB",
-                }).format(product.price)}
+              <Text
+                fontSize="xl"
+                textDecoration="underline"
+                cursor="pointer"
+                onClick={() => router.push(`/product/${product.id}`)}
+              >
+                {product.name}
               </Text>
+
+              <Text color="gray.500">{product.category}</Text>
             </Flex>
           </CardBody>
 
@@ -92,7 +94,12 @@ export const Cart: FC = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Text color="gray.500">{product.category}</Text>
+            <Text fontSize="2xl">
+              {Intl.NumberFormat("ru-RU", {
+                style: "currency",
+                currency: "RUB",
+              }).format(product.price)}
+            </Text>
 
             <IconButton
               onClick={() => {

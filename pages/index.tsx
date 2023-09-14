@@ -9,6 +9,7 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -37,6 +38,7 @@ const Products = graphql(`
         description
         id
         covers
+        isSafeDeleted
       }
     }
   }
@@ -111,6 +113,10 @@ const Home = () => {
       });
     }
   }, [categoriesData?.categories, form, updateForm]);
+
+  useEffect(() => {
+    refetch()
+  }, [refetch]);
 
   const onRefetch = (noFilters?: boolean) => {
     const attributes: ProductInputAttribute[] = [];
@@ -228,41 +234,47 @@ const Home = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <div className={s.products}>
-        {productsData?.products.items.map((product) => (
-          <ProductCard
-            onClick={() => {
-              router.push(`/product/${product.id}`);
-            }}
-            key={product.id}
-            cover={product.covers?.[0]}
-            title={product.name}
-            subText={Intl.NumberFormat("ru-RU", {
-              style: "currency",
-              currency: "RUB",
-            }).format(product.price)}
-            text={product.category}
-            buttons={
-              <Button
-                onClick={() => {
-                  globalStore.cart.push(product);
-                }}
-                isDisabled={
-                  !!globalStoreSnap.cart.find(
+      {productsData?.products.items.length ? (
+        <div className={s.products}>
+          {productsData?.products.items.map((product) => (
+            <ProductCard
+              onClick={() => {
+                router.push(`/product/${product.id}`);
+              }}
+              key={product.id}
+              cover={product.covers?.[0]}
+              title={product.name}
+              subText={Intl.NumberFormat("ru-RU", {
+                style: "currency",
+                currency: "RUB",
+              }).format(product.price)}
+              text={product.category}
+              buttons={
+                <Button
+                  onClick={() => {
+                    globalStore.cart.push(product);
+                  }}
+                  isDisabled={
+                    !!globalStoreSnap.cart.find(
+                      (cartProduct) => cartProduct.id === product.id
+                    )
+                  }
+                >
+                  {!!globalStoreSnap.cart.find(
                     (cartProduct) => cartProduct.id === product.id
                   )
-                }
-              >
-                {!!globalStoreSnap.cart.find(
-                  (cartProduct) => cartProduct.id === product.id
-                )
-                  ? "В корзине"
-                  : "Добавить в корзину"}
-              </Button>
-            }
-          />
-        ))}
-      </div>
+                    ? "В корзине"
+                    : "Добавить в корзину"}
+                </Button>
+              }
+            />
+          ))}
+        </div>
+      ) : (
+        <Text textAlign="center" fontSize="4xl">
+          Товары пока не добавлены
+        </Text>
+      )}
     </Flex>
   );
 };

@@ -31,6 +31,7 @@ const ProductQuery = graphql(`
       description
       price
       name
+      isSafeDeleted
       attributes {
         name
         value
@@ -54,7 +55,7 @@ export default function Product() {
     <Flex flexDirection="column" gap="8">
       <span>
         <Heading>{data?.product.name}</Heading>
-        <Text color="gray" fontSize="2xl">
+        <Text color="gray.500" fontSize="2xl">
           {data?.product.category}
         </Text>
       </span>
@@ -81,34 +82,38 @@ export default function Product() {
           )}
         </Card>
         <Flex flexDirection="column" gap={6}>
-          <Card>
-            <CardHeader>
-              <Text fontSize="xl">Описание</Text>
-            </CardHeader>
-            <Divider color="gray.400" />
-            <CardBody>{data?.product.description}</CardBody>
-          </Card>
-          <Card>
-            <CardHeader>
-              <Text fontSize="xl">Аттрибуты</Text>
-            </CardHeader>
-            <Divider color="gray.400" />
-            <CardBody>
-              <Flex flexDirection="column" gap="8px">
-                {data?.product.attributes.map((attr) => (
-                  <Badge key={attr.name}>
-                    <Text
-                      display="flex"
-                      justifyContent="space-between"
-                      fontSize="sm"
-                    >
-                      <span>{attr.name}:</span> <span>{attr.value}</span>
-                    </Text>
-                  </Badge>
-                ))}
-              </Flex>
-            </CardBody>
-          </Card>
+          {data?.product.description && (
+            <Card>
+              <CardHeader>
+                <Text fontSize="xl">Описание</Text>
+              </CardHeader>
+              <Divider color="gray.400" />
+              <CardBody>{data?.product.description}</CardBody>
+            </Card>
+          )}
+          {!!data?.product.attributes.length && (
+            <Card>
+              <CardHeader>
+                <Text fontSize="xl">Атрибуты</Text>
+              </CardHeader>
+              <Divider color="gray.400" />
+              <CardBody>
+                <Flex flexDirection="column" gap="8px">
+                  {data?.product.attributes.map((attr) => (
+                    <Badge key={attr.name}>
+                      <Text
+                        display="flex"
+                        justifyContent="space-between"
+                        fontSize="sm"
+                      >
+                        <span>{attr.name}:</span> <span>{attr.value}</span>
+                      </Text>
+                    </Badge>
+                  ))}
+                </Flex>
+              </CardBody>
+            </Card>
+          )}
         </Flex>
         <Card height="fit-content">
           <CardBody>

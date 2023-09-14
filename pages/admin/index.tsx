@@ -147,7 +147,7 @@ export default function Orders() {
                 <Grid gridTemplateColumns="1fr" gap={4}>
                   {activeOrder.products?.map((product) => (
                     <Card key={product.id}>
-                      <CardBody padding={2} display="flex" gap={4}>
+                      <CardBody padding={2} display="grid" gridTemplateColumns='100px 1fr' alignItems='center' gap={4}>
                         <Image maxWidth="100px" src={product.covers?.[0]} />
                         <Stack gap={1}>
                           <Text

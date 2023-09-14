@@ -46,7 +46,7 @@ export default function Create() {
       <ProductEdit
         onSubmit={async (product, attributes, category) => {
           const productCategory =
-            category ??
+            category ||
             (await createCategory({
               variables: { name: product.newCategory },
             }).then((data) => data.data?.createCategory.name));

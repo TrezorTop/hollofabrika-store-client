@@ -42,7 +42,6 @@ type Mutation {
     createOrder(products: [CreateOrderProductsList!]): CreateOrderResult!
     createProduct(category: String!, product: CreateProductArgs!): Product!
     deleteCategory(name: String!): Category!
-    deleteProduct(id: Id!): Product!
     login(password: String!, username: String!): JwtToken!
     refresh(token: String!): JwtToken!
     register(email: String!, password: String!, username: String!): Success!
@@ -92,6 +91,7 @@ type Product {
     covers: [String!]
     description: String!
     id: Id!
+    isSafeDeleted: Boolean!
     name: String!
     price: Int!
 }
@@ -170,7 +170,9 @@ enum Errors {
     ProductProductNotExists
     RefreshUsedTokenError
     RefreshWrongTokenError
+    RegisterEmailInUseError
     RegisterEmailWrong
+    RegisterUsernameInUseError
     RoleGuardForbidden
     UpdateCategoryCategoryNotExists
     UpdateProductProductNotExists
@@ -479,6 +481,7 @@ input ProductsQueryInput {
     categories: [String]
     filter: ProductFilterQueryInput
     ids: [Id!]
+    isAdmin: Boolean
     pageData: PageDataInput
 }
 
@@ -487,6 +490,7 @@ input UpdateProductArgs {
     covers: [Upload!]
     coversNamesToDelete: [String!]
     description: String
+    isSafeDeleted: Boolean
     name: String
     price: Int
 }

@@ -37,22 +37,29 @@ type Props = {
 export const LoginForm = ({ onRegister }: Props) => {
   const snap = useSnapshot(authStore);
 
-  const { form, updateForm, errors, setErrors } = useForm<Form>();
-  const [getUser, { loading, data: user }] = useLazyQuery(UserQuery);
+  const { form, updateForm, errors, addError } = useForm<Form>();
+  const [getUser, { loading: userLoading, data: user }] =
+    useLazyQuery(UserQuery);
 
-  const [login, { data: loginData, error }] = useMutation(LoginMutation, {
-    variables: {
-      username: form.login,
-      password: form.password,
-    },
-    onCompleted: async (data) => {
-      if (!data.login) return;
-      setUserTokens(data.login?.access!, data.login?.refresh!);
-      const user = await getUser();
-      if (user.data?.currentUser.username)
-        globalStore.account = user.data?.currentUser;
-    },
-  });
+  const [login, { data: loginData, loading: loginLoading }] = useMutation(
+    LoginMutation,
+    {
+      variables: {
+        username: form.login,
+        password: form.password,
+      },
+      onCompleted: async (data) => {
+        if (!data.login) return;
+        setUserTokens(data.login?.access!, data.login?.refresh!);
+        const user = await getUser();
+        if (user.data?.currentUser.username)
+          globalStore.account = user.data?.currentUser;
+      },
+      onError: (error) => {
+        addError(error.message);
+      },
+    }
+  );
 
   const isValid = () => {
     if (!form.login) return false;
@@ -70,12 +77,18 @@ export const LoginForm = ({ onRegister }: Props) => {
 
       <Input
         onChange={(event) => updateForm({ password: event.target.value })}
+        type="password"
         placeholder="Пароль"
       />
 
-      <ErrorText error={error?.message} />
+      {errors.map((error) => (
+        <ErrorText key={error} error={error} />
+      ))}
 
-      <Button onClick={() => login()} isDisabled={!isValid()}>
+      <Button
+        onClick={() => login()}
+        isDisabled={!isValid() || loginLoading || userLoading}
+      >
         Войти
       </Button>
       <Button variant="outline" onClick={onRegister}>

@@ -7,6 +7,7 @@ import {
   CardHeader,
   Divider,
   Flex,
+  Grid,
   Heading,
   Image,
   Stack,
@@ -15,7 +16,10 @@ import {
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useSnapshot } from "valtio";
 import { useAuth } from "../../core/shared/hooks/useAuth";
+import { globalStore } from "../../core/store/store";
 
 import { graphql } from "../../gql";
 
@@ -27,7 +31,10 @@ const UserOrdersQuery = graphql(`
         totalSum
         products {
           id
+          name
+          category
           covers
+          buyedWithPrice
         }
         date
         expiresIn
@@ -39,7 +46,17 @@ const UserOrdersQuery = graphql(`
 `);
 
 export default function Profile() {
-  const { data: ordersQuery } = useQuery(UserOrdersQuery);
+  const snap = useSnapshot(globalStore);
+
+  const { data: ordersQuery, refetch } = useQuery(UserOrdersQuery);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  useEffect(() => {
+    if (snap.cart.length === 0) refetch();
+  }, [refetch, snap]);
 
   const router = useRouter();
 
@@ -52,6 +69,12 @@ export default function Profile() {
       </Heading>
 
       <Stack flexDirection="column" divider={<StackDivider />} gap="16px">
+        {!ordersQuery?.orders.items.length && (
+          <Text textAlign="center" fontSize="4xl">
+            У вас пока нет заказов
+          </Text>
+        )}
+
         {ordersQuery?.orders.items.map((order, index, array) => {
           const currentDate = DateTime.fromISO(order.date ?? "");
           const previousDate = DateTime.fromISO(array[index - 1]?.date ?? "");
@@ -77,30 +100,51 @@ export default function Profile() {
                 <Divider color="gray.400" />
                 <CardBody>
                   <Stack spacing="3">
-                    <Flex flexWrap="wrap" gap="32px">
+                    <Stack gap="4" divider={<StackDivider />}>
                       {order.products?.map((product) => (
-                        <Image
-                          borderRadius="8px"
-                          key={(order.id ?? "0") + (product.id ?? "0")}
-                          height="100%"
-                          maxHeight="100px"
-                          src={product.covers?.[0]}
-                          onClick={() => router.push(`/product/${product.id}`)}
-                          cursor='pointer'
-                        />
+                        <Grid
+                          key={product.id}
+                          gridTemplateColumns="200px 1fr"
+                          gap="4"
+                        >
+                          <Image
+                            borderRadius="8px"
+                            key={(order.id ?? "0") + (product.id ?? "0")}
+                            height="100%"
+                            maxHeight="100px"
+                            src={product.covers?.[0]}
+                            onClick={() =>
+                              router.push(`/product/${product.id}`)
+                            }
+                            cursor="pointer"
+                            margin="0 auto"
+                          />
+                          <Stack>
+                            <Text>{product.name}</Text>
+                            <Text fontSize="s" color="gray.500">{product.category}</Text>
+                            <Text>
+                              Куплено по цене:{" "}
+                              {Intl.NumberFormat("ru-RU", {
+                                style: "currency",
+                                currency: "RUB",
+                              }).format(product.buyedWithPrice ?? 0)}
+                            </Text>
+                          </Stack>
+                        </Grid>
                       ))}
-                    </Flex>
+                    </Stack>
                   </Stack>
                 </CardBody>
                 <Divider color="gray.400" />
                 <CardFooter
-                  gap="6"
+                  gap="4"
                   display="flex"
-                  alignItems="center"
+                  flexDirection="column"
+                  // alignItems="center"
                   flexWrap="wrap"
                 >
                   {!order.isCompleted && (
-                    <>
+                    <Flex alignItems="center" gap="4">
                       <Text color="blue.600" fontSize="2xl">
                         Код подтверждения:
                       </Text>
@@ -111,7 +155,7 @@ export default function Profile() {
                       >
                         {order.confirmCode}
                       </Badge>
-                    </>
+                    </Flex>
                   )}
                   <Text color="blue.600" fontSize="2xl">
                     Общая цена:{" "}

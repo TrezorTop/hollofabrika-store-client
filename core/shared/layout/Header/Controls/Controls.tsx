@@ -62,7 +62,7 @@ export const Controls = () => {
           </Flex>
         }
       >
-        <Link>{snap.account?.username?.slice(0, 7) ?? "Аккаунт"}</Link>
+        <Link>{snap.account?.username ?? "Аккаунт"}</Link>
       </Popup>
 
       <Popup body={<Cart />}>

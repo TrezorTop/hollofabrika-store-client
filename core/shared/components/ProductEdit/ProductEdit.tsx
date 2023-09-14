@@ -12,11 +12,6 @@ import {
   Input,
   InputGroup,
   InputRightAddon,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Stack,
   Text,
   Textarea,
@@ -35,7 +30,9 @@ import {
   UpdateProductArgs,
 } from "../../../../gql/graphql";
 import { useForm } from "../../hooks/useForm";
+import { ErrorText } from "../../ui/ErrorText/ErrorText";
 import { randomId } from "../../utils/random";
+import { capitalizeFirstLetter } from "../../utils/string";
 
 const allowedImameTypes = ["image/jpeg", "image/jpg", "image/png"];
 
@@ -69,8 +66,8 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
   const [category, setCategory] = useState<string>("");
 
   const [isLargerThan970] = useMediaQuery("(min-width: 970px)");
-  const { data } = useQuery(Categories);
-  const { form, updateForm } = useForm<ProductForm>();
+  const { data: categoriesData } = useQuery(Categories);
+  const { form, updateForm, errors, addError } = useForm<ProductForm>();
 
   useEffect(() => {
     if (product?.attributes)
@@ -94,8 +91,9 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
     setCategory(option.value);
 
     const attributes =
-      data?.categories.find((category) => category.name === option.label)
-        ?.attributes ?? [];
+      categoriesData?.categories.find(
+        (category) => category.name === option.label
+      )?.attributes ?? [];
 
     setAttributes(
       attributes.map((attr) => ({
@@ -122,17 +120,24 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
     <>
       <Grid gridTemplateColumns="320px 3fr" gap={8}>
         <Stack gap={8}>
-          {product?.covers?.filter(cover => cover.split('/').reverse()[0] !== "fallback.jpg").length ? (
+          {product?.covers?.filter(
+            (cover) => cover.split("/").reverse()[0] !== "fallback.jpg"
+          ).length ? (
             <Card height="fit-content">
               <CardBody>
                 <Swiper centeredSlides={true}>
-                  {product?.covers?.filter(cover => cover.split('/').reverse()[0] !== "fallback.jpg").map((cover) => (
-                    <SwiperSlide key={cover}>
-                      <Flex>
-                        <Image src={cover} margin={"0 auto"} width="100%" />
-                      </Flex>
-                    </SwiperSlide>
-                  ))}
+                  {product?.covers
+                    ?.filter(
+                      (cover) =>
+                        cover.split("/").reverse()[0] !== "fallback.jpg"
+                    )
+                    .map((cover) => (
+                      <SwiperSlide key={cover}>
+                        <Flex>
+                          <Image src={cover} margin={"0 auto"} width="100%" />
+                        </Flex>
+                      </SwiperSlide>
+                    ))}
                 </Swiper>
               </CardBody>
             </Card>
@@ -146,54 +151,63 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
             </Card>
           )}
 
-          {!!product?.covers?.filter(cover => cover.split('/').reverse()[0] !== "fallback.jpg").length && (
+          {!!product?.covers?.filter(
+            (cover) => cover.split("/").reverse()[0] !== "fallback.jpg"
+          ).length && (
             <>
               <Text fontSize="xl">Фото товара:</Text>
               <Stack>
-                {product.covers?.filter(cover => cover.split('/').reverse()[0] !== "fallback.jpg").map((cover) => {
-                  const deleted = !!form.coversNamesToDelete?.find((c) => c === cover);
+                {product.covers
+                  ?.filter(
+                    (cover) => cover.split("/").reverse()[0] !== "fallback.jpg"
+                  )
+                  .map((cover) => {
+                    const deleted = !!form.coversNamesToDelete?.find(
+                      (c) => c === cover
+                    );
 
-                  console.log(form.coversNamesToDelete)
-
-                  return (
-                    <Card
-                      key={cover}
-                      border={deleted ? "1px solid red" : "unset"}
-                    >
-                      <CardBody
-                        padding={4}
-                        display="flex"
-                        gap={4}
-                        alignItems="center"
-                        justifyContent="space-between"
+                    return (
+                      <Card
+                        key={cover}
+                        border={deleted ? "1px solid red" : "unset"}
                       >
-                        <Flex gap={4} alignItems="center">
-                          <Image maxWidth="100px" src={cover} />
+                        <CardBody
+                          padding={4}
+                          display="flex"
+                          gap={4}
+                          alignItems="center"
+                          justifyContent="space-between"
+                        >
+                          <Flex gap={4} alignItems="center">
+                            <Image maxWidth="100px" src={cover} />
 
-                          {deleted && <>Фото будет удалено</>}
-                        </Flex>
+                            {deleted && <>Фото будет удалено</>}
+                          </Flex>
 
-                        <IconButton
-                          aria-label={"Delete"}
-                          icon={deleted ? <RepeatClockIcon /> : <DeleteIcon />}
-                          onClick={() =>
-                            deleted
-                              ? updateForm({
-                                  coversNamesToDelete:
-                                    form.coversNamesToDelete?.filter(
-                                      (c) => c !== cover
-                                    ),
-                                })
-                              : updateForm({
-                                  coversNamesToDelete:
-                                    (form.coversNamesToDelete ?? []).concat(cover),
-                                })
-                          }
-                        />
-                      </CardBody>
-                    </Card>
-                  );
-                })}
+                          <IconButton
+                            aria-label={"Delete"}
+                            icon={
+                              deleted ? <RepeatClockIcon /> : <DeleteIcon />
+                            }
+                            onClick={() =>
+                              deleted
+                                ? updateForm({
+                                    coversNamesToDelete:
+                                      form.coversNamesToDelete?.filter(
+                                        (c) => c !== cover
+                                      ),
+                                  })
+                                : updateForm({
+                                    coversNamesToDelete: (
+                                      form.coversNamesToDelete ?? []
+                                    ).concat(cover),
+                                  })
+                            }
+                          />
+                        </CardBody>
+                      </Card>
+                    );
+                  })}
               </Stack>
             </>
           )}
@@ -254,8 +268,16 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                         <Image
                           maxWidth="100px"
                           src={URL.createObjectURL(cover)}
-                        />{" "}
-                        <Text fontSize="xl">{cover.name}</Text>
+                        />
+                        <Text
+                          fontSize="xl"
+                          textOverflow="ellipsis"
+                          maxWidth="120px"
+                          whiteSpace="nowrap"
+                          overflow="hidden"
+                        >
+                          {cover.name}
+                        </Text>
                       </Flex>
                       <IconButton
                         aria-label={"Delete"}
@@ -286,7 +308,7 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                 : { value: "", label: "Создать новую категорию" }
             }
             onChange={(value) => onCategorySelect(value!)}
-            options={data?.categories
+            options={categoriesData?.categories
               .map((category) => ({
                 value: category.name,
                 label: category.name,
@@ -296,7 +318,9 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
           {!category && (
             <Input
               onChange={(event) =>
-                updateForm({ newCategory: event.target.value })
+                updateForm({
+                  newCategory: capitalizeFirstLetter(event.target.value),
+                })
               }
               placeholder="Категория"
             />
@@ -304,22 +328,18 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
           <Input
             defaultValue={product?.name}
             onChange={(event) => updateForm({ name: event.target.value })}
-            placeholder="Имя"
+            placeholder="Имя товара"
           />
           <InputGroup>
-            <NumberInput defaultValue={product?.price}>
-              <NumberInputField
-                placeholder="Цена в рублях"
-                onChange={(event) =>
-                  updateForm({ price: parseFloat(event.target.value) })
-                }
-              />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <InputRightAddon>РУБ</InputRightAddon>
+            <Input
+              type="number"
+              placeholder="Цена в рублях"
+              defaultValue={product?.price}
+              onChange={(event) =>
+                updateForm({ price: parseFloat(event.target.value) })
+              }
+            />
+            <InputRightAddon>руб.</InputRightAddon>
           </InputGroup>
           <Grid
             gap="32px"
@@ -339,31 +359,31 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
               />
             </Grid>
             <Flex flexGrow="1" flexDirection="column" gap="32px">
-              <Heading>Аттрибуты</Heading>
+              <Heading>Атрибуты</Heading>
               {attributes?.map((attribute) => (
                 <Flex key={attribute.id} alignItems="center" gap="8px">
                   <Input
                     defaultValue={attribute.name}
                     onChange={(event) =>
                       onAttributeKeyChange(
-                        event.target.value,
+                        capitalizeFirstLetter(event.target.value),
                         attribute.id,
                         "name"
                       )
                     }
-                    placeholder="Имя атрибута"
+                    placeholder="Имя"
                   />
                   :
                   <Input
                     defaultValue={attribute.value}
                     onChange={(event) =>
                       onAttributeKeyChange(
-                        event.target.value,
+                        capitalizeFirstLetter(event.target.value),
                         attribute.id,
                         "value"
                       )
                     }
-                    placeholder="Значение атрибута"
+                    placeholder="Значение"
                   />
                   <Button
                     onClick={() =>
@@ -384,18 +404,44 @@ export const ProductEdit = ({ onSubmit, product }: Props) => {
                   ])
                 }
               >
-                Add
+                Добавить
+              </Button>
+              <Button
+                onClick={() => {
+                  const attributes =
+                    categoriesData?.categories.find(
+                      (categoryData) => categoryData.name === category
+                    )?.attributes ?? [];
+
+                  setAttributes((prev) => [
+                    ...prev,
+                    ...attributes.map((attr) => ({
+                      id: randomId(),
+                      name: attr?.name!,
+                      value: "",
+                    })),
+                  ]);
+                }}
+              >
+                Добавить все атрибуты из этой категории
               </Button>
             </Flex>
           </Grid>
+
+          {errors.map((error) => (
+            <ErrorText key={error} error={error} />
+          ))}
+
           <Button
             onClick={() =>
               onSubmit(
                 form,
-                attributes.map((attr) => ({
-                  value: attr.value,
-                  name: attr.name,
-                })),
+                attributes
+                  .filter((attr) => attr.name)
+                  .map((attr) => ({
+                    value: attr.value,
+                    name: attr.name,
+                  })),
                 category === product?.category ? undefined : category
               )
             }
