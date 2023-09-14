@@ -44,6 +44,7 @@ const ProductQuery = graphql(`
       category
       name
       covers
+      isSafeDeleted
     }
   }
 `);
@@ -120,9 +121,9 @@ export default function Product() {
               }));
           }
 
-          const coversToDelete = [...new Set(product.coversNamesToDelete)]
+          const coversToDelete = [...new Set(product.coversNamesToDelete)];
 
-          console.log(product.description)
+          console.log(product.description);
 
           await update({
             variables: {

@@ -25,7 +25,7 @@ const documents = {
     "\n  query Orders($input: OrdersQueryInput) {\n    orders(input: $input) {\n      items {\n        id\n        date\n        totalSum\n        products {\n          category\n          name\n          price\n          buyedWithPrice\n          id\n          covers\n        }\n        expiresIn\n        isCompleted\n      }\n    }\n  }\n": types.OrdersDocument,
     "\n  mutation UpdateProduct($id: Id!, $product: UpdateProductArgs!) {\n    updateProduct(id: $id, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      covers\n      description\n      category\n      price\n    }\n  }\n": types.UpdateProductDocument,
     "\n  mutation CreateCategory($name: String!) {\n    createCategory(name: $name) {\n      name\n    }\n  }\n": types.CreateCategoryDocument,
-    "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n    }\n  }\n": types.ProductDocument,
+    "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n      isSafeDeleted\n    }\n  }\n": types.ProductDocument,
     "\n  mutation ChangeCategory($id: Id!, $category: String!) {\n    changeCategory(id: $id, category: $category) {\n      name\n      id\n    }\n  }\n": types.ChangeCategoryDocument,
     "\n  query Categories {\n    categories {\n      name\n    }\n  }\n": types.CategoriesDocument,
     "\n  mutation CreateProduct($category: String!, $product: CreateProductArgs!) {\n    createProduct(category: $category, product: $product) {\n      id\n      name\n      attributes {\n        name\n        value\n      }\n      description\n      category\n      price\n    }\n  }\n": types.CreateProductDocument,
@@ -101,7 +101,7 @@ export function graphql(source: "\n  mutation CreateCategory($name: String!) {\n
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n    }\n  }\n"): (typeof documents)["\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n    }\n  }\n"];
+export function graphql(source: "\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n      isSafeDeleted\n    }\n  }\n"): (typeof documents)["\n  query Product($id: Id!) {\n    product(id: $id) {\n      id\n      description\n      price\n      attributes {\n        value\n        name\n      }\n      category\n      name\n      covers\n      isSafeDeleted\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
