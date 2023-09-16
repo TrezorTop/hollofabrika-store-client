@@ -1,0 +1,9 @@
+@import "../../styles/mixins";
+
+.item {
+  grid-template-columns: 200px 1fr;
+
+  @include media-phone {
+    grid-template-columns: 1fr;
+  }
+}

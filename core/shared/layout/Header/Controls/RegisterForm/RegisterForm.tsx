@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { Button, Input, Text } from "@chakra-ui/react";
+import { Button, Input, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
@@ -47,6 +47,8 @@ export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
 
   const snap = useSnapshot(authStore);
 
+  const toast = useToast();
+
   const { form, updateForm, errors, addError } = useForm<Form>({
     email: "",
     login: "",
@@ -75,6 +77,13 @@ export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
       },
       onError: (error) => {
         addError(error.message);
+      },
+      onCompleted: () => {
+        toast({
+          title: "Успешно",
+          description: "Теперь вы можете зайти в свой аккаунт",
+          status: "success",
+        });
       },
     }
   );
@@ -165,7 +174,18 @@ export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
 
       <Button
         isDisabled={!isValid() || registerLoading || confirmLoading}
-        onClick={() => (step === Step.Register ? register() : confirm())}
+        onClick={() => {
+          if (step === Step.Register) {
+            toast({
+              title: "Подтверждение почты",
+              description: "Скоро вам на почту придёт письмо с кодом",
+              status: "loading",
+            });
+            register();
+          } else {
+            confirm();
+          }
+        }}
       >
         {step === Step.Register ? "Зарегистрироваться" : "Подтвердить код"}
       </Button>

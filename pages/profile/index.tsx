@@ -23,6 +23,8 @@ import { globalStore } from "../../core/store/store";
 
 import { graphql } from "../../gql";
 
+import s from "./profile.module.scss";
+
 const UserOrdersQuery = graphql(`
   query UserOrders {
     orders {
@@ -104,7 +106,7 @@ export default function Profile() {
                       {order.products?.map((product) => (
                         <Grid
                           key={product.id}
-                          gridTemplateColumns="200px 1fr"
+                          className={s.item}
                           gap="4"
                         >
                           <Image
@@ -121,7 +123,9 @@ export default function Profile() {
                           />
                           <Stack>
                             <Text>{product.name}</Text>
-                            <Text fontSize="s" color="gray.500">{product.category}</Text>
+                            <Text fontSize="s" color="gray.500">
+                              {product.category}
+                            </Text>
                             <Text>
                               Куплено по цене:{" "}
                               {Intl.NumberFormat("ru-RU", {
@@ -140,21 +144,20 @@ export default function Profile() {
                   gap="4"
                   display="flex"
                   flexDirection="column"
-                  // alignItems="center"
                   flexWrap="wrap"
                 >
                   {!order.isCompleted && (
                     <Flex alignItems="center" gap="4">
                       <Text color="blue.600" fontSize="2xl">
-                        Код подтверждения:
+                        Код подтверждения:{" "}
+                        <Badge
+                          textAlign="center"
+                          fontSize="4xl"
+                          variant="outline"
+                        >
+                          {order.confirmCode}
+                        </Badge>
                       </Text>
-                      <Badge
-                        textAlign="center"
-                        fontSize="4xl"
-                        variant="outline"
-                      >
-                        {order.confirmCode}
-                      </Badge>
                     </Flex>
                   )}
                   <Text color="blue.600" fontSize="2xl">

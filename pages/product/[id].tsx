@@ -146,7 +146,7 @@ export default function Product() {
                 (cartProduct) => cartProduct.id === data?.product.id
               )
                 ? "В корзине"
-                : "Добавить в корзину"}
+                : "Купить"}
             </Button>
           </CardFooter>
         </Card>

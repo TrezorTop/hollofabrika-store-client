@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
   Button,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -9,6 +10,8 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
+  Link,
+  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -115,7 +118,7 @@ const Home = () => {
   }, [categoriesData?.categories, form, updateForm]);
 
   useEffect(() => {
-    refetch()
+    refetch();
   }, [refetch]);
 
   const onRefetch = (noFilters?: boolean) => {
@@ -142,139 +145,171 @@ const Home = () => {
   };
 
   return (
-    <Flex flexDirection="column" gap="32px">
-      <div className={s.controls}>
-        <Button ref={btnRef} onClick={onOpen}>
-          Фильтровать
-        </Button>
-      </div>
-      <Drawer
-        isOpen={isOpen}
-        placement="right"
-        onClose={() => onClose()}
-        finalFocusRef={btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Фильтр</DrawerHeader>
+    <Flex gap="4">
+      <Stack maxWidth="150px" divider={<Divider />}>
+        <Link
+          onClick={() =>
+            refetch({
+              input: {
+                filter: undefined,
+                categories: [],
+              },
+            })
+          }
+        >
+          Все товары
+        </Link>
+        {categoriesData?.categories.map((category) => (
+          <Link
+            onClick={() =>
+              refetch({
+                input: {
+                  filter: undefined,
+                  categories: [category.name],
+                },
+              })
+            }
+            key={category.name}
+          >
+            {category.name}
+          </Link>
+        ))}
+      </Stack>
+      <Link></Link>
+      <Flex flexDirection="column" gap="8">
+        <div className={s.controls}>
+          <Button ref={btnRef} onClick={onOpen}>
+            Фильтровать
+          </Button>
+        </div>
+        <Drawer
+          isOpen={isOpen}
+          placement="left"
+          onClose={() => onClose()}
+          finalFocusRef={btnRef}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>Фильтр</DrawerHeader>
 
-          <DrawerBody>
-            <Flex flexDirection="column" gap="16px">
-              <Select
-                options={categoriesData?.categories.map((category) => ({
-                  value: category.name,
-                  label: category.name,
-                }))}
-                onChange={(values) => {
-                  updateForm({
-                    categories: values.map((value) => value.value),
-                  });
-                }}
-                value={form.categories.map((category) => ({
-                  value: category,
-                  label: category,
-                }))}
-                placeholder="Категория"
-                isClearable
-                isMulti
-              />
-
-              {attributes?.map((attribute) => {
-                const values = form.attributes[attribute?.name!];
-
-                return (
-                  <Select
-                    key={attribute?.name}
-                    options={attribute?.values?.map((value) => ({
-                      value: value.value,
-                      label: `${value.value} (${value.count})`,
-                    }))}
-                    onChange={(attributes) => {
-                      updateForm({
-                        attributes: {
-                          ...form.attributes,
-                          [attribute?.name!]: attributes.map(
-                            (attr) => attr.value
-                          ),
-                        },
-                      });
-                    }}
-                    value={values?.map((value) => ({
-                      value,
-                      label: `${value} (${
-                        attribute?.values?.find(
-                          (option) => option.value === value
-                        )?.count
-                      })`,
-                    }))}
-                    closeMenuOnSelect={false}
-                    isMulti
-                    placeholder={attribute?.name}
-                  />
-                );
-              })}
-            </Flex>
-          </DrawerBody>
-
-          <DrawerFooter>
-            <Button
-              mr={3}
-              onClick={() => {
-                updateForm({ categories: [], attributes: {} });
-                onClose();
-                onRefetch(true);
-              }}
-            >
-              Очистить
-            </Button>
-            <Button colorScheme="blue" onClick={() => onRefetch()}>
-              Применить
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-      {productsData?.products.items.length ? (
-        <div className={s.products}>
-          {productsData?.products.items.map((product) => (
-            <ProductCard
-              onClick={() => {
-                router.push(`/product/${product.id}`);
-              }}
-              key={product.id}
-              cover={product.covers?.[0]}
-              title={product.name}
-              subText={Intl.NumberFormat("ru-RU", {
-                style: "currency",
-                currency: "RUB",
-              }).format(product.price)}
-              text={product.category}
-              buttons={
-                <Button
-                  onClick={() => {
-                    globalStore.cart.push(product);
+            <DrawerBody>
+              <Flex flexDirection="column" gap="16px">
+                <Select
+                  options={categoriesData?.categories.map((category) => ({
+                    value: category.name,
+                    label: category.name,
+                  }))}
+                  onChange={(values) => {
+                    updateForm({
+                      categories: values.map((value) => value.value),
+                    });
                   }}
-                  isDisabled={
-                    !!globalStoreSnap.cart.find(
+                  value={form.categories.map((category) => ({
+                    value: category,
+                    label: category,
+                  }))}
+                  placeholder="Категория"
+                  isClearable
+                  isMulti
+                />
+
+                {attributes?.map((attribute) => {
+                  const values = form.attributes[attribute?.name!];
+
+                  return (
+                    <Select
+                      key={attribute?.name}
+                      options={attribute?.values?.map((value) => ({
+                        value: value.value,
+                        label: `${value.value} (${value.count})`,
+                      }))}
+                      onChange={(attributes) => {
+                        updateForm({
+                          attributes: {
+                            ...form.attributes,
+                            [attribute?.name!]: attributes.map(
+                              (attr) => attr.value
+                            ),
+                          },
+                        });
+                      }}
+                      value={values?.map((value) => ({
+                        value,
+                        label: `${value} (${
+                          attribute?.values?.find(
+                            (option) => option.value === value
+                          )?.count
+                        })`,
+                      }))}
+                      closeMenuOnSelect={false}
+                      isMulti
+                      placeholder={attribute?.name}
+                    />
+                  );
+                })}
+              </Flex>
+            </DrawerBody>
+
+            <DrawerFooter>
+              <Button
+                mr={3}
+                onClick={() => {
+                  updateForm({ categories: [], attributes: {} });
+                  onClose();
+                  onRefetch(true);
+                }}
+              >
+                Очистить
+              </Button>
+              <Button colorScheme="blue" onClick={() => onRefetch()}>
+                Применить
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+        {productsData?.products.items.length ? (
+          <div className={s.products}>
+            {productsData?.products.items.map((product) => (
+              <ProductCard
+                onClick={() => {
+                  router.push(`/product/${product.id}`);
+                }}
+                key={product.id}
+                cover={product.covers?.[0]}
+                title={product.name}
+                subText={Intl.NumberFormat("ru-RU", {
+                  style: "currency",
+                  currency: "RUB",
+                }).format(product.price)}
+                text={product.category}
+                buttons={
+                  <Button
+                    onClick={() => {
+                      globalStore.cart.push(product);
+                    }}
+                    isDisabled={
+                      !!globalStoreSnap.cart.find(
+                        (cartProduct) => cartProduct.id === product.id
+                      )
+                    }
+                  >
+                    {!!globalStoreSnap.cart.find(
                       (cartProduct) => cartProduct.id === product.id
                     )
-                  }
-                >
-                  {!!globalStoreSnap.cart.find(
-                    (cartProduct) => cartProduct.id === product.id
-                  )
-                    ? "В корзине"
-                    : "Добавить в корзину"}
-                </Button>
-              }
-            />
-          ))}
-        </div>
-      ) : (
-        <Text textAlign="center" fontSize="4xl">
-          Товары пока не добавлены
-        </Text>
-      )}
+                      ? "В корзине"
+                      : "Купить"}
+                  </Button>
+                }
+              />
+            ))}
+          </div>
+        ) : (
+          <Text textAlign="center" fontSize="4xl">
+            Товары пока не добавлены
+          </Text>
+        )}
+      </Flex>
     </Flex>
   );
 };
