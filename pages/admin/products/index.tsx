@@ -12,6 +12,7 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -107,10 +108,18 @@ export default function Products() {
       }),
     ]);
 
+    toast({
+      title: "Успешно",
+      description: "Список товаров обновлён",
+      status: "success",
+    });
+
     refetch();
     setDeleted([]);
     setRestored([]);
   };
+
+  const toast = useToast();
 
   return (
     <Flex flexDirection="column" gap="32px">
