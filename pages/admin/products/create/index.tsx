@@ -17,6 +17,7 @@ const CreateProduct = graphql(`
       description
       category
       price
+      isSafeDeleted
     }
   }
 `);
