@@ -59,6 +59,10 @@ const OrdersQuery = graphql(`
         }
         expiresIn
         isCompleted
+        user {
+          email
+          username
+        }
       }
     }
   }
@@ -147,13 +151,21 @@ export default function Orders() {
                 <Grid gridTemplateColumns="1fr" gap={4}>
                   {activeOrder.products?.map((product) => (
                     <Card key={product.id}>
-                      <CardBody padding={2} display="grid" gridTemplateColumns='100px 1fr' alignItems='center' gap={4}>
+                      <CardBody
+                        padding={2}
+                        display="grid"
+                        gridTemplateColumns="100px 1fr"
+                        alignItems="center"
+                        gap={4}
+                      >
                         <Image maxWidth="100px" src={product.covers?.[0]} />
                         <Stack gap={1}>
                           <Text
                             textDecoration="underline"
                             cursor="pointer"
-                            onClick={() => router.push(`/product/${product.id}`)}
+                            onClick={() =>
+                              router.push(`/product/${product.id}`)
+                            }
                           >
                             {product.name}
                           </Text>
@@ -306,6 +318,7 @@ export default function Orders() {
           <Tr>
             <Th>Идентификатор</Th>
             <Th>Дата</Th>
+            <Th>Пользователь</Th>
             <Th>Статус</Th>
             <Th isNumeric>Общая стоимость</Th>
           </Tr>
@@ -324,6 +337,7 @@ export default function Orders() {
               <Td>
                 {DateTime.fromISO(item.date!).toFormat("dd.LL.yyyy HH:mm")}
               </Td>
+              <Td>{item.user?.username}</Td>
               <Td>{item.isCompleted ? "Завершен" : "Открыт"}</Td>
               <Td isNumeric>
                 {Intl.NumberFormat("ru-RU", {

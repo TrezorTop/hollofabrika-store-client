@@ -38,6 +38,7 @@ type JwtToken {
 type Mutation {
     changeCategory(category: String!, id: Id!): Product!
     confirmOrder(token: String!): ConfirmOrderResult!
+    confirmResetPassword(password: String!, token: String!): Success!
     createCategory(name: String!): Category!
     createOrder(products: [CreateOrderProductsList!]): CreateOrderResult!
     createProduct(category: String!, product: CreateProductArgs!): Product!
@@ -45,6 +46,7 @@ type Mutation {
     login(password: String!, username: String!): JwtToken!
     refresh(token: String!): JwtToken!
     register(email: String!, password: String!, username: String!): Success!
+    requestResetPassword(email: String!): Success!
     updateCategory(newName: String!, originalName: String!): Category!
     updateProduct(id: Id!, product: UpdateProductArgs!): Product!
     verifyEmail(emailToken: String!): Success!
@@ -59,7 +61,7 @@ type Order {
     isCompleted: Boolean
     products: [OrderProduct!]
     totalSum: Int
-    userId: Id
+    user: User
 }
 
 type OrderProduct {
@@ -171,8 +173,11 @@ enum Errors {
     RefreshUsedTokenError
     RefreshWrongTokenError
     RegisterEmailInUseError
-    RegisterEmailWrong
+    RegisterEmailSendingError
     RegisterUsernameInUseError
+    RequestResetEmailSendingError
+    RequestResetPasswordWrongEmailError
+    RequestResetPasswordWrongToken
     RoleGuardForbidden
     UpdateCategoryCategoryNotExists
     UpdateProductProductNotExists
