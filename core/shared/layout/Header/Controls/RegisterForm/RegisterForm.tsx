@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { Button, Input, Text, useToast } from "@chakra-ui/react";
+import { Button, Heading, Input, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
@@ -64,6 +64,13 @@ export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
         username: form.login,
         password: form.password,
       },
+      onCompleted: () => {
+        toast({
+          title: "Подтверждение",
+          description: "Письмо с кодом пришло вам на почту",
+          status: "success",
+        });
+      },
       onError: (error) => {
         addError(error.message);
       },
@@ -120,6 +127,10 @@ export const RegisterForm = ({ onSuccess, onCancel }: Props) => {
 
   return (
     <>
+      <Heading textAlign="center" size="md">
+        Регистрация
+      </Heading>
+
       <Input
         onChange={(event) => updateForm({ email: event.target.value })}
         placeholder="Email"

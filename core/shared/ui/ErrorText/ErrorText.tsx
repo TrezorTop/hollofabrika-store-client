@@ -14,10 +14,16 @@ export const ErrorText: FC<Props> = ({ error, children }) => {
       {error === Errors.LoginWrongPasswordError && "Неверный пароль"}
 
       {error === Errors.RegisterEmailSendingError && "Неверный email"}
-      {error === Errors.RegisterEmailInUseError && "Данный email уже используется"}
-      {error === Errors.RegisterUsernameInUseError && "Данный логин уже используется"}
+      {error === Errors.RegisterEmailInUseError &&
+        "Данный email уже используется"}
+      {error === Errors.RegisterUsernameInUseError &&
+        "Данный логин уже используется"}
 
-      {error === Errors.VerifyEmailWrongToken && "Неверный код"}
+      {error === Errors.RequestResetPasswordWrongEmailError && "Такой email не найден"}
+
+      {(error === Errors.VerifyEmailWrongToken ||
+        error === Errors.RequestResetPasswordWrongToken) &&
+        "Неверный код"}
       {children}
     </Text>
   );

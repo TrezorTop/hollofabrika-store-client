@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Heading, Input } from "@chakra-ui/react";
 import { useSnapshot } from "valtio";
 import { graphql } from "../../../../../../gql";
 import { authStore, globalStore } from "../../../../../store/store";
@@ -32,9 +32,10 @@ type Form = {
 
 type Props = {
   onRegister: () => void;
+  onReset: () => void;
 };
 
-export const LoginForm = ({ onRegister }: Props) => {
+export const LoginForm = ({ onRegister, onReset }: Props) => {
   const snap = useSnapshot(authStore);
 
   const { form, updateForm, errors, addError } = useForm<Form>();
@@ -70,9 +71,11 @@ export const LoginForm = ({ onRegister }: Props) => {
 
   return (
     <>
+      <Heading textAlign='center' size='md'>Вход</Heading>
+
       <Input
         onChange={(event) => updateForm({ login: event.target.value })}
-        placeholder="Логин или email"
+        placeholder="Логин или Email"
       />
 
       <Input
@@ -94,7 +97,9 @@ export const LoginForm = ({ onRegister }: Props) => {
       <Button variant="outline" onClick={onRegister}>
         Регистрация
       </Button>
-      {/*<Button variant="link">Забыли пароль?</Button>*/}
+      <Button variant="link" onClick={() => onReset()}>
+        Забыли пароль?
+      </Button>
     </>
   );
 };

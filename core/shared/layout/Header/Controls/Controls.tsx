@@ -13,10 +13,12 @@ import s from "./Controls.module.css";
 import { LoginForm } from "./LoginForm/LoginForm";
 
 import { RegisterForm } from "./RegisterForm/RegisterForm";
+import { ResetForm } from "./ResetForm/ResetForm";
 
 enum Form {
   LOGIN = "LOGIN",
   REGISTER = "REGISTER",
+  PASSWORD_RESET = "PASSWORD_RESET",
 }
 
 const User = graphql(`
@@ -47,12 +49,21 @@ export const Controls = () => {
             {!snap.account ? (
               <>
                 {form === Form.LOGIN && (
-                  <LoginForm onRegister={() => setForm(Form.REGISTER)} />
+                  <LoginForm
+                    onRegister={() => setForm(Form.REGISTER)}
+                    onReset={() => setForm(Form.PASSWORD_RESET)}
+                  />
                 )}
                 {form === Form.REGISTER && (
                   <RegisterForm
                     onSuccess={() => setForm(Form.LOGIN)}
                     onCancel={() => setForm(Form.LOGIN)}
+                  />
+                )}
+                {form === Form.PASSWORD_RESET && (
+                  <ResetForm
+                    onCancel={() => setForm(Form.LOGIN)}
+                    onSuccess={() => setForm(Form.LOGIN)}
                   />
                 )}
               </>
