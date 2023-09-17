@@ -1,5 +1,5 @@
 import { proxy } from "valtio";
-import { Product, ProductsQuery, Role } from "../../gql/graphql";
+import { Product, Role } from "../../gql/graphql";
 
 export const globalStore = proxy({
   account: null as {
@@ -13,6 +13,6 @@ export const authStore = proxy({
   confirmToken: "",
 });
 
-export const adminStore = proxy({
-  products: undefined as ProductsQuery["products"] | undefined,
-});
+// export const adminStore = proxy({
+//   products: undefined as ProductsQuery["products"] | undefined,
+// });

@@ -15,11 +15,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
-import { useSnapshot } from "valtio";
+import React, { useEffect, useState } from "react";
 
 import { AdminLayout } from "../../../core/shared/layouts/layout";
-import { adminStore } from "../../../core/store/store";
 import { graphql } from "../../../gql";
 
 const baseRoute = "/admin/products/";
@@ -59,21 +57,13 @@ export default function Products() {
   const [deleted, setDeleted] = useState<string[]>([]);
   const [restored, setRestored] = useState<string[]>([]);
   const [showDeleted, setShowDeleted] = useState<boolean>(false);
-
-  const snap = useSnapshot(adminStore);
-
-  const btnRef = useRef<HTMLButtonElement>(null);
-
-  const pageSize = 50;
+  const [saving, setSaving] = useState<boolean>();
 
   const router = useRouter();
 
-  const { data, loading, fetchMore, refetch } = useQuery(ProductsQuery, {
+  const { data, loading, refetch } = useQuery(ProductsQuery, {
     variables: {
-      input: { ids: [], pageData: { page: 1, pageSize }, isAdmin: true },
-    },
-    onCompleted: (data) => {
-      adminStore.products = data.products;
+      input: { ids: [], isAdmin: true },
     },
   });
 
@@ -85,6 +75,8 @@ export default function Products() {
     useMutation(UpdateProductDeleted);
 
   const save = async () => {
+    setSaving(true);
+
     await Promise.all([
       ...deleted.map((id) => {
         return update({
@@ -108,15 +100,21 @@ export default function Products() {
       }),
     ]);
 
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+
     toast({
       title: "Успешно",
       description: "Список товаров обновлён",
       status: "success",
     });
-
-    refetch();
     setDeleted([]);
     setRestored([]);
+
+    await refetch();
+
+    setSaving(false);
   };
 
   const toast = useToast();
@@ -134,12 +132,16 @@ export default function Products() {
             <Switch
               onChange={() => setShowDeleted((prev) => !prev)}
               checked={showDeleted}
+              defaultChecked={true}
               id="email-alerts"
             />
           </FormControl>
           <Button
             isDisabled={
-              (!deleted.length && !restored.length) || loading || updateLoading
+              (!deleted.length && !restored.length) ||
+              loading ||
+              updateLoading ||
+              saving
             }
             onClick={() => save()}
           >
@@ -160,7 +162,7 @@ export default function Products() {
           </Tr>
         </Thead>
         <Tbody>
-          {snap.products?.items
+          {data?.products?.items
             .filter(
               (item) =>
                 item.isSafeDeleted === showDeleted ||
@@ -184,6 +186,7 @@ export default function Products() {
                   {deleted?.includes(item.id) ||
                   (item.isSafeDeleted && !restored.includes(item.id)) ? (
                     <Button
+                      isDisabled={loading || updateLoading || saving}
                       onClick={() => {
                         const isDeleted = deleted?.includes(item.id);
 
@@ -200,6 +203,7 @@ export default function Products() {
                     </Button>
                   ) : (
                     <Button
+                      isDisabled={loading || updateLoading || saving}
                       onClick={() => {
                         const isRestored = restored?.includes(item.id);
 

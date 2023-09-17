@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client";
 import { Flex, Heading } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { ProductEdit } from "../../../../core/shared/components/ProductEdit/ProductEdit";
 import { AdminLayout } from "../../../../core/shared/layouts/layout";
-import { adminStore } from "../../../../core/store/store";
 import { graphql } from "../../../../gql";
 
 const CreateProduct = graphql(`
@@ -33,11 +33,9 @@ const CreateCategory = graphql(`
 export default function Create() {
   const [createCategory] = useMutation(CreateCategory);
 
-  const [createProduct] = useMutation(CreateProduct, {
-    onCompleted: (data) => {
-      adminStore.products?.items.push(data.createProduct);
-    },
-  });
+  const [createProduct] = useMutation(CreateProduct);
+
+  const router = useRouter();
 
   return (
     <Flex flexDirection="column" gap="32px">
@@ -64,6 +62,8 @@ export default function Create() {
               },
             },
           });
+
+          router.push("/admin/products");
         }}
       />
     </Flex>
