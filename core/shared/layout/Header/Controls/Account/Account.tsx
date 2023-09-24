@@ -80,6 +80,7 @@ export const Account = () => {
     variables: {
       input: {
         orderTokens: [code],
+        isAdmin: true
       },
     },
   });
