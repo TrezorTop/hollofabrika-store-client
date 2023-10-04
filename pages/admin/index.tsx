@@ -337,7 +337,7 @@ export default function Orders() {
               <Td>
                 {DateTime.fromISO(item.date!).toFormat("dd.LL.yyyy HH:mm")}
               </Td>
-              <Td>{item.user?.username}</Td>
+              <Td>{item.user?.email}</Td>
               <Td>{item.isCompleted ? "Завершен" : "Открыт"}</Td>
               <Td isNumeric>
                 {Intl.NumberFormat("ru-RU", {

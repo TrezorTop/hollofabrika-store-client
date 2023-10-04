@@ -77,6 +77,8 @@ export default function Product() {
 
   const [getProduct, { loading, data: product }] = useLazyQuery(ProductQuery);
 
+  console.log(product)
+
   const [changeCategory] = useMutation(ChangeCategory);
 
   useEffect(() => {

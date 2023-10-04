@@ -132,7 +132,7 @@ export default function Products() {
             <Switch
               onChange={() => setShowDeleted((prev) => !prev)}
               checked={showDeleted}
-              defaultChecked={true}
+              defaultChecked={false}
               id="email-alerts"
             />
           </FormControl>
